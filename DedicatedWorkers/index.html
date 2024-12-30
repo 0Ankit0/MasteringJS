@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table Chunk Loading</title>
+    <style>
+      /* Make the table scrollable */
+      #table-container {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script>
+      // Handle worker responses
+      let worker = new Worker("TableWorker.js");
+      let loading = false; // Control when data can be loaded
+
+      // Handle worker responses
+      worker.onmessage = function (event) {
+        const { status, tableBody, totalRows } = event.data;
+        const tableBodyElement = document.querySelector("tbody");
+
+        if (status === "initialized") {
+          console.log(`Worker initialized. Total rows: ${totalRows}`);
+          // Immediately fetch the first chunk of data after initialization
+          fetchChunk();
+        } else if (status === "success") {
+          if (tableBody) {
+            tableBodyElement.innerHTML += tableBody; // Append new rows to the tbody
+          }
+          loading = false; // Allow further loading after processing the current chunk
+        } else if (status === "reset") {
+          console.log("Worker reset.");
+          tableBodyElement.innerHTML = ""; // Clear the table body
+        }
+      };
+
+      // Initialize worker with payload and columns
+      function initializeWorker(payload, columns) {
+        worker.postMessage({ type: "initialize", payload, columns }); // Ensure columns are sent correctly
+      }
+
+      // Fetch the next chunk of rows
+      function fetchChunk() {
+        if (!loading) {
+          loading = true; // Prevent multiple simultaneous fetches
+          worker.postMessage({
+            type: "getChunk",
+            columns: ["name", "address"],
+          }); // Send columns with each request
+        }
+      }
+
+      // Check if user has scrolled to the bottom of the table to load more rows
+      document
+        .querySelector("#table-container")
+        .addEventListener("scroll", function () {
+          const container = this;
+          if (
+            container.scrollTop + container.clientHeight >=
+              container.scrollHeight &&
+            !loading
+          ) {
+            fetchChunk();
+          }
+        });
+
+      // Example data and initialization
+      const payload = Array.from({ length: 400 }, (_, i) => ({
+        name: `Name ${i + 1}`,
+        address: `Address ${i + 1}`,
+      }));
+      const columns = ["name", "address"];
+      initializeWorker(payload, columns); // Send columns as part of the initialization message
+    </script>
+  </body>
+</html>
