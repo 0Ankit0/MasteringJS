@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Options with Worker</title>
+    <style>
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        width: 200px;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 200px;
+        max-height: 150px;
+        overflow-y: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+      .dropdown-content.show {
+        display: block;
+      }
+      .dropdown-content .option {
+        padding: 8px 16px;
+        cursor: pointer;
+      }
+      .dropdown-content .option:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dropdown">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search..."
+        onfocus="showDropdown()"
+        onblur="hideDropdown()"
+      />
+      <div id="dropdown-content" class="dropdown-content"></div>
+    </div>
+
+    <script type="text/javascript">
+      // Create worker instance
+      const selectWorker = new Worker("selectWorker.js");
+
+      // Define a function to handle worker responses
+      function handleWorkerResponse(event) {
+        console.log("Worker response:", event.data);
+        if (event.data.status === "success") {
+          document.querySelector("#dropdown-content").innerHTML +=
+            event.data.data;
+        } else {
+          console.error("Error:", event.data.error);
+        }
+      }
+
+      // Add event listener for worker messages
+      selectWorker.onmessage = handleWorkerResponse;
+
+      // Define the fields to use for value and label in an option object
+      const option = {
+        value: "name", // Change this to the field you want to use for the value
+        label: "address", // Change this to the field you want to use for the label
+      };
+
+      // Initial load of options
+      selectWorker.postMessage({ action: "initial", option });
+
+      // Load more options when the user scrolls to the end
+      document
+        .querySelector("#dropdown-content")
+        .addEventListener("scroll", function () {
+          if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
+            const currentOptionsCount = document.querySelectorAll(
+              "#dropdown-content .option"
+            ).length;
+            selectWorker.postMessage({
+              action: "loadMore",
+              searchQuery: currentOptionsCount / 20,
+              option,
+            });
+          }
+        });
+
+      // Debounce function for search input
+      function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+      }
+
+      // Search input event listener
+      const searchInput = document.querySelector("#search-input");
+      searchInput.addEventListener(
+        "input",
+        debounce(function () {
+          const searchQuery = this.value;
+          document.querySelector("#dropdown-content").innerHTML = ""; // Clear current options
+          selectWorker.postMessage({ action: "search", searchQuery, option });
+        }, 1000)
+      );
+
+      // Show and hide dropdown
+      function showDropdown() {
+        document.querySelector("#dropdown-content").classList.add("show");
+      }
+
+      function hideDropdown() {
+        setTimeout(() => {
+          document.querySelector("#dropdown-content").classList.remove("show");
+        }, 200); // Delay to allow click event on options
+      }
+    </script>
+  </body>
+</html>
