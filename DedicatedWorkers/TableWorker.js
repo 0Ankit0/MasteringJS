@@ -5,54 +5,55 @@
  */
 
 let dataPayload = [];
-let currentIndex = 0;
 let chunkSize = 50;
 
 /**
  * Handles incoming messages to the worker.
  * 
  * @param {MessageEvent} event - The message event containing data.
- * @property {string} event.data.type - The type of the message.
- * @property {Array} event.data.payload - The data payload to be processed.
- * @property {Array} event.data.columns - The columns to be used for generating the table body.
  */
 self.onmessage = async function (event) {
-    const { type, payload, columns } = event.data;
+    const { payload, columns } = event.data;
 
-    if (type === "initialize") {
-        dataPayload = payload; // Store the payload received
-        currentIndex = 0;
-        await resetCache();
+    // Load the current index from cache to continue from where we left off
+    let currentIndex = await getCachedIndex();
+
+    if (payload) {
+        // Initialize with payload, if provided.
+        dataPayload = payload;
+        await resetCache(); // Ensure no old index is cached
+        currentIndex = 0; // Reset current index to start fresh
         postMessage({ status: "initialized", totalRows: dataPayload.length });
-    } else if (type === "getChunk") {
-        const chunk = dataPayload.slice(currentIndex, currentIndex + chunkSize);
-        currentIndex += chunkSize;
-        await updateCache(currentIndex);
-        const tableBody = generateTableBody(chunk, columns); // Ensure columns are passed to generateTableBody
-        postMessage({ status: "success", tableBody });
-    } else if (type === "reset") {
-        dataPayload = [];
-        currentIndex = 0;
-        await resetCache();
-        postMessage({ status: "reset" });
+        fetchNextChunk(columns, currentIndex); // Automatically fetch the first chunk
+    } else if (columns) {
+        // Proceed with fetching the next chunk
+        fetchNextChunk(columns, currentIndex);
     }
 };
 
 /**
- * Generates the HTML table body from a chunk of data.
+ * Fetches the next chunk of data and sends the result back to the main thread.
  * 
- * @param {Array} chunk - The chunk of data to be processed.
- * @param {Array} columns - The columns to be used for generating the table body.
- * @returns {string} The generated HTML table body.
+ * @param {Array} columns - The columns to generate the table body.
+ * @param {number} currentIndex - The current index from where to fetch the next chunk.
  */
-function generateTableBody(chunk, columns) {
-    return chunk
-        .map((row) =>
-            `<tr>${columns
-                .map((col) => `<td>${row[col] || ""}</td>`)
-                .join("")}</tr>`
-        )
-        .join("");
+async function fetchNextChunk(columns, currentIndex) {
+    // Ensure we haven't exhausted all the data
+    if (currentIndex >= dataPayload.length) {
+        postMessage({ status: "completed" });
+        return;
+    }
+
+    // Fetch the next chunk
+    const chunk = dataPayload.slice(currentIndex, currentIndex + chunkSize);
+    currentIndex += chunkSize;
+
+    // Store the updated index in the cache
+    await updateCache(currentIndex);
+
+    // Generate and send the table body
+    const tableBody = generateTableBody(chunk, columns);
+    postMessage({ status: "success", tableBody });
 }
 
 /**
@@ -91,4 +92,26 @@ async function getCachedIndex() {
         return index || 0;
     }
     return 0;
+}
+
+/**
+ * Generates the HTML table body from a chunk of data.
+ * 
+ * @param {Array} chunk - The chunk of data to be processed.
+ * @param {Array} columns - The columns to be used for generating the table body.
+ * @returns {string} The generated HTML table body.
+ */
+function generateTableBody(chunk, columns) {
+    if (!columns || columns.length === 0) {
+        console.error("Invalid columns data.");
+        return "";
+    }
+
+    return chunk
+        .map((row) =>
+            `<tr>${columns
+                .map((col) => `<td>${row[col] || ""}</td>`)
+                .join("")}</tr>`
+        )
+        .join("");
 }
