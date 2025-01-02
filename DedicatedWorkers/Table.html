@@ -84,6 +84,163 @@
           <tbody></tbody>
         </table>
       </div>
+
+      <div class="container mt-4">
+        <h3>Explanation: Dynamic Table with Chunk Loading</h3>
+        <p>
+          This implementation dynamically loads data into a table in chunks. It
+          uses a
+          <strong>web worker</strong> to process data, ensuring smooth UI
+          performance even with large datasets.
+        </p>
+
+        <h4>1. HTML Structure for the Table</h4>
+        <pre><code>
+      <div id="table-container">
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+        </code></pre>
+        <p>
+          The table is enclosed in a scrollable container. New rows are
+          dynamically added to the <code>tbody</code>.
+        </p>
+
+        <h4>2. Main Thread JavaScript</h4>
+        <p>
+          The main thread initializes the worker, handles user scroll events,
+          and receives chunks of data from the worker.
+        </p>
+
+        <h5>Worker Initialization</h5>
+        <pre><code>
+      let worker = new Worker("TableWorker.js");
+      
+      function initializeWorker(payload, columns) {
+        worker.postMessage({ payload, columns });
+      }
+        </code></pre>
+        <p>
+          The worker is initialized with a dataset (payload) and column names.
+        </p>
+
+        <h5>Fetching Chunks</h5>
+        <pre><code>
+      function fetchChunk() {
+        if (!loading) {
+          loading = true;
+          worker.postMessage({ columns: ["name", "address"] });
+        }
+      }
+        </code></pre>
+        <p>
+          This function requests the next set of rows from the worker while
+          preventing simultaneous requests.
+        </p>
+
+        <h5>Infinite Scrolling</h5>
+        <pre><code>
+      document.querySelector("#table-container").addEventListener("scroll", function () {
+        const container = this;
+        if (container.scrollTop + container.clientHeight >= container.scrollHeight && !loading) {
+          fetchChunk();
+        }
+      });
+        </code></pre>
+        <p>
+          Detects when the user scrolls to the bottom and triggers a data fetch.
+        </p>
+
+        <h4>3. Web Worker (<code>TableWorker.js</code>)</h4>
+        <p>
+          The worker processes data in chunks and communicates with the main
+          thread to update the table.
+        </p>
+
+        <h5>Initialization</h5>
+        <pre><code>
+      self.onmessage = async function (event) {
+        const { payload, columns } = event.data;
+      
+        if (payload) {
+          dataPayload = payload;
+          await resetCache();
+          postMessage({ status: "initialized", totalRows: dataPayload.length });
+          fetchNextChunk(columns, 0);
+        }
+      };
+        </code></pre>
+        <p>
+          The worker stores the dataset, resets any cached state, and sends an
+          initialization message to the main thread.
+        </p>
+
+        <h5>Fetching the Next Chunk</h5>
+        <pre><code>
+      async function fetchNextChunk(columns, currentIndex) {
+        if (currentIndex >= dataPayload.length) {
+          postMessage({ status: "completed" });
+          return;
+        }
+      
+        const chunk = dataPayload.slice(currentIndex, currentIndex + chunkSize);
+        currentIndex += chunkSize;
+      
+        await updateCache(currentIndex);
+        const tableBody = generateTableBody(chunk, columns);
+        postMessage({ status: "success", tableBody });
+      }
+        </code></pre>
+        <p>
+          This function retrieves the next set of rows and sends them back to
+          the main thread as HTML.
+        </p>
+
+        <h5>Cache Management</h5>
+        <pre><code>
+      async function resetCache() {
+        const cache = await caches.open("worker-cache");
+        await cache.delete("currentIndex");
+      }
+      
+      async function updateCache(index) {
+        const cache = await caches.open("worker-cache");
+        const response = new Response(JSON.stringify(index));
+        await cache.put("currentIndex", response);
+      }
+      
+      async function getCachedIndex() {
+        const cache = await caches.open("worker-cache");
+        const response = await cache.match("currentIndex");
+        return response ? await response.json() : 0;
+      }
+        </code></pre>
+        <p>
+          The worker uses the <code>Cache API</code> to track the current index
+          for seamless chunk loading.
+        </p>
+
+        <h5>HTML Generation</h5>
+        <pre><code>
+      function generateTableBody(chunk, columns) {
+        return chunk
+        .map((row) =>
+            `<tr>${columns
+                .map((col) => `<td>${row[col] || ""}</td>`)
+                .join("")}</tr>`
+        )
+        .join("");
+      }
+        </code></pre>
+        <p>Converts each data chunk into an HTML string for the table.</p>
+      </div>
     </div>
 
     <script
