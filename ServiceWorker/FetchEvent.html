@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch Event Example</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Service Workers</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="./Events.html">Events List</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <p>
+        This is used to simulate the working of fetch event. When you put a url
+        and click on submit. It will simulate a network request and if the data
+        is found on the cache it retrieves it and sends it back otherwise it
+        sends back the response from the server.
+      </p>
+      <div class="mb-3">
+        <label for="urlInput" class="form-label">Enter URL:</label>
+        <input
+          type="text"
+          value="https://example.com"
+          class="form-control"
+          id="urlInput"
+          placeholder="Enter URL"
+        />
+      </div>
+      <button class="btn btn-primary" onclick="fetchData()">Submit</button>
+      <pre id="response" class="mt-3"></pre>
+
+      <h2>Fetch Event</h2>
+      <p class="text-muted">
+        <strong>Explanation:</strong> The fetch event is triggered whenever the
+        app makes a network request. This event allows the service worker to
+        intercept these requests and respond with custom responses. This can be
+        useful for serving cached content when offline, modifying requests, or
+        even simulating server responses.
+      </p>
+      <p>
+        <strong>Real-Life Use Case:</strong> Serve cached pages when offline and
+        fetch new content when online.
+      </p>
+      <h4>Requirements:</h4>
+      <ul>
+        <li>
+          The fetch event is fired when a fetch request is made by the
+          application.
+        </li>
+      </ul>
+      <p>
+        <strong>Note:</strong> The same URL called twice will be responded to by
+        the cache.
+      </p>
+      <h4>Detailed Explanation:</h4>
+      <p>
+        When a fetch request is made, the service worker can handle it in
+        several ways:
+      </p>
+      <ul>
+        <li>
+          <strong>Network First:</strong> Try to fetch the resource from the
+          network first, and if it fails, serve it from the cache.
+        </li>
+        <pre><code>
+// Network First
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
+});
+        </code></pre>
+        <li>
+          <strong>Cache First:</strong> Try to serve the resource from the cache
+          first, and if it is not available, fetch it from the network and cache
+          it for future use.
+        </li>
+        <pre><code>
+// Cache First
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request).then(networkResponse => {
+        caches.open('dynamic-cache').then(cache => {
+          cache.put(event.request, networkResponse.clone());
+        });
+        return networkResponse;
+      });
+    })
+  );
+});
+        </code></pre>
+        <li>
+          <strong>Cache Only:</strong> Serve the resource only from the cache,
+          without making any network requests.
+        </li>
+        <pre><code>
+// Cache Only
+self.addEventListener('fetch', event => {
+  event.respondWith(caches.match(event.request));
+});
+        </code></pre>
+        <li>
+          <strong>Network Only:</strong> Always fetch the resource from the
+          network, without using the cache.
+        </li>
+        <pre><code>
+// Network Only
+self.addEventListener('fetch', event => {
+  event.respondWith(fetch(event.request));
+});
+        </code></pre>
+        <li>
+          <strong>Stale-While-Revalidate:</strong> Serve the resource from the
+          cache while simultaneously fetching an updated version from the
+          network and updating the cache.
+        </li>
+        <pre><code>
+// Stale-While-Revalidate
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        caches.open('dynamic-cache').then(cache => {
+          cache.put(event.request, networkResponse.clone());
+        });
+        return networkResponse;
+      });
+      return response || fetchPromise;
+    })
+  );
+});
+        </code></pre>
+      </ul>
+    </div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("FetchWorker.js").then(
+          function (registration) {
+            console.log(
+              "ServiceWorker registration successful with scope: ",
+              registration.scope
+            );
+          },
+          function (err) {
+            console.log("ServiceWorker registration failed: ", err);
+          }
+        );
+      }
+
+      // Emulate a fetch call from the main thread
+      function fetchData() {
+        const url = document.getElementById("urlInput").value;
+        fetch(url, { method: "POST", mode: "no-cors" })
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("response").textContent = data;
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
