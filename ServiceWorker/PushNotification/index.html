@@ -1,0 +1,100 @@
+/index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Push Notification Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-push/3.4.5/web-push.min.js"></script>
+  </head>
+  <body>
+    <h1>Push Notification Demo</h1>
+    <button id="subscribe">Subscribe for Push Notifications</button>
+    <button id="sendNotification">Send Test Notification</button>
+    <div id="status"></div>
+
+    <script>
+      const vapidPublicKey =
+        "BLnXJJgtPpT6PqNHUxHfCebLzn3jlEYGI6s-xEzQBaFYJ8_HPGMna70Wa11qC6p1_gXoQWHJy8VIrPtHCTTXRc0";
+      const statusDiv = document.getElementById("status");
+
+      // Convert VAPID key to Uint8Array
+      function urlBase64ToUint8Array(base64String) {
+        const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+        const base64 = (base64String + padding)
+          .replace(/\-/g, "+")
+          .replace(/_/g, "/");
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      }
+
+      // Register Service Worker
+      if ("serviceWorker" in navigator && "PushManager" in window) {
+        navigator.serviceWorker
+          .register("service-worker.js")
+          .then((registration) => {
+            statusDiv.textContent = "Service Worker registered successfully";
+            return registration;
+          })
+          .catch((error) => {
+            statusDiv.textContent =
+              "Service Worker registration failed: " + error;
+          });
+      } else {
+        statusDiv.textContent = "Push notifications not supported";
+      }
+
+      // Handle subscription
+      document
+        .getElementById("subscribe")
+        .addEventListener("click", async () => {
+          try {
+            const registration = await navigator.serviceWorker.ready;
+            const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+
+            const subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: convertedVapidKey,
+            });
+
+            statusDiv.textContent =
+              "Successfully subscribed to push notifications";
+            console.log("Push Subscription:", subscription);
+          } catch (error) {
+            statusDiv.textContent = "Failed to subscribe: " + error;
+            console.error("Subscription error:", error);
+          }
+        });
+
+      // Handle sending test notification
+      document
+        .getElementById("sendNotification")
+        .addEventListener("click", async () => {
+          try {
+            const response = await fetch("http://localhost:5500/sendPush", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                title: "Test Push",
+                body: "Message to server: " + new Date().toLocaleString(),
+              }),
+            });
+
+            const result = await response.json();
+            statusDiv.textContent = result.message;
+          } catch (error) {
+            statusDiv.textContent = "Error: " + error.message;
+            console.error("Push error:", error);
+          }
+        });
+    </script>
+  </body>
+</html>
