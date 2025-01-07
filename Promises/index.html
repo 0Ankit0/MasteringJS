@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Promises in JavaScript</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Understanding Promises in JavaScript</h1>
+        <p class="lead">Promises are used to handle asynchronous operations in JavaScript. They are easy to manage when dealing with multiple asynchronous operations where callbacks can create callback hell leading to unmanageable code.</p>
+        
+        <h2>What is a Promise?</h2>
+        <p>A Promise is an object representing the eventual completion or failure of an asynchronous operation. It has three states:</p>
+        <ul>
+            <li><strong>Pending:</strong> Initial state, neither fulfilled nor rejected.</li>
+            <li><strong>Fulfilled:</strong> The operation completed successfully.</li>
+            <li><strong>Rejected:</strong> The operation failed.</li>
+        </ul>
+        
+        <h2>Creating a Promise</h2>
+        <pre><code class="language-javascript">
+const myPromise = new Promise((resolve, reject) => {
+    // asynchronous operation
+    let success = true;
+    if (success) {
+        resolve("Operation was successful!");
+    } else {
+        reject("Operation failed.");
+    }
+});
+        </code></pre>
+        
+        <h2>Using a Promise</h2>
+        <p>To handle the result of a promise, you can use the <code>.then()</code> and <code>.catch()</code> methods:</p>
+        <pre><code class="language-javascript">
+myPromise
+    .then((message) => {
+        console.log(message); // Operation was successful!
+    })
+    .catch((error) => {
+        console.error(error); // Operation failed.
+    });
+        </code></pre>
+        
+        <h2>Chaining Promises</h2>
+        <p>Promises can be chained to handle multiple asynchronous operations in sequence:</p>
+        <pre><code class="language-javascript">
+const firstPromise = new Promise((resolve, reject) => {
+    resolve("First promise resolved.");
+});
+
+firstPromise
+    .then((message) => {
+        console.log(message);
+        return new Promise((resolve, reject) => {
+            resolve("Second promise resolved.");
+        });
+    })
+    .then((message) => {
+        console.log(message);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+        </code></pre>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
