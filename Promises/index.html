@@ -1,73 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Understanding Promises in JavaScript</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Shared Workers</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" href="./AbortController.html"
+                >AbortController</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container mt-5">
-        <h1 class="text-center">Understanding Promises in JavaScript</h1>
-        <p class="lead">Promises are used to handle asynchronous operations in JavaScript. They are easy to manage when dealing with multiple asynchronous operations where callbacks can create callback hell leading to unmanageable code.</p>
-        
-        <h2>What is a Promise?</h2>
-        <p>A Promise is an object representing the eventual completion or failure of an asynchronous operation. It has three states:</p>
+      <div>
+        <h1>JavaScript Promises</h1>
+        <p>
+          A promise represents the eventual completion (or failure) of an
+          asynchronous operation and its resulting value.
+        </p>
+        <pre><code>
+    // Creating a new Promise
+    let myPromise = new Promise((resolve, reject) => {
+        // Simulating an asynchronous operation using setTimeout
+        setTimeout(() => {
+            let success = true; // Change this to false to simulate a failure
+            if (success) {
+                resolve("Operation was successful!"); // Resolving the promise
+            } else {
+                reject("Operation failed."); // Rejecting the promise
+            }
+        }, 1000);
+    });
+    
+    // Handling the resolved and rejected cases
+    myPromise.then(
+        (successMessage) => {
+            console.log(successMessage); // This will run if the promise is resolved
+        },
+        (errorMessage) => {
+            console.log(errorMessage); // This will run if the promise is rejected
+        }
+    ).catch((error) => {
+        console.log("Caught an error: " + error); // This will run if there's an error
+    });
+            </code></pre>
+        <h2>Explanation</h2>
         <ul>
-            <li><strong>Pending:</strong> Initial state, neither fulfilled nor rejected.</li>
-            <li><strong>Fulfilled:</strong> The operation completed successfully.</li>
-            <li><strong>Rejected:</strong> The operation failed.</li>
+          <li>
+            <strong>Promise Constructor:</strong>
+            <code>new Promise((resolve, reject) => { ... })</code> - Creates a
+            new promise and immediately executes the executor function.
+          </li>
+          <li>
+            <strong>Executor Function:</strong>
+            <code>(resolve, reject) => { ... }</code> - Contains the
+            asynchronous operation. In this case, a <code>setTimeout</code> is
+            used to simulate an async operation.
+          </li>
+          <li>
+            <strong>Resolve Function:</strong>
+            <code>resolve("Operation was successful!");</code> - Called when the
+            operation is successful.
+          </li>
+          <li>
+            <strong>Reject Function:</strong>
+            <code>reject("Operation failed.");</code> - Called when the
+            operation fails.
+          </li>
+          <li>
+            <strong>Then Method:</strong>
+            <code
+              >myPromise.then((successMessage) => { ... }, (errorMessage) => {
+              ... });</code
+            >
+            - Handles the resolved and rejected cases. The first function is
+            called if the promise is resolved, and the second function is called
+            if the promise is rejected.
+          </li>
+          <li>
+            <strong>Catch Method:</strong>
+            <code>.catch((error) => { ... });</code> - Handles any errors that
+            occur during the execution of the promise.
+          </li>
         </ul>
-        
-        <h2>Creating a Promise</h2>
-        <pre><code class="language-javascript">
-const myPromise = new Promise((resolve, reject) => {
-    // asynchronous operation
-    let success = true;
-    if (success) {
-        resolve("Operation was successful!");
-    } else {
-        reject("Operation failed.");
-    }
-});
-        </code></pre>
-        
-        <h2>Using a Promise</h2>
-        <p>To handle the result of a promise, you can use the <code>.then()</code> and <code>.catch()</code> methods:</p>
-        <pre><code class="language-javascript">
-myPromise
-    .then((message) => {
-        console.log(message); // Operation was successful!
-    })
-    .catch((error) => {
-        console.error(error); // Operation failed.
+        <h2>Detailed Information</h2>
+        <p>
+          Promises are a way to handle asynchronous operations in JavaScript.
+          They provide a cleaner, more flexible alternative to traditional
+          callback-based approaches.
+        </p>
+        <h3>Creating a Promise</h3>
+        <p>
+          To create a promise, use the <code>new Promise</code> constructor,
+          which takes an executor function as an argument. The executor function
+          receives two arguments: <code>resolve</code> and <code>reject</code>.
+        </p>
+        <pre><code>
+    // Example of creating a promise
+    let myPromise = new Promise((resolve, reject) => {
+        // Asynchronous operation
+        setTimeout(() => {
+            let success = true;
+            if (success) {
+                resolve("Operation was successful!");
+            } else {
+                reject("Operation failed.");
+            }
+        }, 1000);
     });
-        </code></pre>
-        
-        <h2>Chaining Promises</h2>
-        <p>Promises can be chained to handle multiple asynchronous operations in sequence:</p>
-        <pre><code class="language-javascript">
-const firstPromise = new Promise((resolve, reject) => {
-    resolve("First promise resolved.");
-});
+            </code></pre>
+        <h3>Handling Promise Results</h3>
+        <p>
+          Use the <code>then</code> method to handle the resolved value of the
+          promise. The <code>then</code> method takes two arguments: a callback
+          function for the resolved case and another callback function for the
+          rejected case.
+        </p>
+        <pre><code>
+    // Handling the resolved and rejected cases
+    myPromise.then(
+        (successMessage) => {
+            console.log(successMessage); // This will run if the promise is resolved
+        },
+        (errorMessage) => {
+            console.log(errorMessage); // This will run if the promise is rejected
+        }
+    );
+            </code></pre>
 
-firstPromise
-    .then((message) => {
-        console.log(message);
-        return new Promise((resolve, reject) => {
-            resolve("Second promise resolved.");
-        });
-    })
-    .then((message) => {
-        console.log(message);
-    })
-    .catch((error) => {
-        console.error(error);
+        <h3>Handling Errors</h3>
+        <p>
+          Use the <code>catch</code> method to handle any errors that occur
+          during the execution of the promise. The <code>catch</code> method is
+          a shorthand for <code>.then(null, rejection)</code>.
+        </p>
+        <pre><code>
+    // Handling errors
+    myPromise.catch((error) => {
+        console.log("Caught an error: " + error);
     });
-        </code></pre>
+            </code></pre>
+        <h3>Chaining Promises</h3>
+        <p>
+          Promises can be chained to perform a sequence of asynchronous
+          operations.
+        </p>
+        <pre><code>
+        fetch('/api/user')
+          .then(response => response.json())
+          .then(user => {
+            console.log(user);
+            return fetch(`/api/posts?userId=${user.id}`);
+          })
+          .then(response => response.json())
+          .then(posts => {
+            console.log(posts);
+          })
+          .catch(error => {
+            console.log("Caught an error: " + error);
+          })
+          .finally(() => {
+            console.log("All operations completed");
+          });
+                </code></pre>
+
+        <h3>Promise Handling Methods</h3>
+        <p>JavaScript provides several methods to handle multiple promises:</p>
+        <h4>Promise.all</h4>
+        <p>
+          The <code>Promise.all</code> method takes an array of promises and
+          returns a single promise that resolves when all of the promises in the
+          array have resolved, or rejects with the reason of the first promise
+          that rejects.
+        </p>
+        <p>
+          <strong>Use Case:</strong> Fetching data from multiple APIs
+          simultaneously and processing the results together.
+        </p>
+        <pre><code>
+        const fetchUser = fetch('/api/user');
+        const fetchPosts = fetch('/api/posts');
+        const fetchComments = fetch('/api/comments');
+    
+        Promise.all([fetchUser, fetchPosts, fetchComments])
+          .then(async ([userResponse, postsResponse, commentsResponse]) => {
+            const user = await userResponse.json();
+            const posts = await postsResponse.json();
+            const comments = await commentsResponse.json();
+            console.log({ user, posts, comments });
+          })
+          .catch((error) => {
+            console.log("Caught an error: " + error);
+          });
+                </code></pre>
+
+        <h4>Promise.race</h4>
+        <p>
+          The <code>Promise.race</code> method returns a promise that resolves
+          or rejects as soon as one of the promises in the array resolves or
+          rejects, with the value or reason from that promise.
+        </p>
+        <p>
+          <strong>Use Case:</strong> Implementing a timeout for an API request.
+        </p>
+        <pre><code>
+        const fetchWithTimeout = (url, timeout) => {
+          const fetchPromise = fetch(url);
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timed out')), timeout)
+          );
+    
+          return Promise.race([fetchPromise, timeoutPromise]);
+        };
+    
+        fetchWithTimeout('/api/data', 5000)
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.log("Caught an error: " + error));
+                </code></pre>
+
+        <h4>Promise.allSettled</h4>
+        <p>
+          The <code>Promise.allSettled</code> method returns a promise that
+          resolves after all of the given promises have either resolved or
+          rejected, with an array of objects that each describe the outcome of
+          each promise.
+        </p>
+        <p>
+          <strong>Use Case:</strong> Fetching data from multiple APIs and
+          processing all results, regardless of whether some requests fail.
+        </p>
+        <pre><code>
+        const fetchUser = fetch('/api/user');
+        const fetchPosts = fetch('/api/posts');
+        const fetchComments = fetch('/api/comments');
+    
+        Promise.allSettled([fetchUser, fetchPosts, fetchComments])
+          .then(async (results) => {
+            const user = results[0].status === 'fulfilled' ? await results[0].value.json() : null;
+            const posts = results[1].status === 'fulfilled' ? await results[1].value.json() : [];
+            const comments = results[2].status === 'fulfilled' ? await results[2].value.json() : [];
+            console.log({ user, posts, comments });
+          });
+                </code></pre>
+
+        <h4>Promise.any</h4>
+        <p>
+          The <code>Promise.any</code> method returns a promise that resolves as
+          soon as any of the promises in the array resolves, with the value of
+          the resolved promise. If all of the given promises are rejected, it
+          returns a promise that is rejected with an
+          <code>AggregateError</code>.
+        </p>
+        <p>
+          <strong>Use Case:</strong> Fetching data from multiple sources and
+          using the first successful response.
+        </p>
+        <pre><code>
+        const fetchFromSource1 = fetch('/api/source1');
+        const fetchFromSource2 = fetch('/api/source2');
+        const fetchFromSource3 = fetch('/api/source3');
+    
+        Promise.any([fetchFromSource1, fetchFromSource2, fetchFromSource3])
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.log("Caught an error: " + error));
+                </code></pre>
+      </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>

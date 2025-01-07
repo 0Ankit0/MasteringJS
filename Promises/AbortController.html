@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding Promises in JavaScript</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Shared Workers</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" href="./AbortController.html"
+                >AbortController</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <div class="text-center">
+        <button id="sendRequest" class="btn btn-primary">Send Request</button>
+        <button id="cancelRequest" class="btn btn-danger">
+          Cancel Request
+        </button>
+      </div>
+
+      <div id="alertContainer" class="mt-4"></div>
+
+      <h2>Using AbortController to Cancel a Promise</h2>
+      <p>
+        The <code>AbortController</code> interface represents a controller
+        object that allows you to abort one or more DOM requests as and when
+        desired. It is particularly useful for canceling fetch requests.
+      </p>
+      <pre><code class="language-javascript">
+// Create an AbortController instance
+const controller = new AbortController();
+const signal = controller.signal;
+
+// Function that returns a promise which can be canceled
+function fetchData(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = () => resolve(xhr.responseText);
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.onabort = () => reject(new Error('Request aborted'));
+        xhr.send();
+
+        // Listen for the abort signal
+        signal.addEventListener('abort', () => {
+            xhr.abort();
+        });
+    });
+}
+
+// Usage
+const promise = fetchData('https://jsonplaceholder.typicode.com/posts');
+
+promise.then(data => {
+    console.log(data);
+}).catch(error => {
+    console.error(error);
+});
+
+// Cancel the promise
+controller.abort();
+        </code></pre>
+      <p>
+        In this example, we create an <code>AbortController</code> instance and
+        use its <code>signal</code> property to listen for abort events. When
+        <code>controller.abort()</code> is called, the request is aborted, and
+        the promise is rejected with an "Request aborted" error.
+      </p>
+      <p>Here's a simple explanation of what is going on:</p>
+      <ul>
+        <li>
+          We create an <code>AbortController</code> instance to control the
+          cancellation of the request.
+        </li>
+        <li>
+          We define a function <code>fetchData</code> that returns a promise.
+          This function makes an HTTP GET request using
+          <code>XMLHttpRequest</code>.
+        </li>
+        <li>
+          We attach an event listener to the <code>signal</code> of the
+          <code>AbortController</code>. If the signal is aborted, the request is
+          canceled, and the promise is rejected with an "Request aborted" error.
+        </li>
+        <li>
+          We call the <code>fetchData</code> function and handle the promise
+          with <code>then</code> and <code>catch</code> to log the result or
+          error.
+        </li>
+        <li>
+          We call <code>controller.abort()</code> to cancel the request and
+          trigger the abort event.
+        </li>
+      </ul>
+
+      <h2>Demo: AbortController with Buttons</h2>
+      <p>
+        Click "Send Request" to start a 5-second timer. Click "Cancel Request"
+        to abort the operation.
+      </p>
+
+      <script>
+        let controller;
+
+        document.getElementById("sendRequest").addEventListener("click", () => {
+          controller = new AbortController();
+          //   console.info("Controller", controller);
+
+          const signal = controller.signal;
+
+          //   console.info("Signal", signal);
+          const promise = new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(() => {
+              resolve("Request succeeded!");
+            }, 5000);
+
+            signal.addEventListener("abort", () => {
+              clearTimeout(timeoutId);
+              reject(new Error("Request aborted"));
+            });
+          });
+
+          promise
+            .then((message) => {
+              showAlert("success", message);
+            })
+            .catch((error) => {
+              showAlert("danger", error.message);
+            });
+        });
+
+        document
+          .getElementById("cancelRequest")
+          .addEventListener("click", () => {
+            if (controller) {
+              controller.abort();
+            }
+          });
+
+        function showAlert(type, message) {
+          const alertContainer = document.getElementById("alertContainer");
+          alertContainer.innerHTML = `
+                    <div class="alert alert-${type}" role="alert">
+                        ${message}
+                    </div>
+                `;
+        }
+      </script>
+    </div>
+  </body>
+</html>
