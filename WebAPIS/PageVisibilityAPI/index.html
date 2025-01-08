@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding Promises in JavaScript</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Shared Workers</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./liveChart.html">Live Chart</a>
+              </li>
+            </ul>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1>Page Visibility API</h1>
+
+      <audio
+        controls
+        src="https://mdn.github.io/webaudio-examples/audio-basics/outfoxing.mp3"
+      ></audio>
+      <p>
+        The Page Visibility API lets you know when a webpage is visible or
+        hidden to the user. This can be useful for saving resources or pausing
+        activities when the page is not visible.
+      </p>
+      <h2>Example</h2>
+      <pre><code>
+      // JavaScript code to handle page visibility changes
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          console.log('Page is hidden');
+          // Pause activities, save resources, etc.
+        } else {
+          console.log('Page is visible');
+          // Resume activities, reload data, etc.
+        }
+      });
+        </code></pre>
+      <h2>Components and States</h2>
+      <p>
+        The Page Visibility API consists of the following components and states:
+      </p>
+      <ul>
+        <li>
+          <strong>document.hidden:</strong> A boolean property that returns true
+          if the page is hidden, and false if it is visible.
+        </li>
+        <li>
+          <strong>document.visibilityState:</strong> A property that returns the
+          visibility state of the document. Possible values are:
+          <ul>
+            <li>
+              <code>visible</code>: The page content is at least partially
+              visible.
+            </li>
+            <li>
+              <code>hidden</code>: The page content is not visible to the user.
+            </li>
+            <li>
+              <code>prerender</code>: The page is being prerendered and is not
+              visible to the user (rarely used).
+            </li>
+            <li>
+              <code>unloaded</code>: The page is being unloaded from memory
+              (rarely used).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>visibilitychange event:</strong> An event that is fired when
+          the visibility state of the document changes.
+        </li>
+      </ul>
+      <h2>Use Cases</h2>
+      <ul>
+        <li>
+          <strong>Pause/Resume Media:</strong> Pause a video or audio when the
+          page is not visible and resume it when the page becomes visible again.
+        </li>
+        <li>
+          <strong>Save Resources:</strong> Stop animations or intensive
+          computations when the page is hidden to save CPU and battery.
+        </li>
+        <li>
+          <strong>Improve User Experience:</strong> Notify the user when they
+          return to the page about any updates or changes that occurred while
+          they were away.
+        </li>
+        <li>
+          <strong>Analytics:</strong> Track how much time users actually spend
+          viewing your page versus having it open in the background.
+        </li>
+      </ul>
+    </div>
+    <script type="text/javascript">
+      const audio = document.querySelector("audio");
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          audio.pause();
+        } else {
+          audio.play();
+        }
+      });
+    </script>
+  </body>
+</html>
