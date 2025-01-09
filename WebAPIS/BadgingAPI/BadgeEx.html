@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Badging API Example</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Badging API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="./BadgeEx.html"
+                >Badge Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1>Badging API Example</h1>
+      <p>
+        The Badging API allows web applications to set an application-wide
+        badge, shown in an operating-system-specific place associated with the
+        application (such as the shelf or home screen).
+      </p>
+
+      <h2>Requirements</h2>
+      <ul>
+        <li>
+          <strong>Browser Support:</strong> The Badging API is primarily
+          supported in Chromium-based browsers like Google Chrome and Microsoft
+          Edge.
+        </li>
+        <li>
+          <strong>Secure Context:</strong> The API can only be used in secure
+          contexts (i.e., over HTTPS).
+        </li>
+        <li>
+          <strong>Progressive Web App (PWA):</strong> The Badging API is most
+          effective when used in the context of a Progressive Web App (PWA) that
+          is installed on the user's device.
+        </li>
+        <li>
+          <strong>Permissions:</strong> The API does not require explicit user
+          permission, but the browser may impose its own restrictions or require
+          user interaction before allowing the badge to be set.
+        </li>
+        <li>
+          <strong>Platform Limitations:</strong> The appearance and behavior of
+          the badge can vary depending on the operating system and platform.
+        </li>
+      </ul>
+
+      <button id="enableBadge" class="btn btn-primary">Enable Badging</button>
+      <button id="clearBadge" class="btn btn-danger">Clear Badge</button>
+    </div>
+    <script>
+      document.getElementById("enableBadge").addEventListener("click", () => {
+        if ("setAppBadge" in navigator && location.protocol === "https:") {
+          navigator
+            .setAppBadge(5)
+            .then(() => {
+              console.log("Badge set successfully.");
+            })
+            .catch((error) => {
+              console.error("Failed to set badge:", error);
+            });
+        } else {
+          console.log(
+            "Badging API is not supported in this browser or not in a secure context."
+          );
+        }
+      });
+
+      document.getElementById("clearBadge").addEventListener("click", () => {
+        if ("clearAppBadge" in navigator) {
+          navigator.clearAppBadge().catch((error) => {
+            console.error("Failed to clear badge:", error);
+          });
+        } else {
+          console.log("Badging API is not supported in this browser.");
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          if ("setAppBadge" in navigator) {
+            navigator.setAppBadge(1).catch((error) => {
+              console.error("Failed to set badge:", error);
+            });
+          }
+        }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
