@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding CSS Custom Highlight API</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        mark {
+        background-color: #f06;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">CSS Custom Highlight API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./CustomHighlightExample.html"
+                >Custom Highlight Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1>CSS Custom Highlight API</h1>
+      <p>
+        The CSS Custom Highlight API allows developers to create custom text
+        highlights that are independent of the built-in `<mark>` or
+        selection-based highlights. These highlights can be styled using CSS
+        and can be applied to any text content on the page.
+      </p>
+
+      <h2>Key Components</h2>
+      <ul>
+        <li><strong>Highlight Registry:</strong> Manages highlight registrations</li>
+        <li><strong>Range:</strong> Defines the text segment to highlight</li>
+        <li><strong>HighlightRegistry.register():</strong> Registers new highlights</li>
+        <li><strong>::highlight():</strong> CSS pseudo-element for styling highlights</li>
+      </ul>
+
+      <h2>Methods & Properties</h2>
+      <ul>
+        <li><code>CSS.highlights</code>: The global highlight registry</li>
+        <li><code>register(name, highlight)</code>: Registers a new highlight</li>
+        <li><code>delete(name)</code>: Removes a highlight registration</li>
+        <li><code>clear()</code>: Removes all highlight registrations</li>
+      </ul>
+
+      <h2>Implementation Example</h2>
+      <pre><code class="language-javascript">
+// Create ranges for the text to highlight
+const range = new Range();
+range.setStart(textNode, 5);
+range.setEnd(textNode, 10);
+
+// Create a highlight
+const highlight = new Highlight(range);
+
+// Register the highlight
+CSS.highlights.set('my-highlight', highlight);
+
+// Style the highlight in CSS
+::highlight(my-highlight) {
+  background-color: yellow;
+  color: black;
+}
+      </code></pre>
+
+      <h2>Browser Support</h2>
+      <p>
+        The CSS Custom Highlight API is relatively new and currently supported in:
+      </p>
+      <ul>
+        <li>Chrome 105+</li>
+        <li>Edge 105+</li>
+        <li>Opera 91+</li>
+      </ul>
+
+      <div class="alert alert-info mt-4">
+        <strong>Note:</strong> This API is part of modern web platform features and may require
+        feature detection before use in production environments.
+      </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

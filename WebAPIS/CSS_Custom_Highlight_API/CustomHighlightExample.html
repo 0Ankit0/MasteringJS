@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search and Highlight Example</title>
+    <style>
+      ::highlight(search-results) {
+        background-color: #f06;
+        color: white;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      article {
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+      }
+
+      pre {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+
+      code {
+        font-family: Consolas, "Courier New", monospace;
+        color: #d63384;
+      }
+    </style>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">CSS Custom Highlight API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./CustomHighlightExample.html"
+                >Custom Highlight Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <!-- Input field for the search query -->
+      <h2>Example</h2>
+      <label>
+        Search within text:
+        <input id="query" type="text" placeholder="Type to search..." />
+      </label>
+
+      <!-- Article text to be searched -->
+      <article>
+        <p>
+          Maxime debitis hic, delectus perspiciatis laborum molestiae labore,
+          deleniti, quam consequatur iure veniam alias voluptas nisi quo.
+          Dolorem eaque alias, quo vel quas repudiandae architecto deserunt
+          quidem, sapiente laudantium nulla.
+        </p>
+        <p>
+          Maiores odit molestias, necessitatibus doloremque dolor illum
+          reprehenderit provident nostrum laboriosam iste, tempore perferendis!
+          Ab porro neque esse voluptas libero necessitatibus fugiat, ex, minus
+          atque deserunt veniam molestiae tempora? Vitae.
+        </p>
+        <p>
+          Dolorum facilis voluptate eaque eius similique ducimus dignissimos
+          assumenda quos architecto. Doloremque deleniti non exercitationem
+          rerum quam alias harum, nisi obcaecati corporis temporibus vero
+          sapiente voluptatum est quibusdam id ipsa.
+        </p>
+      </article>
+    </div>
+
+    <!-- Code Walkthrough Section -->
+    <div class="container mt-5">
+      <h2>Code Walkthrough</h2>
+
+      <!-- Step 1: DOM Element Selection -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 1: DOM Element Selection</h3>
+          <pre><code class="language-javascript">
+const query = document.getElementById("query");
+const article = document.querySelector("article");
+          </code></pre>
+          <p>
+            Here, we are selecting the DOM elements: the search input field and
+            the article element where the search will be performed.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2: Text Node Collection -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 2: Collecting All Text Nodes</h3>
+          <pre><code class="language-javascript">
+const treeWalker = document.createTreeWalker(
+  article,
+  NodeFilter.SHOW_TEXT
+);
+const allTextNodes = [];
+let currentNode = treeWalker.nextNode();
+while (currentNode) {
+  allTextNodes.push(currentNode);
+  currentNode = treeWalker.nextNode();
+}
+          </code></pre>
+          <p>
+            We use a TreeWalker to traverse through the article element and
+            collect all text nodes. This is needed to search the content inside
+            the article.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 3: Input Event Listener -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 3: Input Event Listener</h3>
+          <pre><code class="language-javascript">
+query.addEventListener("input", () => {
+  // Handle search functionality here
+});
+          </code></pre>
+          <p>
+            An event listener is added to the search input field to detect when
+            the user types something. This triggers the search functionality.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 4: Clear Previous Highlights -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 4: Clearing Previous Highlights</h3>
+          <pre><code class="language-javascript">
+CSS.highlights.clear();
+          </code></pre>
+          <p>
+            Before starting a new search, we clear any previous highlights that
+            may exist. This ensures the display is fresh for the current search.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 5: Process the Search Query -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 5: Processing the Search Query</h3>
+          <pre><code class="language-javascript">
+const str = query.value.trim().toLowerCase();
+if (!str) return;
+          </code></pre>
+          <p>
+            We grab the query entered by the user, trim any extra spaces, and
+            convert it to lowercase for case-insensitive searching. If the query
+            is empty, the search does not proceed.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 6: Finding Matching Text -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 6: Finding Matching Text</h3>
+          <pre><code class="language-javascript">
+const ranges = allTextNodes
+  .map((el) => {
+    return { el, text: el.textContent.toLowerCase() };
+  })
+  .map(({ text, el }) => {
+    const indices = [];
+    let startPos = 0;
+    while (startPos < text.length) {
+      const index = text.indexOf(str, startPos);
+      if (index === -1) break;
+      indices.push(index);
+      startPos = index + str.length;
+    }
+    return indices.map((index) => {
+      const range = new Range();
+      range.setStart(el, index);
+      range.setEnd(el, index + str.length);
+      return range;
+    });
+  });
+          </code></pre>
+          <p>
+            In this step, we search for all occurrences of the user's query in
+            the article text. For each match, we create a `Range` object, which
+            will help us highlight the matching text.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 7: Highlight the Matches -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3>Step 7: Highlight the Matches</h3>
+          <pre><code class="language-javascript">
+const searchResultsHighlight = new Highlight(...ranges.flat());
+CSS.highlights.set("search-results", searchResultsHighlight);
+          </code></pre>
+          <p>
+            Finally, we create a `Highlight` object containing all the matched
+            ranges and register it with the `CSS.highlights` API, which will
+            apply the defined highlight styles.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript code for implementing the search and highlight functionality
+
+      const query = document.getElementById("query");
+      const article = document.querySelector("article");
+
+      // Step 1: Collect all text nodes in the article
+      const treeWalker = document.createTreeWalker(
+        article,
+        NodeFilter.SHOW_TEXT
+      );
+      const allTextNodes = [];
+      let currentNode = treeWalker.nextNode();
+      while (currentNode) {
+        allTextNodes.push(currentNode);
+        currentNode = treeWalker.nextNode();
+      }
+
+      // Step 2: Add event listener for input changes
+      query.addEventListener("input", () => {
+        if (!CSS.highlights) {
+          article.textContent = "CSS Custom Highlight API not supported.";
+          return;
+        }
+
+        // Step 3: Clear previous highlights
+        CSS.highlights.clear();
+
+        const str = query.value.trim().toLowerCase();
+        if (!str) return;
+
+        // Step 4: Find and highlight matches
+        const ranges = allTextNodes
+          .map((el) => {
+            return { el, text: el.textContent.toLowerCase() };
+          })
+          .map(({ text, el }) => {
+            const indices = [];
+            let startPos = 0;
+            while (startPos < text.length) {
+              const index = text.indexOf(str, startPos);
+              if (index === -1) break;
+              indices.push(index);
+              startPos = index + str.length;
+            }
+            return indices.map((index) => {
+              const range = new Range();
+              range.setStart(el, index);
+              range.setEnd(el, index + str.length);
+              return range;
+            });
+          });
+
+        const searchResultsHighlight = new Highlight(...ranges.flat());
+        CSS.highlights.set("search-results", searchResultsHighlight);
+      });
+    </script>
+  </body>
+</html>
