@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding Broadcast Channel API in JavaScript</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Broadcast Channel API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="./BroadcastEx.html"
+                >Broadcast Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1>Broadcast Channel API</h1>
+      <button class="btn btn-primary" id="send-message">Send Message</button>
+
+      <p>
+        The Broadcast Channel API allows simple communication between browsing
+        contexts (such as tabs, iframes, web workers, and service workers) of
+        the same origin.
+      </p>
+
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>postMessage(message):</strong> Sends a message to all
+          BroadcastChannel objects listening to the channel.
+        </li>
+        <li>
+          <strong>close():</strong> Closes the BroadcastChannel object, ending
+          the connection to the channel.
+        </li>
+      </ul>
+
+      <h2>Implementation</h2>
+      <p>Below is an example of how to use the Broadcast Channel API:</p>
+      <pre><code class="language-javascript">
+// Create a new BroadcastChannel
+const channel = new BroadcastChannel('test_channel');
+
+// Listen for messages
+channel.onmessage = (event) => {
+  console.log('Received:', event.data);
+};
+
+// Send a message
+channel.postMessage('Hello, Broadcast Channel!');
+
+// Close the channel
+channel.close();
+      </code></pre>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+      // Page 1 script
+      const worker = new SharedWorker("shared-worker.js");
+      const broadcastChannel = new BroadcastChannel("shared-worker-channel");
+
+      const sendMessageButton = document.getElementById("send-message");
+      sendMessageButton.addEventListener("click", () => {
+        // Send a message to the worker
+        worker.port.postMessage("Message from Page 1");
+      });
+
+      // Listen for messages
+      broadcastChannel.onmessage = (event) => {
+        alert("Message received in Page 1:", event.data);
+      };
+
+      // Start communication
+      worker.port.start();
+    </script>
+  </body>
+</html>
