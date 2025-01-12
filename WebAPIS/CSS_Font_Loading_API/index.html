@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding CSS Font Loading API in JavaScript</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">CSS Font Loading API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="./FontLoadingEx.html"
+                >Font Loading Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1>CSS Font Loading API</h1>
+      <button class="btn btn-primary" id="load-font">Load Font</button>
+
+      <p>
+        The CSS Font Loading API provides a programmatic way to load and manage
+        fonts, allowing developers to dynamically load fonts and detect their
+        loading status.
+      </p>
+
+      <h2>Methods and Properties</h2>
+      <ul>
+        <li>
+          <strong>FontFace:</strong> Represents a single font face. You can use
+          it to define a font by providing a source and descriptors.
+        </li>
+        <li>
+          <strong>document.fonts:</strong> A FontFaceSet interface representing
+          the document's font collection. You can check font status and load
+          fonts.
+        </li>
+        <li>
+          <strong>FontFace.load():</strong> Loads a font defined by the
+          <code>FontFace</code> object.
+        </li>
+        <li>
+          <strong>FontFaceSet.ready:</strong> A promise that resolves when all
+          fonts in the document have loaded.
+        </li>
+      </ul>
+
+      <h2>Implementation</h2>
+      <p>Below is an example of how to use the CSS Font Loading API:</p>
+      <pre><code class="language-javascript">
+// Create a FontFace object
+const font = new FontFace('CustomFont', 'url(/path/to/font.woff2)');
+
+// Add it to the document
+document.fonts.add(font);
+
+// Load the font
+font.load().then(() => {
+  console.log('Font loaded successfully!');
+  document.body.style.fontFamily = 'CustomFont, sans-serif';
+}).catch((err) => {
+  console.error('Font failed to load:', err);
+});
+
+// Check the readiness of the font set
+document.fonts.ready.then(() => {
+  console.log('All fonts are ready');
+});
+      </code></pre>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+      // Page script
+      const loadFontButton = document.getElementById("load-font");
+      loadFontButton.addEventListener("click", async () => {
+        try {
+          // Create and load a new font
+          const font = new FontFace(
+            "DynamicFont",
+            "url(https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu4mxP.ttf)"
+          );
+          await font.load();
+
+          // Add font to document
+          document.fonts.add(font);
+          document.body.style.fontFamily = "DynamicFont, sans-serif";
+          //or you can also use variable in css and change the font-family in js
+          //document.documentElement.style.setProperty('--fontFamily', '"DynamicFont, sans-serif"');
+
+          alert("Font loaded and applied!");
+        } catch (error) {
+          console.error("Font loading failed:", error);
+        }
+      });
+
+      // Check readiness of fonts in the document
+      document.fonts.ready.then(() => {
+        console.log("All fonts are ready!");
+      });
+    </script>
+  </body>
+</html>

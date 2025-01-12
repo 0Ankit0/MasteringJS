@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Font Loading API Example</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container py-5">
+      <h1 class="text-center mb-4">CSS Font Loading API Example</h1>
+      <p class="text-muted text-center">
+        Below are dynamically generated icons based on the
+        <code>data-icon</code> attribute using the CSS Font Loading API.
+      </p>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <!-- Elements with data-icon attributes -->
+          <div class="bg-light p-3 rounded shadow-sm" data-icon="fa-heart">
+            Like
+          </div>
+          <div class="bg-light p-3 rounded shadow-sm" data-icon="fa-star">
+            Favorite
+          </div>
+          <div
+            class="bg-light p-3 rounded shadow-sm"
+            data-icon="fa-circle-check"
+          >
+            Success
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Load the Font Awesome font dynamically using the CSS Font Loading API
+      const fontFace = new FontFace(
+        "Font Awesome 6 Free",
+        "url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2)"
+      );
+
+      fontFace
+        .load()
+        .then((loadedFont) => {
+          // Add the loaded font to the document
+          document.fonts.add(loadedFont);
+
+          // Find all elements with the 'data-icon' attribute
+          document.querySelectorAll("[data-icon]").forEach((el) => {
+            const iconName = el.getAttribute("data-icon");
+            if (iconName) {
+              // Create a <span> element to hold the icon
+              const iconElement = document.createElement("span");
+              iconElement.className = `fa ${iconName}`; // Add Font Awesome classes
+              el.prepend(iconElement); // Add the icon before the text content
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Font loading failed:", error);
+        });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
