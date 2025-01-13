@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding Cookie Store API in JavaScript</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Cookie Store API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./CookieStoreAPIExample.html"
+                >Cookie Store Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1>Cookie Store API</h1>
+
+      <p>
+        The Cookie Store API provides a modern, asynchronous way to read, write,
+        and monitor cookies in the browser. It is more developer-friendly and
+        avoids some limitations of the traditional
+        <code>document.cookie</code> API, such as string manipulation and lack
+        of async support.
+      </p>
+      <h3>Interactive Example</h3>
+      <p>
+        Click the buttons below to interact with cookies using the Cookie Store
+        API:
+      </p>
+      <button class="btn btn-primary mb-2" id="set-cookie">Set Cookie</button>
+      <button class="btn btn-secondary mb-2" id="get-cookie">Get Cookie</button>
+      <button class="btn btn-danger mb-2" id="delete-cookie">
+        Delete Cookie
+      </button>
+
+      <div id="output" class="mt-3 p-3 border bg-light"></div>
+      <h2>Benefits of the Cookie Store API</h2>
+      <ul>
+        <li>
+          Asynchronous and Promise-based, which prevents blocking the main
+          thread.
+        </li>
+        <li>
+          More secure and avoids string concatenation errors common with
+          <code>document.cookie</code>.
+        </li>
+        <li>Supports observing changes to cookies using events.</li>
+        <li>
+          Improved readability and usability compared to traditional APIs.
+        </li>
+      </ul>
+
+      <h2>Methods and Properties</h2>
+      <ul>
+        <li>
+          <code>cookieStore.get(name)</code>: Returns a Promise resolving to a
+          cookie object for the given name.
+        </li>
+        <li>
+          <code>cookieStore.set()</code>: Sets a new cookie or updates an
+          existing cookie.
+        </li>
+        <li><code>cookieStore.delete()</code>: Deletes a cookie.</li>
+        <li>
+          <code>cookieStore.addEventListener()</code>: Listens for changes to
+          cookies.
+        </li>
+      </ul>
+
+      <h2>Example Usage</h2>
+      <pre><code class="language-javascript">
+// Add a cookie
+await cookieStore.set({
+  name: "example_cookie",
+  value: "Hello, World!",
+  expires: Date.now() + 3600 * 1000, // 1 hour from now
+});
+
+// Get the cookie value
+const cookie = await cookieStore.get("example_cookie");
+console.log(cookie?.value); // Output: Hello, World!
+
+// Delete the cookie
+await cookieStore.delete("example_cookie");
+      </code></pre>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+      // DOM Elements
+      const output = document.getElementById("output");
+
+      // Utility function to display messages
+      const displayMessage = (message, isError = false) => {
+        output.innerHTML = `<p class="${
+          isError ? "text-danger" : "text-success"
+        }">${message}</p>`;
+      };
+
+      // Set Cookie
+      document
+        .getElementById("set-cookie")
+        .addEventListener("click", async () => {
+          try {
+            await cookieStore.set({
+              name: "example_cookie",
+              value: "Hello, World!",
+              expires: Date.now() + 3600 * 1000, // Expires in 1 hour
+            });
+            displayMessage("Cookie set successfully!");
+          } catch (error) {
+            displayMessage("Failed to set cookie: " + error.message, true);
+          }
+        });
+
+      // Get Cookie
+      document
+        .getElementById("get-cookie")
+        .addEventListener("click", async () => {
+          try {
+            const cookie = await cookieStore.get("example_cookie");
+            if (cookie) {
+              displayMessage(`Cookie Value: ${cookie.value}`);
+            } else {
+              displayMessage("Cookie not found.", true);
+            }
+          } catch (error) {
+            displayMessage("Failed to get cookie: " + error.message, true);
+          }
+        });
+
+      // Delete Cookie
+      document
+        .getElementById("delete-cookie")
+        .addEventListener("click", async () => {
+          try {
+            await cookieStore.delete("example_cookie");
+            displayMessage("Cookie deleted successfully!");
+          } catch (error) {
+            displayMessage("Failed to delete cookie: " + error.message, true);
+          }
+        });
+    </script>
+  </body>
+</html>
