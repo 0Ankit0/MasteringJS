@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding Compression Stream API</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Compression Stream API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./CompressionStreamExample.html"
+                >Compression Stream Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1>Compression Stream API</h1>
+
+      <p>
+        The Compression Stream API allows web applications to compress and
+        decompress data streams directly in the browser, improving efficiency
+        and reducing bandwidth usage.
+      </p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li>
+          <b>Efficient Compression</b>: Compress data streams using algorithms
+          like gzip or deflate.
+        </li>
+        <li>
+          <b>Reduced Bandwidth Usage</b>: Minimize data transfer size over
+          networks.
+        </li>
+        <li>
+          <b>Streamlined Data Processing</b>: Handle large datasets more
+          effectively.
+        </li>
+      </ul>
+
+      <h2>Benefits</h2>
+      <ul>
+        <li>Improved performance by reducing network latency.</li>
+        <li>Supports various compression algorithms for flexibility.</li>
+        <li>Enhanced user experience with faster load times.</li>
+      </ul>
+
+      <h2>Methods and Properties</h2>
+      <ul>
+        <li>
+          <code>CompressionStream</code>: Represents a writable stream that
+          compresses data.
+        </li>
+        <li>
+          <code>DecompressionStream</code>: Represents a readable stream that
+          decompresses data.
+        </li>
+        <li>
+          <code>TransformStream</code>: Facilitates transformation of data
+          streams, including compression and decompression.
+        </li>
+      </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
