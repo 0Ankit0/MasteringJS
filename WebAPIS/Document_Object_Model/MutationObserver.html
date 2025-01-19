@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding MutationObserver</title>
+    <!-- Bootstrap CDN for styling -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="./index.html">DOM Tutorial</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="./DomParser.html">DomParser</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./MutationObserver.html"
+                >MutationObserver</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./ResizeObserver.html"
+                >ResizeObserver</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./IntersectionObserver.html"
+                >IntersectionObserver</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1 class="text-center">Understanding <code>MutationObserver</code></h1>
+      <p class="lead text-center">
+        An explanation, its usage, and real-life web development examples
+      </p>
+
+      <!-- Explanation Section -->
+      <div class="card mb-5">
+        <div class="card-header fs-3">
+          What is <code>MutationObserver</code>?
+        </div>
+        <div class="card-body">
+          <p>
+            <strong><code>MutationObserver</code></strong> is a built-in
+            JavaScript object that allows you to watch for changes in the DOM
+            (Document Object Model) of a web page. It listens for changes in the
+            structure of the DOM, including changes to attributes, child
+            elements, or text content, and triggers a callback when such changes
+            occur.
+          </p>
+          <p>
+            This is especially useful for dynamically handling content updates
+            and reacting to DOM changes without the need for complex or
+            resource-heavy polling mechanisms.
+          </p>
+        </div>
+      </div>
+      <div class="card mb-5">
+        <div class="card-header fs-3">
+          <code>MutationObserver</code> Parameters
+        </div>
+        <div class="card-body">
+          <h5>1. <code>callback</code> (Function)</h5>
+          <p>
+            The <code>callback</code> function is triggered when a mutation
+            occurs. It receives two arguments:
+          </p>
+          <ul>
+            <li>
+              <strong>mutationsList</strong> — A list of
+              <code>MutationRecord</code> objects representing all the mutations
+              that occurred.
+            </li>
+            <li>
+              <strong>observer</strong> — The
+              <code>MutationObserver</code> instance that triggered the
+              callback.
+            </li>
+          </ul>
+
+          <h5>2. <code>options</code> (Object)</h5>
+          <p>
+            The <code>options</code> object can include the following properties
+            to specify what types of changes to observe:
+          </p>
+          <ul>
+            <li>
+              <strong><code>childList</code></strong> (<code>boolean</code>) —
+              Set to <code>true</code> to observe when child nodes are added or
+              removed.
+            </li>
+            <li>
+              <strong><code>attributes</code></strong> (<code>boolean</code>) —
+              Set to <code>true</code> to observe changes to attributes of the
+              element.
+            </li>
+            <li>
+              <strong><code>subtree</code></strong> (<code>boolean</code>) — Set
+              to <code>true</code> to observe changes in the entire subtree
+              (descendants) of the target node.
+            </li>
+            <li>
+              <strong><code>characterData</code></strong> (<code>boolean</code>)
+              — Set to <code>true</code> to observe changes to the text content
+              of a node.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- What It Does Section -->
+      <div class="card mb-5">
+        <div class="card-header fs-3">
+          What Does <code>MutationObserver</code> Do?
+        </div>
+        <div class="card-body">
+          <p>
+            <strong><code>MutationObserver</code></strong> listens for changes
+            in the DOM and fires a callback function when the changes occur. For
+            example, it can track:
+          </p>
+          <ul>
+            <li>Added or removed child elements.</li>
+            <li>Changes to element attributes (like class or style).</li>
+            <li>Text content changes.</li>
+          </ul>
+          <p>
+            This makes it very useful for web apps that require dynamic updates
+            based on DOM modifications, such as single-page applications (SPAs),
+            form validation, or live content updates.
+          </p>
+        </div>
+      </div>
+
+      <!-- Use Cases in Real-Life Web Development -->
+      <div class="card mb-5">
+        <div class="card-header fs-3">
+          Use Cases in Real-Life Web Development
+        </div>
+        <div class="card-body">
+          <h5>1. Monitoring Dynamic Content</h5>
+          <p>
+            Many modern websites and web applications update content
+            dynamically, such as social media sites or news websites. The
+            <code>MutationObserver</code> can be used to monitor these changes
+            and automatically refresh or adjust content on the page without
+            requiring the entire page to reload.
+          </p>
+          <p>
+            <strong>Example:</strong> A news website could use
+            <code>MutationObserver</code> to update the displayed "latest
+            article" every time a new article is added to the DOM.
+          </p>
+
+          <h5>2. Form Validation and Real-time Feedback</h5>
+          <p>
+            In web forms, <code>MutationObserver</code> can be used to provide
+            real-time feedback as the user fills out the form. For example, if a
+            user selects an option that causes a field to become required, the
+            observer can automatically trigger validation.
+          </p>
+          <p>
+            <strong>Example:</strong> A form input field might automatically
+            show an error message if the user types an invalid email address in
+            real-time.
+          </p>
+
+          <h5>3. Detecting Changes in a UI Component</h5>
+          <p>
+            Web developers can use <code>MutationObserver</code> to track
+            changes in the UI components of their page, such as when new items
+            are added to a shopping cart or product list. This helps in
+            dynamically updating the interface based on user interactions.
+          </p>
+          <p>
+            <strong>Example:</strong> An e-commerce site could use it to update
+            the cart icon whenever the number of items in the cart changes.
+          </p>
+        </div>
+      </div>
+
+      <!-- MutationObserver Example Code -->
+      <div class="card">
+        <div class="card-header fs-3">
+          Example of Using <code>MutationObserver</code>
+        </div>
+        <div class="card-body">
+          <p>
+            This example demonstrates how <code>MutationObserver</code> can be
+            used to monitor changes in the DOM. Every time a new item is added
+            to a container, the page will show a message indicating a new item
+            was added.
+          </p>
+
+          <div class="mb-4">
+            <button class="btn btn-primary" id="addItemBtn">Add Item</button>
+          </div>
+
+          <!-- Container to watch for changes -->
+          <div id="itemContainer" class="border p-3">
+            <h4>Items:</h4>
+          </div>
+
+          <div id="message" class="mt-3 text-success"></div>
+        </div>
+      </div>
+
+      <hr class="mt-5" />
+      <footer class="text-center py-4">
+        <p>&copy; 2025 Web Development Tutorials</p>
+      </footer>
+    </div>
+
+    <!-- Bootstrap Icons CDN (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+
+    <script>
+      // Select the container to observe for new child elements
+      const itemContainer = document.getElementById("itemContainer");
+      const messageDiv = document.getElementById("message");
+      const addItemBtn = document.getElementById("addItemBtn");
+
+      // Initialize the MutationObserver
+      const observer = new MutationObserver((mutationsList) => {
+        mutationsList.forEach((mutation) => {
+          if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                // Check if it's an element node
+                messageDiv.textContent = `New item added: ${node.textContent}`;
+              }
+            });
+          }
+        });
+      });
+
+      // Start observing the container for changes (i.e., added or removed children)
+      observer.observe(itemContainer, { childList: true });
+
+      // Event listener to add items when the button is clicked
+      addItemBtn.addEventListener("click", () => {
+        const newItem = document.createElement("div");
+        newItem.classList.add("alert", "alert-info", "mt-2");
+        newItem.textContent = `Item ${itemContainer.children.length + 1}`;
+        itemContainer.appendChild(newItem);
+      });
+    </script>
+  </body>
+</html>

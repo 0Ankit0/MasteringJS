@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Introduction to the Document Object Model (DOM)"
+    />
+    <title>Introduction to DOM</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      code {
+        background-color: #e9ecef;
+        padding: 2px 4px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="./index.html">DOM Tutorial</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="./DomParser.html">DomParser</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./MutationObserver.html"
+                >MutationObserver</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./ResizeObserver.html"
+                >ResizeObserver</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./IntersectionObserver.html"
+                >IntersectionObserver</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+      <section>
+        <h2 class="text-primary">What is the DOM?</h2>
+        <p>
+          The <strong>Document Object Model (DOM)</strong> is a programming
+          interface for web documents. It represents the structure of an HTML or
+          XML document as a tree of objects, making it possible to manipulate
+          the document dynamically with programming languages like JavaScript.
+        </p>
+      </section>
+
+      <section class="mt-4">
+        <h2 class="text-primary">Structure of the DOM</h2>
+        <p>
+          The DOM organizes the document into a tree structure, where each
+          element, attribute, and text becomes a node. Here’s an example of how
+          an HTML document translates into a DOM tree:
+        </p>
+        <h3>HTML Code</h3>
+        <pre>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Sample Page&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Hello, World!&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </pre
+        >
+        <h3>DOM Tree Representation</h3>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <code>html</code>
+            <ul>
+              <li>
+                <code>head</code>
+                <ul>
+                  <li><code>title</code>: "Sample Page"</li>
+                </ul>
+              </li>
+              <li>
+                <code>body</code>
+                <ul>
+                  <li><code>h1</code>: "Hello, World!"</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section class="mt-4">
+        <h2 class="text-primary">Key Components of the DOM</h2>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <strong>Document:</strong> The root node representing the entire
+            document.
+          </li>
+          <li class="list-group-item">
+            <strong>Element:</strong> HTML tags like <code>&lt;div&gt;</code>,
+            <code>&lt;p&gt;</code>, etc.
+          </li>
+          <li class="list-group-item">
+            <strong>Attribute:</strong> Additional information about elements
+            (e.g., <code>class</code>, <code>id</code>).
+          </li>
+          <li class="list-group-item">
+            <strong>Text:</strong> Content inside an element (e.g., "Hello,
+            World!").
+          </li>
+        </ul>
+      </section>
+
+      <section class="mt-4">
+        <h2 class="text-primary">How to Use the DOM</h2>
+        <p>
+          With JavaScript, you can manipulate the DOM to dynamically update the
+          content of a webpage. Below is an example:
+        </p>
+        <h3>JavaScript Example</h3>
+        <p>HTML:</p>
+        <pre>
+&lt;body&gt;
+    &lt;h1 id="title"&gt;Old Title&lt;/h1&gt;
+    &lt;button id="changeTitle" class="btn btn-primary"&gt;Change Title&lt;/button&gt;
+&lt;/body&gt;
+            </pre
+        >
+        <p>JavaScript:</p>
+        <pre>
+document.getElementById("changeTitle").addEventListener("click", function() {
+    const title = document.getElementById("title");
+    title.textContent = "New Title";
+});
+            </pre
+        >
+      </section>
+
+      <section class="mt-4">
+        <h2 class="text-primary">Benefits of Using the DOM</h2>
+        <ul class="list-group">
+          <li class="list-group-item">
+            Enables dynamic updates to web pages without reloading.
+          </li>
+          <li class="list-group-item">
+            Allows interaction with HTML elements programmatically.
+          </li>
+          <li class="list-group-item">
+            Works seamlessly with event listeners for user interaction.
+          </li>
+        </ul>
+      </section>
+
+      <section class="mt-4">
+        <h2 class="text-primary">Learn More</h2>
+        <p>
+          For more information about the DOM, visit the following resources:
+        </p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model"
+              target="_blank"
+              >MDN: Document Object Model</a
+            >
+          </li>
+          <li class="list-group-item">
+            <a
+              href="https://www.w3schools.com/js/js_htmldom.asp"
+              target="_blank"
+              >W3Schools: JavaScript HTML DOM</a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+      <p>© 2025 LearnDOM. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
