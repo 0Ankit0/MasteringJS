@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Example - Encoding API</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">QR Code Generator</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Back to Index</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+      <h1 class="mb-4">QR Code Generator using Encoding API</h1>
+      <p>
+        Enter text below to encode it into Base64 format using the Encoding API,
+        and then generate a QR code for the Base64 string. Below the form,
+        you’ll find a detailed explanation of why encoding is important for QR
+        code generation.
+      </p>
+
+      <form id="qr-form" class="mb-4">
+        <div class="mb-3">
+          <label for="text-input" class="form-label">Enter Text</label>
+          <input
+            type="text"
+            id="text-input"
+            class="form-control"
+            placeholder="Type something..."
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Generate QR Code</button>
+      </form>
+
+      <h3 class="mt-4">Base64-Encoded Text</h3>
+      <pre id="base64-output" class="bg-light p-3 rounded"></pre>
+
+      <h3 class="mt-4">Generated QR Code</h3>
+      <div id="qrcode" class="p-3 border rounded"></div>
+
+      <hr class="my-4" />
+
+      <h2>Why Encoding Is Important for QR Code Generation</h2>
+      <p>
+        QR codes can encode text directly, but encoding the data before
+        generating the QR code has specific advantages and use cases:
+      </p>
+
+      <h4>1. <strong>Ensures Compatibility</strong></h4>
+      <p>
+        Some data formats (like binary data or special characters) are not
+        directly compatible with QR code libraries. Encoding into Base64 ensures
+        the data is transformed into a safe, textual representation that can be
+        encoded reliably.
+      </p>
+
+      <h4>2. <strong>Prevents Errors with Special Characters</strong></h4>
+      <p>
+        Directly including special characters or non-UTF-8 data may cause
+        encoding errors or produce corrupt QR codes. Base64 encoding eliminates
+        these issues by standardizing the input.
+      </p>
+
+      <h4>3. <strong>Enables Data Interoperability</strong></h4>
+      <p>
+        If the data needs to be consumed by another system, Base64 ensures the
+        data remains intact during transmission. This is particularly useful for
+        sharing binary data or JSON objects in QR codes.
+      </p>
+
+      <h4>4. <strong>Prevents Security Issues</strong></h4>
+      <p>
+        Passing untrusted or unsanitized input directly into QR code generation
+        can lead to potential security risks, such as injection attacks.
+        Encoding the input helps mitigate such risks.
+      </p>
+
+      <h4>5. <strong>Facilitates Complex Data Embedding</strong></h4>
+      <p>
+        For applications like embedding images, files, or other binary content,
+        Base64 encoding is necessary to represent the data in a textual format
+        suitable for QR codes.
+      </p>
+
+      <h4>6. <strong>Direct Text Use Cases</strong></h4>
+      <p>
+        For simple text like "Hello, QR Code!", encoding may not be necessary,
+        but for complex use cases like sharing configuration files or tokens, it
+        is highly recommended.
+      </p>
+
+      <h3>What Happens Without Encoding?</h3>
+      <ul>
+        <li>Plain text input will work without encoding.</li>
+        <li>
+          Special characters or binary data might produce unreadable or invalid
+          QR codes.
+        </li>
+        <li>
+          Applications consuming the QR code might fail to interpret the raw
+          data correctly.
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script -->
+    <script>
+      const qrForm = document.getElementById("qr-form");
+      const textInput = document.getElementById("text-input");
+      const base64Output = document.getElementById("base64-output");
+      const qrCodeContainer = document.getElementById("qrcode");
+
+      qrForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        // Get the text input value
+        const text = textInput.value.trim();
+        if (!text) {
+          alert("Please enter some text to encode!");
+          return;
+        }
+
+        // Encode the text into Base64 using Encoding API
+        const encodedText = btoa(text); // btoa() encodes text to Base64
+        base64Output.textContent = encodedText;
+
+        // Clear previous QR code
+        qrCodeContainer.innerHTML = "";
+
+        // Dynamically create a canvas element for QR code
+        const canvas = document.createElement("canvas");
+        qrCodeContainer.appendChild(canvas);
+
+        // Generate QR code using the Base64 string
+        QRCode.toCanvas(canvas, encodedText, { width: 200 }, (error) => {
+          if (error) {
+            console.error("Error generating QR code:", error);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

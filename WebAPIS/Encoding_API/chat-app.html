@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App Example - Encoding API</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Chat App Example</a>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Back to Index</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+      <h1 class="mb-4">Chat App: Send Images as Base64 Encoded Strings</h1>
+      <p>
+        In this example, we'll allow users to send an image file as part of a
+        chat payload by encoding it into Base64 format using the Encoding API.
+        Below the form, you'll find an explanation of why we need to encode
+        images before sending them.
+      </p>
+
+      <!-- Chat Form -->
+      <form id="chat-form" class="mb-4">
+        <div class="mb-3">
+          <label for="image-input" class="form-label">Select Image</label>
+          <input type="file" id="image-input" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Send Image</button>
+      </form>
+
+      <h3 class="mt-4">Base64-Encoded Image</h3>
+      <pre id="base64-output" class="bg-light p-3 rounded"></pre>
+
+      <h3 class="mt-4">Chat Message</h3>
+      <div id="chat-output" class="border p-3 rounded"></div>
+
+      <hr class="my-4" />
+
+      <h2>Why Encoding Images is Important in Chat Apps</h2>
+      <p>
+        Sending images as part of chat messages can be tricky, especially if the
+        image is large. Here are the reasons why encoding an image into Base64
+        is beneficial:
+      </p>
+
+      <h4>1. <strong>Ensures Data Compatibility</strong></h4>
+      <p>
+        Image files contain binary data, which cannot be sent directly in a chat
+        message. Encoding the image as Base64 converts it into a text format,
+        making it compatible with systems that only support text-based
+        transmission.
+      </p>
+
+      <h4>2. <strong>Prevents Errors with Binary Data</strong></h4>
+      <p>
+        Directly transmitting binary image data can cause errors or corruption
+        in systems that are not designed to handle binary payloads. Base64
+        encoding transforms the image into a textual representation, eliminating
+        these issues.
+      </p>
+
+      <h4>
+        3. <strong>Enables Embedding Images in Text-Based Protocols</strong>
+      </h4>
+      <p>
+        Some chat apps or APIs might only accept text-based data (e.g., JSON).
+        Base64 encoding enables you to embed the image directly as part of the
+        payload, making it easy to send and receive images in such systems.
+      </p>
+
+      <h4>4. <strong>Prevents Security Issues</strong></h4>
+      <p>
+        Passing unencoded or raw binary data can open up security
+        vulnerabilities. Encoding the image helps sanitize the data and makes
+        sure that it adheres to the expected format.
+      </p>
+
+      <h4>5. <strong>Facilitates Cross-System Communication</strong></h4>
+      <p>
+        Base64 encoding allows image data to be transmitted between different
+        systems, services, or devices without worrying about encoding
+        mismatches. It ensures that the image remains intact during
+        transmission.
+      </p>
+
+      <h4>6. <strong>File Size Increase</strong></h4>
+      <p>
+        One downside to Base64 encoding is that the size of the image increases
+        by approximately 33%. However, this is often acceptable, especially when
+        the image is small, and the tradeoff is simplified transmission.
+      </p>
+
+      <h3>What Happens Without Encoding?</h3>
+      <ul>
+        <li>
+          Raw binary data could be rejected or corrupt when sent over a
+          text-based system.
+        </li>
+        <li>
+          Some systems might not handle binary data properly, causing errors
+          during transmission.
+        </li>
+        <li>
+          It could lead to compatibility issues between different platforms,
+          especially if the chat app is using APIs that expect text data.
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script -->
+    <script>
+      const chatForm = document.getElementById("chat-form");
+      const imageInput = document.getElementById("image-input");
+      const base64Output = document.getElementById("base64-output");
+      const chatOutput = document.getElementById("chat-output");
+
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        // Get the selected file
+        const file = imageInput.files[0];
+        if (!file) {
+          alert("Please select an image to send!");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          // Encode the image file as Base64
+          const encodedImage = e.target.result.split(",")[1]; // Remove "data:image/jpeg;base64," prefix
+
+          // Display the Base64 string
+          base64Output.textContent = encodedImage;
+
+          // Simulate sending a message (chat payload)
+          const message = `<strong>Image:</strong><br><img src="data:image/jpeg;base64,${encodedImage}" alt="Chat Image" class="img-fluid">`;
+          chatOutput.innerHTML = message;
+        };
+        reader.readAsDataURL(file); // Read the image as a Data URL (Base64 encoded)
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encoding API - Chat App Example</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Encoding API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="chat-app.html">Chat App Example</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="qr-example.html">QR Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+      <h1 class="mb-4">Understanding the Encoding API</h1>
+      <p>
+        The <strong>Encoding API</strong> allows developers to work with
+        different text encodings such as UTF-8 and Base64. It plays a vital role
+        in handling multilingual text, encoding binary data like images, and
+        ensuring compatibility between systems.
+      </p>
+
+      <h2>Key Use Cases</h2>
+      <ul>
+        <li>Handling text in various encodings (e.g., UTF-8, UTF-16).</li>
+        <li>Encoding/decoding binary data (e.g., images) to Base64.</li>
+        <li>Ensuring compatibility with internationalized text.</li>
+        <li>Preventing security vulnerabilities like XSS.</li>
+      </ul>
+
+      <h2>Code Examples</h2>
+
+      <h3>1. Encoding and Decoding Base64</h3>
+      <pre class="bg-light p-3">
+<code>
+// Encoding a string to Base64
+const text = "Hello, Encoding API!";
+const encodedText = btoa(text); // Encode to Base64
+console.log(encodedText); // Output: "SGVsbG8sIEVuY29kaW5nIEFQIQ=="
+
+// Decoding Base64 back to a string
+const decodedText = atob(encodedText);
+console.log(decodedText); // Output: "Hello, Encoding API!"
+</code>
+    </pre>
+
+      <h3>2. Encoding an Image to Base64</h3>
+      <pre class="bg-light p-3">
+<code>
+// Convert an image to Base64 using FileReader
+const fileInput = document.getElementById("image-input");
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Image = event.target.result;
+      console.log(base64Image); // Data URI with Base64-encoded image
+    };
+    reader.readAsDataURL(file);
+  }
+});
+</code>
+    </pre>
+
+      <h2>Real-World Applications</h2>
+      <ul>
+        <li>
+          <strong>Chat Apps:</strong> Encode images for secure transmission.
+        </li>
+        <li>
+          <strong>Email Clients:</strong> Attachments are Base64-encoded for
+          transport.
+        </li>
+        <li>
+          <strong>QR Code Generators:</strong> Encode data for QR code content.
+        </li>
+        <li>
+          <strong>Web APIs:</strong> Encode binary data for API compatibility.
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
