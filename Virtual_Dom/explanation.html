@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtual DOM Diff Example</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .example {
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .step {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+      }
+
+      .highlight {
+        color: #007bff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="./explanation.html">Explanation</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1 class="text-center">Understanding Virtual DOM Diffing & Patching</h1>
+
+      <div class="example">
+        <div class="section-title">
+          <a href="create-virtual-dom.html"
+            >Step 1: Create the Virtual DOM for the Old Node (Initial State)
+          </a>
+        </div>
+        <p>
+          The initial state of the HTML page is represented by a Virtual DOM,
+          which looks like the following:
+        </p>
+        <pre><code>
+const oldVNode = {
+    tag: "div",
+    props: { id: "app" },
+    children: [
+        { tag: "h1", props: {}, children: ["Hello, Virtual DOM!"] },
+        { tag: "p", props: {}, children: ["This is a simple example."] }
+    ]
+};
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <div class="section-title">
+          <a href="new-virtual-dom.html"
+            >Step 2: Create the Virtual DOM for the New Node (Updated Content)
+          </a>
+        </div>
+        <p>
+          When the content changes (e.g., text in the <code>h1</code> and
+          <code>p</code> tags), the new Virtual DOM looks like this:
+        </p>
+        <pre><code>
+const newVNode = {
+    tag: "div",
+    props: { id: "app" },
+    children: [
+        { tag: "h1", props: {}, children: ["Hello, Updated Virtual DOM!"] },  // Changed text
+        { tag: "p", props: {}, children: ["This content was updated from the server."] } // Updated text
+    ]
+};
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <div class="section-title">
+          Step 3: Identifying Differences (Diffing)
+        </div>
+        <p>
+          The diffing process compares the <code>oldVNode</code> and
+          <code>newVNode</code>. Here's a comparison:
+        </p>
+        <ul>
+          <li>
+            <strong>Changed:</strong> Text content of the <code>h1</code> tag
+            from "Hello, Virtual DOM!" to "Hello, Updated Virtual DOM!"
+          </li>
+          <li>
+            <strong>Changed:</strong> Text content of the <code>p</code> tag
+            from "This is a simple example." to "This content was updated from
+            the server."
+          </li>
+          <li>
+            <strong>No change:</strong> Other tags like <code>button</code> and
+            <code>script</code> remain the same.
+          </li>
+        </ul>
+        <p>
+          The diffing process identifies that only the text content of
+          <code>h1</code> and <code>p</code> tags needs to be updated.
+        </p>
+      </div>
+
+      <div class="example">
+        <div class="section-title">
+          Step 4: Apply the Changes (Patching the Real DOM)
+        </div>
+        <p>
+          When applying the changes, the only updates needed are for the text
+          content of the <code>h1</code> and <code>p</code> tags. The patching
+          process would look like this:
+        </p>
+        <pre><code>
+diffAndPatch(document.getElementById('app'), oldVNode, newVNode);
+        </code></pre>
+        <p>
+          The real DOM is updated with the new content without re-rendering the
+          entire page. Only the necessary changes are made.
+        </p>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Example: Changing a List Item</div>
+        <p>Consider the following change: Updating a list item's content.</p>
+        <pre><code>
+const oldVNode = {
+  tag: "ul",
+  props: {},
+  children: [
+    { tag: "li", props: {}, children: ["Item 1"] },
+    { tag: "li", props: {}, children: ["Item 2"] }
+  ]
+};
+
+const newVNode = {
+  tag: "ul",
+  props: {},
+  children: [
+    { tag: "li", props: {}, children: ["Item 1"] },
+    { tag: "li", props: {}, children: ["Updated Item 2"] } // Content changed
+  ]
+};
+        </code></pre>
+        <p>
+          In this example, the text content of the second list item is updated,
+          and the patching will only update the <code>li</code> element, leaving
+          other items unchanged.
+        </p>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Example: Adding a New Element</div>
+        <p>Now consider an example where a new list item is added:</p>
+        <pre><code>
+const oldVNode = {
+  tag: "ul",
+  props: {},
+  children: [
+    { tag: "li", props: {}, children: ["Item 1"] }
+  ]
+};
+
+const newVNode = {
+  tag: "ul",
+  props: {},
+  children: [
+    { tag: "li", props: {}, children: ["Item 1"] },
+    { tag: "li", props: {}, children: ["Item 2"] } // New item added
+  ]
+};
+        </code></pre>
+        <p>
+          In this case, the second <code>li</code> element is added, and the
+          patching process will append this element to the real DOM.
+        </p>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Example: Removing an Element</div>
+        <p>Lastly, let's remove an element:</p>
+        <pre><code>
+const oldVNode = {
+  tag: "ul",
+  props: {},
+  children: [
+    { tag: "li", props: {}, children: ["Item 1"] },
+    { tag: "li", props: {}, children: ["Item 2"] }
+  ]
+};
+
+const newVNode = {
+  tag: "ul",
+  props: {},
+  children: [
+    { tag: "li", props: {}, children: ["Item 1"] }
+  ]
+};
+        </code></pre>
+        <p>
+          In this case, the second <code>li</code> element is removed, and the
+          patching process will remove the element from the real DOM.
+        </p>
+      </div>
+
+      <div class="example">
+        <div class="section-title">
+          Step 5: Update Content Button (Outside Virtual DOM)
+        </div>
+        <p>
+          The <code>button</code> and <code>script</code> tags are outside the
+          <code>#app</code> div and are not part of the Virtual DOM updates.
+          They remain unaffected and do not change during the diffing and
+          patching process.
+        </p>
+        <pre><code>
+<button id="update-content">Update Content</button>
+<script src="script.js"></script>
+        </code></pre>
+      </div>
+
+      <hr />
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+    <script>
+      // Example functions for diffing and patching (simplified for demonstration purposes)
+      function diffAndPatch(parent, oldVNode, newVNode) {
+        console.log("Patching the real DOM with changes:", {
+          oldVNode,
+          newVNode,
+        });
+        // Simulate patching: just log changes (implement actual diffing logic as needed)
+      }
+    </script>
+  </body>
+</html>

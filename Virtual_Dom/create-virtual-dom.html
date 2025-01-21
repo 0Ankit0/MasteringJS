@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creating a Virtual DOM - Explanation</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 20px;
+      }
+      .code-block {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./explanation.html">Explanation</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="text-center">Creating a Virtual DOM - Explanation</h1>
+
+      <div class="section-title">
+        1. Function Definition: <code>createVirtualDOM(node)</code>
+      </div>
+      <p>
+        The <code>createVirtualDOM</code> function is designed to recursively
+        create a virtual representation of a real DOM node. Let's go through it
+        line by line.
+      </p>
+
+      <div class="code-block">
+        <pre><code>function createVirtualDOM(node) {</code></pre>
+      </div>
+      <p>
+        This is the function definition. The function takes a single parameter,
+        <code>node</code>, which represents a real DOM node passed from the
+        actual DOM tree.
+      </p>
+
+      <div class="section-title">2. Check if the Node is a Text Node</div>
+      <div class="code-block">
+        <pre><code>
+    if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent; // Return text content for text nodes
+    }
+        </code></pre>
+      </div>
+      <p>
+        This block checks whether the <code>node</code> is a text node. If it
+        is, the function returns the text content directly. Text nodes do not
+        require the same structure as element nodes, so we simply return their
+        content.
+      </p>
+
+      <div class="section-title">3. Create Virtual DOM Object</div>
+      <div class="code-block">
+        <pre><code>
+    const vNode = {
+        tag: node.tagName, // Store the tag name of the element
+        props: {}, // Store the element attributes (e.g., id, class)
+        children: [], // Store the children of the element
+    };
+        </code></pre>
+      </div>
+      <p>
+        Here, we create an object called <code>vNode</code>, which will hold the
+        virtual representation of the node. <br />- <code>tag</code>: Stores the
+        tag name of the element (e.g., <code>div</code>, <code>h1</code>).<br />
+        - <code>props</code>: An empty object to store attributes of the
+        element, such as <code>id</code>, <code>class</code>, and so on. <br />-
+        <code>children</code>: An empty array where the child nodes of the
+        current node will be stored.
+      </p>
+
+      <div class="section-title">
+        4. Adding Attributes to the Virtual DOM Node
+      </div>
+      <div class="code-block">
+        <pre><code>
+    for (const attr of node.attributes || []) {
+        vNode.props[attr.name] = attr.value;
+    }
+        </code></pre>
+      </div>
+      <p>
+        This loop iterates over the attributes of the <code>node</code> (such as
+        <code>id</code>, <code>class</code>, etc.) and adds them to the
+        <code>vNode.props</code> object. The
+        <code>node.attributes</code> provides a list of all attributes on the
+        element. <br />- <code>attr.name</code>: The name of the attribute
+        (e.g., <code>id</code>).<br />
+        - <code>attr.value</code>: The value of the attribute (e.g.,
+        <code>app</code>).
+      </p>
+
+      <div class="section-title">
+        5. Recursively Adding Child Nodes to the Virtual DOM
+      </div>
+      <div class="code-block">
+        <pre><code>
+    for (const child of node.childNodes) {
+        vNode.children.push(createVirtualDOM(child));
+    }
+        </code></pre>
+      </div>
+      <p>
+        This block of code processes the child nodes of the current
+        <code>node</code>. - It loops over <code>node.childNodes</code>, which
+        contains all the child nodes (whether element nodes, text nodes, etc.).
+        - For each child node, it recursively calls
+        <code>createVirtualDOM(child)</code>, converting each child node into
+        its own virtual representation and pushing it into the
+        <code>vNode.children</code> array.
+      </p>
+
+      <div class="section-title">6. Return the Virtual DOM Node</div>
+      <div class="code-block">
+        <pre><code>
+    return vNode;
+}
+        </code></pre>
+      </div>
+      <p>
+        After processing the current node and its children, we return the
+        <code>vNode</code> object. This object now contains a complete virtual
+        representation of the real DOM node.
+      </p>
+
+      <div class="section-title">
+        Example: Converting a Simple DOM to Virtual DOM
+      </div>
+      <p>Here is a simple example of what the output might look like:</p>
+      <div class="code-block">
+        <pre><code>
+// Real DOM
+&lt;div id="app"&gt;
+    &lt;h1&gt;Hello&lt;/h1&gt;
+    &lt;p&gt;World&lt;/p&gt;
+&lt;/div&gt;
+
+// Virtual DOM Representation
+{
+  tag: "div",
+  props: { id: "app" },
+  children: [
+    { tag: "H1", props: {}, children: ["Hello"] },
+    { tag: "P", props: {}, children: ["World"] }
+  ]
+}
+        </code></pre>
+      </div>
+
+      <div class="section-title">Conclusion</div>
+      <p>
+        The <code>createVirtualDOM</code> function is an essential step in
+        creating a virtual representation of a real DOM node. This process
+        involves creating an object structure that mirrors the real DOM, making
+        it possible to efficiently compare and update the DOM with minimal
+        performance overhead.
+      </p>
+    </div>
+  </body>
+</html>
