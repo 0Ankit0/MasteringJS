@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patching Process - Explanation</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 20px;
+      }
+      .code-block {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./explanation.html">Explanation</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="text-center">Patching Process - Explanation</h1>
+
+      <div class="section-title">What is Patching?</div>
+      <p>
+        The <strong>patching process</strong> involves applying the changes
+        identified during the diffing process to the real DOM. It ensures the
+        DOM is updated efficiently, minimizing re-rendering.
+      </p>
+
+      <div class="section-title">1. Adding New Nodes</div>
+      <p>
+        When a node is identified as new during the diffing process, it is
+        rendered and appended to the real DOM:
+      </p>
+      <div class="code-block">
+        <pre><code>
+if (!oldVNode && newVNode) {
+    const newNode = render(newVNode);
+    parent.appendChild(newNode);
+    return;
+}
+        </code></pre>
+      </div>
+      <p>
+        This ensures that only necessary new nodes are created and added to the
+        DOM, avoiding unnecessary renders.
+      </p>
+
+      <div class="section-title">2. Removing Nodes</div>
+      <p>
+        If a node exists in the old virtual DOM but not in the new virtual DOM,
+        it is removed from the real DOM:
+      </p>
+      <div class="code-block">
+        <pre><code>
+if (oldVNode && !newVNode) {
+    parent.removeChild(realNode);
+    return;
+}
+        </code></pre>
+      </div>
+      <p>
+        This keeps the real DOM clean by removing elements that are no longer
+        needed.
+      </p>
+
+      <div class="section-title">3. Replacing Nodes</div>
+      <p>
+        When two nodes differ in type or tag, the old node is replaced with a
+        new one:
+      </p>
+      <div class="code-block">
+        <pre><code>
+if (typeof oldVNode !== typeof newVNode || (oldVNode && oldVNode.tag !== newVNode.tag)) {
+    const newNode = render(newVNode);
+    parent.replaceChild(newNode, realNode);
+    return;
+}
+        </code></pre>
+      </div>
+      <p>This ensures structural changes in the DOM are handled correctly.</p>
+
+      <div class="section-title">4. Updating Text Nodes</div>
+      <p>
+        If a text node's content has changed, its
+        <code>textContent</code> property is updated:
+      </p>
+      <div class="code-block">
+        <pre><code>
+if (typeof newVNode === "string" && oldVNode !== newVNode) {
+    realNode.textContent = newVNode;
+    return;
+}
+        </code></pre>
+      </div>
+      <p>
+        Text updates are quick and efficient, involving only a single DOM
+        operation.
+      </p>
+
+      <div class="section-title">5. Updating Attributes</div>
+      <p>
+        When attributes differ between the old and new virtual DOM nodes, they
+        are updated on the real DOM node:
+      </p>
+      <div class="code-block">
+        <pre><code>
+for (const [key, value] of Object.entries(newVNode.props || {})) {
+    if (!oldVNode.props || oldVNode.props[key] !== value) {
+        realNode.setAttribute(key, value);
+    }
+}
+for (const key in oldVNode.props || {}) {
+    if (!(key in newVNode.props)) {
+        realNode.removeAttribute(key);
+    }
+}
+        </code></pre>
+      </div>
+      <p>
+        - Attributes that exist in the new virtual DOM but differ from the old
+        are updated.<br />
+        - Attributes that are no longer present are removed.
+      </p>
+
+      <div class="section-title">6. Recursive Patching for Children</div>
+      <p>
+        After updating the current node, the patching process continues
+        recursively for its children:
+      </p>
+      <div class="code-block">
+        <pre><code>
+            const oldChildren = oldVNode.children || [];
+            const newChildren = newVNode.children || [];
+            const maxLength = Math.max(oldChildren.length, newChildren.length);
+            for (let i = 0; i < maxLength; i++) {
+                diffAndPatch(realNode, oldChildren[i], newChildren[i], i);
+            }
+                    </code></pre>
+      </div>
+      <p>
+        This ensures that changes in nested structures are handled efficiently,
+        keeping the real DOM in sync with the virtual DOM.
+      </p>
+
+      <div class="section-title">Conclusion</div>
+      <p>
+        The patching process applies the minimal changes identified by the
+        diffing process to the real DOM. Together, these processes ensure
+        efficient and seamless updates to the user interface.
+      </p>
+    </div>
+  </body>
+</html>

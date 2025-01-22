@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diffing Process - Explanation</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 20px;
+      }
+      .code-block {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./explanation.html">Explanation</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="text-center">Diffing Process - Explanation</h1>
+
+      <div class="section-title">What is Diffing?</div>
+      <p>
+        The <strong>diffing process</strong> involves comparing the old virtual
+        DOM tree with the new virtual DOM tree to determine what has changed.
+        This minimizes the amount of work required to update the real DOM by
+        identifying only the differences.
+      </p>
+
+      <div class="section-title">1. Comparing Virtual DOM Nodes</div>
+      <p>
+        The <code>diffAndPatch</code> function first compares the current
+        virtual DOM nodes at a high level to identify changes:
+      </p>
+      <div class="code-block">
+        <pre><code>
+if (!oldVNode && newVNode) {
+    // New node added
+} else if (oldVNode && !newVNode) {
+    // Node removed
+} else if (typeof oldVNode !== typeof newVNode || oldVNode.tag !== newVNode.tag) {
+    // Node replaced
+}
+        </code></pre>
+      </div>
+      <p>
+        - If the old node doesn’t exist, it means the node is newly added.<br />
+        - If the new node doesn’t exist, it means the node is removed.<br />
+        - If the types or tags of the nodes are different, the node is replaced.
+      </p>
+
+      <div class="section-title">2. Text Node Comparison</div>
+      <p>
+        When the nodes are text nodes, their content is compared to determine if
+        an update is needed:
+      </p>
+      <div class="code-block">
+        <pre><code>
+if (typeof newVNode === "string" && oldVNode !== newVNode) {
+    // Update text content
+}
+        </code></pre>
+      </div>
+      <p>
+        This ensures text updates are handled efficiently without unnecessary
+        DOM operations.
+      </p>
+
+      <div class="section-title">3. Attribute and Children Diffing</div>
+      <p>
+        For element nodes, the attributes and children are compared recursively:
+      </p>
+      <div class="code-block">
+        <pre><code>
+// Attributes are compared key by key
+for (const [key, value] of Object.entries(newVNode.props || {})) {
+    if (!oldVNode.props || oldVNode.props[key] !== value) {
+        // Update or add attribute
+    }
+}
+
+// Compare and diff children recursively
+const maxLength = Math.max(oldChildren.length, newChildren.length);
+for (let i = 0; i < maxLength; i++) {
+    diffAndPatch(realNode, oldChildren[i], newChildren[i], i);
+}
+        </code></pre>
+      </div>
+      <p>
+        - Attributes are updated or removed by comparing their values between
+        <code>oldVNode</code> and <code>newVNode</code>.<br />
+        - Children are processed recursively, ensuring every level of the DOM
+        tree is accurately diffed.
+      </p>
+
+      <div class="section-title">Conclusion</div>
+      <p>
+        The diffing process focuses on identifying the minimal set of changes
+        required to transform the old virtual DOM into the new virtual DOM. Once
+        the differences are identified, they are applied to the real DOM using
+        the patching process.
+      </p>
+    </div>
+  </body>
+</html>

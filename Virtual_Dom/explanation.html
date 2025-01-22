@@ -116,7 +116,7 @@ const newVNode = {
 
       <div class="example">
         <div class="section-title">
-          Step 3: Identifying Differences (Diffing)
+          <a href="diffing.html"> Step 3: Identifying Differences (Diffing)</a>
         </div>
         <p>
           The diffing process compares the <code>oldVNode</code> and
@@ -145,7 +145,9 @@ const newVNode = {
 
       <div class="example">
         <div class="section-title">
-          Step 4: Apply the Changes (Patching the Real DOM)
+          <a href="patching.html"
+            >Step 4: Apply the Changes (Patching the Real DOM)</a
+          >
         </div>
         <p>
           When applying the changes, the only updates needed are for the text
@@ -242,22 +244,6 @@ const newVNode = {
           In this case, the second <code>li</code> element is removed, and the
           patching process will remove the element from the real DOM.
         </p>
-      </div>
-
-      <div class="example">
-        <div class="section-title">
-          Step 5: Update Content Button (Outside Virtual DOM)
-        </div>
-        <p>
-          The <code>button</code> and <code>script</code> tags are outside the
-          <code>#app</code> div and are not part of the Virtual DOM updates.
-          They remain unaffected and do not change during the diffing and
-          patching process.
-        </p>
-        <pre><code>
-<button id="update-content">Update Content</button>
-<script src="script.js"></script>
-        </code></pre>
       </div>
 
       <hr />
