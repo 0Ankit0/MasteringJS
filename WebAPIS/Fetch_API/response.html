@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding the Response Object</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .example {
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .highlight {
+        color: #007bff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Fetch API</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./request.html">Request Object</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="./response.html"
+              >Response Object</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1 class="text-center">
+        Understanding the <span class="highlight">Response</span> Object
+      </h1>
+      <p class="text-center">
+        The <code>Response</code> interface represents the response to a request
+        and provides various properties and methods to handle data effectively.
+      </p>
+
+      <!-- Instance Properties -->
+      <div class="example">
+        <div class="section-title">Instance Properties</div>
+
+        <h3>1. <code>Response.body</code></h3>
+        <p>
+          The <code>body</code> property is a
+          <strong>ReadableStream</strong> that allows you to process the
+          response body incrementally, especially useful for large data.
+        </p>
+        <p>
+          <strong>When to use:</strong> Use this for streaming scenarios, such
+          as downloading large files or processing chunks of data while they
+          arrive.
+        </p>
+        <pre><code>
+// Example: Processing a large file incrementally
+fetch('https://example.com/large-file')
+  .then(response => {
+    const reader = response.body.getReader();
+    reader.read().then(function process({ done, value }) {
+      if (done) {
+        console.log('Stream complete.');
+        return;
+      }
+      console.log('Received chunk:', new TextDecoder().decode(value));
+      return reader.read().then(process);
+    });
+  });
+        </code></pre>
+
+        <h3>2. <code>Response.bodyUsed</code></h3>
+        <p>
+          This boolean property indicates whether the <code>body</code> of the
+          response has already been consumed.
+        </p>
+        <p>
+          <strong>When to use:</strong> Use this to ensure the body is not
+          accessed multiple times, as doing so would cause an error.
+        </p>
+        <pre><code>
+// Example: Preventing multiple reads of the body
+fetch('https://example.com/data')
+  .then(response => {
+    if (response.bodyUsed) {
+      throw new Error('Body already consumed.');
+    }
+    return response.text();
+  });
+        </code></pre>
+
+        <h3>3. <code>Response.headers</code></h3>
+        <p>
+          The <code>headers</code> property gives you access to the
+          <strong>HTTP headers</strong> returned by the server.
+        </p>
+        <p>
+          <strong>When to use:</strong> Use it to inspect metadata like content
+          type, cache policies, or server-specific information.
+        </p>
+        <pre><code>
+// Example: Logging response headers
+fetch('https://example.com/data')
+  .then(response => {
+    for (const [key, value] of response.headers.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+  });
+        </code></pre>
+
+        <h3>4. <code>Response.ok</code></h3>
+        <p>
+          Indicates whether the response was successful (status code between 200
+          and 299).
+        </p>
+        <p>
+          <strong>When to use:</strong> Use it to check if the request succeeded
+          before proceeding with processing the data.
+        </p>
+        <pre><code>
+// Example: Handling response success
+fetch('https://example.com/data')
+  .then(response => {
+    if (response.ok) {
+      console.log('Request was successful.');
+    } else {
+      console.error('Request failed with status:', response.status);
+    }
+  });
+        </code></pre>
+
+        <h3>5. <code>Response.redirected</code></h3>
+        <p>
+          A boolean value indicating if the response is the result of a
+          redirect.
+        </p>
+        <p>
+          <strong>When to use:</strong> Use it when you want to verify if the
+          response has followed a redirect, especially for debugging
+          authentication flows.
+        </p>
+        <pre><code>
+// Example: Checking if a redirect occurred
+fetch('https://example.com/redirect')
+  .then(response => {
+    if (response.redirected) {
+      console.log('The response was redirected to:', response.url);
+    }
+  });
+        </code></pre>
+      </div>
+
+      <!-- Static Methods -->
+      <div class="example">
+        <div class="section-title">Static Methods</div>
+
+        <h3>1. <code>Response.error()</code></h3>
+        <p>Creates a new response object representing a network error.</p>
+        <p>
+          <strong>When to use:</strong> Use it when creating mock error
+          responses or handling network-related issues in service workers.
+        </p>
+        <pre><code>
+// Example: Creating a mock error response
+const errorResponse = Response.error();
+console.log(errorResponse.ok); // false
+        </code></pre>
+
+        <h3>2. <code>Response.redirect()</code></h3>
+        <p>
+          Returns a new <code>Response</code> object that redirects to a
+          specified URL.
+        </p>
+        <p>
+          <strong>When to use:</strong> Use it to programmatically handle
+          redirections, especially in service workers.
+        </p>
+        <pre><code>
+// Example: Redirecting to a new URL
+const redirectResponse = Response.redirect('https://example.com', 301);
+console.log(redirectResponse.status); // 301
+        </code></pre>
+      </div>
+
+      <!-- Custom Response Constructor -->
+      <div class="example">
+        <div class="section-title">
+          Creating Custom Responses with the <code>Response()</code> Constructor
+        </div>
+        <p>
+          You can create your own custom <code>Response</code> object using the
+          <code>Response()</code> constructor. This is useful when mocking API
+          responses or testing in controlled environments.
+        </p>
+        <pre><code>
+// Example: Creating a custom response
+const init = {
+  status: 200,
+  statusText: 'OK',
+  headers: { 'Content-Type': 'application/json' }
+};
+const body = JSON.stringify({ message: 'Custom response created!' });
+const customResponse = new Response(body, init);
+
+customResponse.json().then(data => console.log(data)); // { message: 'Custom response created!' }
+        </code></pre>
+        <p>
+          <strong>When to use:</strong> Use this when you need a mock response
+          or need to manipulate data in service workers before delivering it to
+          the client.
+        </p>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  </body>
+</html>

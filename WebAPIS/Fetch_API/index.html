@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch API Guide</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .example {
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .step {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+      }
+
+      .highlight {
+        color: #007bff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./request.html">Request Object</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./response.html">Response Object</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1 class="text-center">Understanding the Fetch API in JavaScript</h1>
+
+      <div class="example">
+        <div class="section-title">Introduction</div>
+        <p>
+          The Fetch API is a modern JavaScript feature that provides an easy and
+          flexible way to make HTTP requests and handle responses. It is built
+          on promises and is designed to be simpler than the traditional
+          <code>XMLHttpRequest</code>.
+        </p>
+        <pre><code>
+// Example of a simple fetch call:
+fetch('https://api.example.com/data')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Parameters of Fetch API</div>
+        <p>The Fetch API accepts two arguments:</p>
+        <ul>
+          <li>
+            <strong>Input (URL or Request Object):</strong> This specifies the
+            resource you want to fetch. It can be a string (URL) or a
+            <a href="./request.html">Request</a> object.
+          </li>
+          <li>
+            <strong>Options (Optional):</strong> This is an object containing
+            additional settings for the request, such as:
+            <ul>
+              <li>
+                <strong>method:</strong> The HTTP method (GET, POST, etc.).
+              </li>
+              <li>
+                <strong>headers:</strong> Custom headers as a key-value object.
+              </li>
+              <li>
+                <strong>body:</strong> The request payload for POST/PUT methods.
+              </li>
+              <li>
+                <strong>mode:</strong> CORS settings. Possible values are
+                <code>same-origin</code>, <code>cors</code>, or
+                <code>no-cors</code>.
+              </li>
+              <li>
+                <strong>credentials:</strong> Controls cookies (e.g., include).
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <pre><code>
+// Example with options:
+fetch('https://api.example.com/data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_TOKEN'
+  },
+  body: JSON.stringify({ key: 'value' })
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Handling Response</div>
+        <p>
+          The <a href="./response.html">Response</a> object represents the
+          result of the fetch call. You can access properties like:
+        </p>
+        <ul>
+          <li><strong>status:</strong> HTTP status code (e.g., 200, 404).</li>
+          <li>
+            <strong>statusText:</strong> Text corresponding to the status code.
+          </li>
+          <li>
+            <strong>ok:</strong> Boolean indicating whether the response was
+            successful.
+          </li>
+          <li>
+            <strong>methods to read content:</strong> Methods such as
+            <code>json()</code>, <code>text()</code>, <code>blob()</code>,
+            <code>arrayBuffer()</code>, and <code>formData()</code>.
+          </li>
+        </ul>
+        <pre><code>
+// Example handling response:
+fetch('https://api.example.com/data')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Error Handling</div>
+        <p>
+          Network errors or issues can occur when using the Fetch API. Use
+          <code>catch</code> to handle such errors.
+        </p>
+        <pre><code>
+// Example with error handling:
+fetch('https://api.example.com/data')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('HTTP error! status: ' + response.status);
+    }
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error('Fetch error:', error));
+        </code></pre>
+      </div>
+
+      <div class="example">
+        <div class="section-title">Examples of Using Fetch API</div>
+        <p>Here are a few additional examples of using the Fetch API:</p>
+        <div class="step">
+          <h5>Example: GET Request</h5>
+          <pre><code>
+fetch('https://api.example.com/users')
+  .then(response => response.json())
+  .then(users => console.log(users))
+  .catch(error => console.error('Error:', error));
+          </code></pre>
+        </div>
+
+        <div class="step">
+          <h5>Example: POST Request</h5>
+          <pre><code>
+fetch('https://api.example.com/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'John Doe', age: 30 })
+})
+  .then(response => response.json())
+  .then(user => console.log(user))
+  .catch(error => console.error('Error:', error));
+          </code></pre>
+        </div>
+
+        <div class="step">
+          <h5>Example: Handling JSON Response</h5>
+          <pre><code>
+fetch('https://api.example.com/products')
+  .then(response => response.json())
+  .then(products => console.table(products))
+  .catch(error => console.error('Error:', error));
+          </code></pre>
+        </div>
+      </div>
+      <hr />
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Object - Fetch API</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .mode-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .mode-table th,
+      .mode-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+
+      .mode-table th {
+        background-color: #f8f9fa;
+      }
+      .example {
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+      pre {
+        background-color: #272822;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .highlight {
+        color: #007bff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Fetch API</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="./request.html">Request Object</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./response.html">Response Object</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1 class="text-center">
+        Understanding the <span class="highlight">Request</span> Object
+      </h1>
+      <p class="text-center">
+        The <code>Request</code> object represents an HTTP request, allowing you
+        to customize, inspect, and handle various aspects of resource fetching.
+      </p>
+
+      <!-- Instance Properties -->
+      <div class="example">
+        <div class="section-title">Instance Properties</div>
+
+        <h3>1. <code>Request.body</code></h3>
+        <p>
+          A <code>ReadableStream</code> representing the body content of the
+          request.
+        </p>
+        <pre><code>
+// Example: Accessing the body stream
+const request = new Request('/endpoint', { body: 'Hello', method: 'POST' });
+console.log(request.body); // ReadableStream object
+        </code></pre>
+
+        <h3>2. <code>Request.bodyUsed</code></h3>
+        <p>
+          Indicates whether the body of the request has already been read. Once
+          used, a body cannot be read again.
+        </p>
+        <pre><code>
+// Example: Checking if the body is already used
+const request = new Request('/endpoint', { body: 'Hello', method: 'POST' });
+console.log(request.bodyUsed); // false
+        </code></pre>
+
+        <h3>3. <code>Request.cache</code></h3>
+        <p>
+          Describes the cache mode of the request (<code>default</code>,
+          <code>no-cache</code>, <code>reload</code>, etc.).
+        </p>
+        <table class="mode-table">
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>default</td>
+              <td>
+                Follows the default cache behavior based on cache headers like
+                Cache-Control.
+              </td>
+              <td><code>cache: 'default'</code></td>
+            </tr>
+            <tr>
+              <td>no-cache</td>
+              <td>
+                Sends the request to the server but checks the cache first for a
+                match and validates it.
+              </td>
+              <td><code>cache: 'no-cache'</code></td>
+            </tr>
+            <tr>
+              <td>reload</td>
+              <td>
+                Forces the browser to fetch the resource from the network,
+                ignoring the cache.
+              </td>
+              <td><code>cache: 'reload'</code></td>
+            </tr>
+            <tr>
+              <td>no-store</td>
+              <td>
+                Does not cache the request or its response, forcing fresh
+                requests every time.
+              </td>
+              <td><code>cache: 'no-store'</code></td>
+            </tr>
+            <tr>
+              <td>only-if-cached</td>
+              <td>
+                Only serves from the cache. Fails if the resource is not cached.
+              </td>
+              <td><code>cache: 'only-if-cached'</code></td>
+            </tr>
+            <tr>
+              <td>force-cache</td>
+              <td>
+                Uses the cache if available, falling back to the network if not.
+              </td>
+              <td><code>cache: 'force-cache'</code></td>
+            </tr>
+          </tbody>
+        </table>
+        <pre><code>
+// Example: Setting cache mode
+const request = new Request('/endpoint', { cache: 'no-cache' });
+console.log(request.cache); // "no-cache"
+        </code></pre>
+
+        <h3>4. <code>Request.credentials</code></h3>
+        <p>
+          Indicates whether credentials such as cookies or HTTP authentication
+          are included in the request. Possible values: <code>omit</code>,
+          <code>same-origin</code>, <code>include</code>.
+        </p>
+        <pre><code>
+// Example: Setting credentials
+const request = new Request('/endpoint', { credentials: 'include' });
+console.log(request.credentials); // "include"
+        </code></pre>
+
+        <h3>5. <code>Request.destination</code></h3>
+        <p>
+          A string describing the type of content being requested (e.g.,
+          <code>document</code>, <code>script</code>, etc.).
+        </p>
+        <pre><code>
+// Example: Checking the destination
+const request = new Request('/endpoint');
+console.log(request.destination); // e.g., "script"
+        </code></pre>
+
+        <h3>6. <code>Request.headers</code></h3>
+        <p>
+          Contains the <code>Headers</code> object associated with the request.
+        </p>
+        <pre><code>
+// Example: Accessing headers
+const request = new Request('/endpoint', {
+  headers: { 'Content-Type': 'application/json' },
+});
+console.log(request.headers.get('Content-Type')); // "application/json"
+        </code></pre>
+
+        <h3>7. <code>Request.integrity</code></h3>
+        <p>
+          Contains the subresource integrity value of the request (e.g.,
+          <code>sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=</code>).
+        </p>
+        <pre><code>
+// Example: Setting integrity
+const request = new Request('/endpoint', { integrity: 'sha256-...' });
+console.log(request.integrity); // "sha256-..."
+        </code></pre>
+
+        <h3>8. <code>Request.isHistoryNavigation</code></h3>
+        <p>
+          Indicates whether the request is a result of a history navigation.
+        </p>
+        <pre><code>
+// Example: Checking if it's a history navigation
+const request = new Request('/endpoint');
+console.log(request.isHistoryNavigation); // false
+        </code></pre>
+
+        <h3>9. <code>Request.keepalive</code></h3>
+        <p>
+          Indicates whether the browser will keep the request alive if the page
+          is unloaded.
+        </p>
+        <pre><code>
+// Example: Setting keepalive
+const request = new Request('/endpoint', { keepalive: true });
+console.log(request.keepalive); // true
+        </code></pre>
+
+        <h3>10. <code>Request.method</code></h3>
+        <p>
+          The HTTP method (e.g., <code>GET</code>, <code>POST</code>, etc.) used
+          in the request.
+        </p>
+        <pre><code>
+// Example: Checking the HTTP method
+const request = new Request('/endpoint', { method: 'POST' });
+console.log(request.method); // "POST"
+        </code></pre>
+
+        <h3>11. <code>Request.mode</code></h3>
+        <p>
+          Contains the mode of the request (<code>cors</code>,
+          <code>no-cors</code>, <code>same-origin</code>, etc.).
+        </p>
+        <pre><code>
+// Example: Setting the mode
+const request = new Request('/endpoint', { mode: 'cors' });
+console.log(request.mode); // "cors"
+        </code></pre>
+
+        <h3>12. <code>Request.url</code></h3>
+        <p>The URL of the resource being requested.</p>
+        <pre><code>
+// Example: Checking the request URL
+const request = new Request('https://example.com/api');
+console.log(request.url); // "https://example.com/api"
+        </code></pre>
+      </div>
+
+      <!-- Instance Methods -->
+      <div class="example">
+        <div class="section-title">Instance Methods</div>
+
+        <h3>1. <code>Request.clone()</code></h3>
+        <p>Creates a copy of the current <code>Request</code> object.</p>
+        <pre><code>
+// Example: Cloning a request
+const request = new Request('/endpoint', { body: 'Hello', method: 'POST' });
+const clonedRequest = request.clone();
+console.log(clonedRequest.method); // "POST"
+        </code></pre>
+
+        <h3>2. <code>Request.json()</code></h3>
+        <p>
+          Parses the request body as JSON and returns a promise that resolves
+          with the result.
+        </p>
+        <pre><code>
+// Example: Parsing JSON body
+const request = new Request('/endpoint', {
+  body: JSON.stringify({ name: 'John' }),
+  method: 'POST',
+});
+request.json().then((data) => console.log(data)); // { name: 'John' }
+        </code></pre>
+
+        <!-- Add other methods like Request.text(), Request.formData(), etc., similarly -->
+      </div>
+    </div>
+  </body>
+</html>
