@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas with Shapes and Text</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, sans-serif;
+      }
+      canvas {
+        border: 1px solid black;
+        cursor: crosshair;
+      }
+      .toolbar {
+        margin-bottom: 10px;
+      }
+      .toolbar button {
+        margin: 0 5px;
+        padding: 5px 10px;
+      }
+      #textInput {
+        position: absolute;
+        display: none;
+        border: none;
+        background: transparent;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <button id="pencil">Pencil</button>
+      <button id="line">Line</button>
+      <button id="rectangle">Rectangle</button>
+      <button id="circle">Circle</button>
+      <button id="hand">Hand (Move)</button>
+    </div>
+    <canvas id="canvas" width="800" height="500"></canvas>
+    <input type="text" id="textInput" />
+
+    <script src="script.js"></script>
+  </body>
+</html>
