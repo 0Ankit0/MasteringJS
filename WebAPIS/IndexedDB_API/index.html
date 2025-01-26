@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IndexedDB API - Detailed Explanation</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #2c3e50;
+      }
+      p {
+        margin-bottom: 10px;
+      }
+      code {
+        background-color: #f4f4f4;
+        padding: 4px;
+        border-radius: 3px;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 3px;
+        overflow-x: auto;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">IndexedDB API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="./index.html">IndexedDB</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./IndexedDBEx.html">CRUD Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h1>Understanding IndexedDB API</h1>
+      <p>
+        IndexedDB is a low-level, asynchronous database API for storing
+        structured data in the browser. Here's a detailed guide with examples
+        for each feature of the IndexedDB API.
+      </p>
+
+      <h2>1. Opening a Database</h2>
+      <p>
+        To open a database, use the <code>indexedDB.open()</code> method. It
+        takes two parameters:
+      </p>
+      <ul>
+        <li><code>dbName</code>: The name of the database.</li>
+        <li>
+          <code>version</code> (optional): The version number of the database.
+          Use this to manage schema updates.
+        </li>
+      </ul>
+      <pre><code>
+    // Open a database named 'MyDatabase'
+    const request = indexedDB.open('MyDatabase', 1);
+    
+    // Success handler
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        console.log('Database opened:', db);
+    };
+    
+    // Error handler
+    request.onerror = (event) => {
+        console.error('Database error:', event.target.error);
+    };
+    
+    // Upgrade handler (if version changes)
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        console.log('Upgrading database...');
+    };
+        </code></pre>
+
+      <h2>2. Creating Object Stores</h2>
+      <p>
+        An object store is where data is stored in IndexedDB. Use the
+        <code>db.createObjectStore()</code> method during the
+        <code>onupgradeneeded</code> event.
+      </p>
+      <p>Parameters:</p>
+      <ul>
+        <li><code>name</code>: Name of the object store.</li>
+        <li>
+          <code>options</code> (optional): An object specifying store options:
+          <ul>
+            <li>
+              <code>keyPath</code>: Defines the primary key for the store.
+            </li>
+            <li>
+              <code>autoIncrement</code>: If true, a key will be automatically
+              generated.
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <pre><code>
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+    
+        // Create an object store named 'users' with 'id' as the key
+        const userStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+    
+        console.log('Object store created:', userStore.name);
+    };
+        </code></pre>
+
+      <h2>3. Adding Data</h2>
+      <p>
+        Use the <code>add()</code> method to insert data into an object store.
+        You must initiate a transaction to interact with the database.
+      </p>
+      <p>Steps:</p>
+      <ul>
+        <li>
+          Create a transaction with
+          <code>db.transaction(storeName, mode)</code>.
+        </li>
+        <li>
+          Access the object store using
+          <code>transaction.objectStore(storeName)</code>.
+        </li>
+        <li>Call <code>add()</code> on the store.</li>
+      </ul>
+      <pre><code>
+    // Add a record to the 'users' object store
+    const transaction = db.transaction('users', 'readwrite');
+    const store = transaction.objectStore('users');
+    
+    const user = { id: 1, name: 'John Doe', age: 30 };
+    
+    store.add(user).onsuccess = () => {
+        console.log('User added:', user);
+    };
+        </code></pre>
+
+      <h2>4. Retrieving Data</h2>
+      <p>
+        To fetch data, use the <code>get()</code> or
+        <code>getAll()</code> methods:
+      </p>
+      <pre><code>
+    // Get a user by ID
+    store.get(1).onsuccess = (event) => {
+        console.log('User:', event.target.result);
+    };
+    
+    // Get all users
+    store.getAll().onsuccess = (event) => {
+        console.log('All users:', event.target.result);
+    };
+        </code></pre>
+
+      <h2>5. Updating Data</h2>
+      <p>
+        Use the <code>put()</code> method to update an existing record. If the
+        record does not exist, it will be created.
+      </p>
+      <pre><code>
+    // Update a user
+    store.put({ id: 1, name: 'Jane Doe', age: 35 }).onsuccess = () => {
+        console.log('User updated');
+    };
+        </code></pre>
+
+      <h2>6. Deleting Data</h2>
+      <p>
+        To delete a record, use the <code>delete()</code> method. To delete all
+        records, use <code>clear()</code>.
+      </p>
+      <pre><code>
+    // Delete a user by ID
+    store.delete(1).onsuccess = () => {
+        console.log('User deleted');
+    };
+    
+    // Clear all users
+    store.clear().onsuccess = () => {
+        console.log('All users deleted');
+    };
+        </code></pre>
+
+      <h2>7. Creating an Index</h2>
+      <p>
+        Indexes allow you to query data based on fields other than the primary
+        key. Use the <code>createIndex()</code> method during the
+        <code>onupgradeneeded</code> event.
+      </p>
+      <p>Parameters:</p>
+      <ul>
+        <li><code>name</code>: Name of the index.</li>
+        <li><code>keyPath</code>: The field(s) to index.</li>
+        <li>
+          <code>options</code>: Optional settings like <code>unique</code>.
+        </li>
+      </ul>
+      <pre><code>
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        const userStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+    
+        // Create an index on the 'name' field
+        userStore.createIndex('nameIndex', 'name', { unique: false });
+    };
+        </code></pre>
+
+      <h2>8. Using Transactions</h2>
+      <p>
+        Transactions control how you interact with the database. They ensure
+        atomicity (all operations succeed or fail together).
+      </p>
+      <p>To create a transaction:</p>
+      <ul>
+        <li>Use <code>db.transaction(storeNames, mode)</code>.</li>
+        <li>
+          <code>storeNames</code>: The name(s) of the object store(s) to access.
+        </li>
+        <li>
+          <code>mode</code>: The mode of the transaction (<code>readonly</code>
+          or <code>readwrite</code>).
+        </li>
+      </ul>
+      <pre><code>
+    // Create a readwrite transaction for 'users'
+    const transaction = db.transaction('users', 'readwrite');
+    transaction.oncomplete = () => {
+        console.log('Transaction completed');
+    };
+    transaction.onerror = (event) => {
+        console.error('Transaction error:', event.target.error);
+    };
+        </code></pre>
+
+      <h2>9. Example: Full Workflow</h2>
+      <p>
+        This example demonstrates opening a database, creating an object store,
+        adding data, and reading it:
+      </p>
+      <pre><code>
+    const request = indexedDB.open('MyDatabase', 1);
+    
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        const store = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+        store.createIndex('nameIndex', 'name', { unique: false });
+    };
+    
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        const transaction = db.transaction('users', 'readwrite');
+        const store = transaction.objectStore('users');
+    
+        // Add a user
+        store.add({ name: 'John Doe', age: 30 }).onsuccess = () => {
+            console.log('User added');
+        };
+    
+        // Retrieve all users
+        store.getAll().onsuccess = (event) => {
+            console.log('All users:', event.target.result);
+        };
+    };
+        </code></pre>
+
+      <h2>10. Error Handling</h2>
+      <p>
+        Always include error handling for requests, transactions, and database
+        operations to handle failures gracefully.
+      </p>
+      <pre><code>
+    // Error example
+    request.onerror = (event) => {
+        console.error('Database error:', event.target.error);
+    };
+        </code></pre>
+
+      <p>
+        With these examples, you should have a good understanding of how
+        IndexedDB works and how to use it effectively in your projects.
+      </p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
