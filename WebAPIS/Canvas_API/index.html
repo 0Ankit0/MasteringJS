@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Canvas API - Detailed Guide</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .section-heading {
+        margin-top: 30px;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+      }
+      code {
+        background-color: #f8f9fa;
+        padding: 3px;
+        border-radius: 3px;
+      }
+      #content {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+      }
+
+      canvas {
+        border: 2px solid #007bff;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Canvas API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <header class="text-center mt-5">
+        <h1>HTML Canvas API</h1>
+        <p class="lead">
+          A Detailed Guide with Methods, Examples, and Use Cases
+        </p>
+      </header>
+
+      <section class="mt-5">
+        <h2 class="section-heading">Introduction</h2>
+        <p>
+          The <strong>Canvas API</strong> in HTML5 provides a powerful way to
+          draw graphics on a web page using JavaScript. The
+          <code>&lt;canvas&gt;</code> element, combined with the Canvas API,
+          allows you to create complex images, animations, and game graphics.
+        </p>
+        <p>
+          This API allows developers to draw shapes, lines, text, images, and
+          manipulate pixels directly on the screen. The canvas element itself
+          doesn't render anything until JavaScript is used to tell it what to
+          draw.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Use Cases</h2>
+        <ul>
+          <li>
+            <strong>Game Development:</strong> Create 2D games with dynamic
+            graphics and animations.
+          </li>
+          <li>
+            <strong>Data Visualization:</strong> Render charts, graphs, and
+            interactive visualizations on the fly.
+          </li>
+          <li>
+            <strong>Image Manipulation:</strong> Edit images in the browser,
+            apply filters, and manipulate pixel data.
+          </li>
+          <li>
+            <strong>Animations:</strong> Create smooth, interactive animations
+            using the Canvas API.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Live Working Example</h2>
+        <p>
+          Below is a live demonstration of drawing a rectangle and a circle on
+          the canvas using the HTML5 Canvas API:
+        </p>
+
+        <!-- Canvas Element -->
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+
+        <script>
+          const canvas = document.getElementById("myCanvas");
+          const ctx = canvas.getContext("2d");
+
+          // Drawing a rectangle
+          ctx.fillStyle = "#4CAF50"; // Set fill color
+          ctx.fillRect(50, 50, 200, 100); // Draw rectangle
+
+          // Drawing a circle
+          ctx.beginPath();
+          ctx.arc(300, 150, 50, 0, 2 * Math.PI); // Draw circle
+          ctx.fillStyle = "#FF5733"; // Set fill color
+          ctx.fill();
+        </script>
+      </section>
+
+      <!-- How it works: Explanation of the Live Example -->
+      <section>
+        <h2 class="section-heading">How the Live Example Works</h2>
+        <p>Here's a breakdown of the live example:</p>
+        <ul>
+          <li>
+            <strong>Canvas element:</strong> The
+            <code>&lt;canvas&gt;</code> element is defined with a specific width
+            and height. This is the area where drawing happens.
+          </li>
+          <li>
+            <strong>getContext("2d"):</strong> This method provides a 2D
+            rendering context that allows us to draw graphics on the canvas.
+          </li>
+          <li>
+            <strong>fillRect(x, y, width, height):</strong> This method is used
+            to draw a filled rectangle. The arguments specify the x and y
+            coordinates of the top-left corner and the width and height of the
+            rectangle.
+          </li>
+          <li>
+            <strong>arc(x, y, radius, startAngle, endAngle):</strong> This
+            method draws a circle or an arc. The arguments specify the center
+            (x, y), the radius, and the start and end angles.
+          </li>
+          <li>
+            <strong>fill():</strong> This method fills the path with the current
+            fill color.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Understanding the Canvas API Methods</h2>
+        <p>
+          The Canvas API provides various methods to draw shapes, images, and
+          manipulate the canvas. Below are some of the most commonly used
+          methods:
+        </p>
+        <ul>
+          <li>
+            <strong>fillRect(x, y, width, height):</strong> Draws a filled
+            rectangle at the specified position with the given width and height.
+          </li>
+          <li>
+            <strong>clearRect(x, y, width, height):</strong> Clears the
+            specified rectangular area on the canvas, making it transparent.
+          </li>
+          <li>
+            <strong>beginPath():</strong> Starts a new path. This is useful when
+            you want to draw complex shapes.
+          </li>
+          <li>
+            <strong>moveTo(x, y):</strong> Moves the pen to the specified
+            coordinates without drawing anything.
+          </li>
+          <li>
+            <strong>lineTo(x, y):</strong> Draws a line from the current
+            position to the specified coordinates.
+          </li>
+          <li>
+            <strong>arc(x, y, radius, startAngle, endAngle):</strong> Draws an
+            arc or circle with the specified center (x, y), radius, and angles.
+          </li>
+          <li>
+            <strong>fill():</strong> Fills the current path with the current
+            fill color.
+          </li>
+          <li>
+            <strong>stroke():</strong> Strokes (outlines) the current path with
+            the current stroke color.
+          </li>
+          <li>
+            <strong>drawImage(image, x, y):</strong> Draws an image on the
+            canvas at the specified position.
+          </li>
+          <li>
+            <strong>getImageData(x, y, width, height):</strong> Returns pixel
+            data for a specified rectangular area on the canvas.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Conclusion</h2>
+        <p>
+          The Canvas API is a powerful and flexible tool for drawing graphics
+          directly in the browser. Whether you're creating dynamic games,
+          interactive visualizations, or simple graphics, the Canvas API offers
+          a variety of methods to achieve a wide range of effects.
+        </p>
+        <p>
+          With JavaScript, you can fully control how elements are rendered on
+          the canvas, providing endless possibilities for creativity and
+          interactivity in web applications.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
