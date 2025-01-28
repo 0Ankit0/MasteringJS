@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beacon API Example</title>
+    <!-- Link to Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 0;
+        color: #333;
+        background-color: #f9f9f9;
+      }
+      h1 {
+        color: #2c3e50;
+      }
+      #status {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      pre {
+        background: #eaeaea;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      code {
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="my-4">Beacon API Example</h1>
+      <p>
+        The <strong>Beacon API</strong> allows you to send small amounts of data
+        to a server without waiting for a response. It’s ideal for logging,
+        analytics, or other tasks where you don’t need an immediate response
+        from the server. Below is a live example of using the Beacon API.
+      </p>
+
+      <h2>Live Example</h2>
+      <p>
+        Click the button below to send a beacon request to the mock server. The
+        service worker will intercept the request and simulate a server
+        response.
+      </p>
+      <button id="send-beacon" class="btn btn-primary">Send Beacon</button>
+      <div id="status" class="mt-3">No beacon sent yet.</div>
+
+      <h2 class="mt-4">Code Explanation</h2>
+      <p>
+        Let’s break down the code step by step to understand how the Beacon API
+        works.
+      </p>
+
+      <h3>1. Sending Data with the Beacon API</h3>
+      <p>
+        The <code>navigator.sendBeacon()</code> method sends small amounts of
+        data to the server asynchronously.
+      </p>
+      <pre><code>
+const data = JSON.stringify({ action: 'user_click', timestamp: Date.now() });
+navigator.sendBeacon('/log', data);
+      </code></pre>
+      <p>
+        This code creates a JSON object with some data and sends it to the
+        '/log' endpoint using the Beacon API. The request is sent asynchronously
+        and doesn't block the page from continuing to load.
+      </p>
+
+      <h3>2. Service Worker Registration</h3>
+      <p>
+        The service worker is responsible for intercepting the requests made by
+        the Beacon API. Here’s how we register the service worker.
+      </p>
+      <pre><code>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+      </code></pre>
+      <p>
+        The code checks if the browser supports service workers. If supported,
+        it registers the service worker file (`sw.js`). This will enable the
+        service worker to intercept the Beacon API request.
+      </p>
+
+      <h3>3. Handling the Beacon Request in the Service Worker</h3>
+      <p>
+        The service worker intercepts the request made to `/log`. It responds
+        with a simulated server message and logs the request data.
+      </p>
+      <pre><code>
+self.addEventListener('fetch', event => {
+  if (event.request.url.includes('/log')) {
+    event.respondWith(
+      new Response('Beacon received by the server!', { status: 200 })
+    );
+    event.request.text().then(body => {
+      console.log('Beacon Data:', body);
+    });
+  }
+});
+      </code></pre>
+      <p>
+        The service worker listens for fetch events. If the request is made to
+        the `/log` endpoint, the service worker returns a response and logs the
+        data received in the beacon request.
+      </p>
+
+      <h2>How It Works</h2>
+      <p>
+        1. The user clicks the "Send Beacon" button.<br />
+        2. The page sends data to the `/log` endpoint using the Beacon API.<br />
+        3. The service worker intercepts the request to `/log` and logs the data
+        in the console.<br />
+        4. The page receives a response from the service worker and updates the
+        status message.
+      </p>
+
+      <h2>Browser Support</h2>
+      <p>
+        The Beacon API is supported by most modern browsers, including Chrome,
+        Edge, Firefox, and Safari. Ensure your browser is updated for the best
+        experience.
+      </p>
+    </div>
+
+    <!-- Register the Service Worker -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("sw.js")
+          .then(() => {
+            console.log("Service Worker registered!");
+          })
+          .catch((err) => {
+            console.error("Service Worker registration failed:", err);
+          });
+      }
+
+      document.getElementById("send-beacon").addEventListener("click", () => {
+        const data = JSON.stringify({
+          action: "user_click",
+          timestamp: Date.now(),
+        });
+
+        // Use the Beacon API to send data
+        const success = navigator.sendBeacon("/log", data);
+
+        // Update the status on the page
+        const statusDiv = document.getElementById("status");
+        if (success) {
+          statusDiv.innerText = "Beacon sent successfully!";
+        } else {
+          statusDiv.innerText = "Failed to send the beacon.";
+        }
+      });
+    </script>
+  </body>
+</html>
