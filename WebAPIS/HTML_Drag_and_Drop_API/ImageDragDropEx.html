@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Drag and Drop Image File with Browse Option</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .section-heading {
+        margin-top: 30px;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+      }
+      code {
+        background-color: #f8f9fa;
+        padding: 3px;
+        border-radius: 3px;
+      }
+      #content {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+      }
+
+      .draggable {
+        margin: 10px;
+        padding: 20px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .drop-zone {
+        margin: 20px;
+        padding: 30px;
+        background-color: #f1f1f1;
+        border: 2px dashed #007bff;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .image-preview {
+        margin-top: 20px;
+        max-width: 100%;
+        max-height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Drag Drop API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./ImageDragDropEx.html"
+                >Image Drag Drop Example</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="text-center mt-5">
+        <h1>Drag and Drop Image File with Browse Option</h1>
+        <p class="lead">
+          A Drag-and-Drop interface to upload an image, with an option to browse
+          for files
+        </p>
+      </header>
+
+      <section>
+        <h2 class="section-heading">Instructions</h2>
+        <p>
+          Click on the drop zone or drag and drop an image file to upload and
+          display it.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Live Working Example</h2>
+
+        <!-- Drop Zone for Image -->
+        <div class="drop-zone" id="dropZone">
+          <p class="instruction-text">Click here or drag and drop an image</p>
+        </div>
+
+        <!-- Hidden File Input -->
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          style="display: none"
+        />
+
+        <!-- Image Preview -->
+        <div id="imagePreviewContainer"></div>
+
+        <script>
+          const dropZone = document.getElementById("dropZone");
+          const fileInput = document.getElementById("fileInput");
+          const imagePreviewContainer = document.getElementById(
+            "imagePreviewContainer"
+          );
+
+          // Handle dragover event to allow drop
+          dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault(); // Prevent the default behavior to allow dropping
+            dropZone.style.backgroundColor = "#e1f5fe"; // Highlight drop zone
+          });
+
+          // Handle dragleave event to reset the drop zone style
+          dropZone.addEventListener("dragleave", () => {
+            dropZone.style.backgroundColor = "#f1f1f1"; // Reset drop zone style
+          });
+
+          // Handle drop event
+          dropZone.addEventListener("drop", (e) => {
+            e.preventDefault(); // Prevent default behavior
+            dropZone.style.backgroundColor = "#f1f1f1"; // Reset drop zone style
+
+            // Get the file that was dropped
+            const file = e.dataTransfer.files[0];
+
+            // Handle the file if it is an image
+            if (file && file.type.startsWith("image/")) {
+              displayImage(file);
+            } else {
+              alert("Please drop a valid image file.");
+            }
+          });
+
+          // Handle file input change event (when the user selects a file from file picker)
+          fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+
+            // Handle the file if it is an image
+            if (file && file.type.startsWith("image/")) {
+              displayImage(file);
+            } else {
+              alert("Please select a valid image file.");
+            }
+          });
+
+          // Function to display the image
+          function displayImage(file) {
+            const reader = new FileReader();
+
+            // Define what to do when the file is successfully read
+            reader.onload = function (event) {
+              // Create an image element and set its source to the file data
+              const img = document.createElement("img");
+              img.src = event.target.result;
+              img.classList.add("image-preview");
+              imagePreviewContainer.innerHTML = ""; // Clear any previous image
+              imagePreviewContainer.appendChild(img); // Append the new image to the container
+            };
+
+            // Read the file as a data URL (base64 encoded)
+            reader.readAsDataURL(file);
+          }
+
+          // When drop zone is clicked, trigger the file input click to open file picker
+          dropZone.addEventListener("click", () => {
+            fileInput.click();
+          });
+        </script>
+      </section>
+
+      <section>
+        <h2 class="section-heading">How it Works</h2>
+        <p>
+          The drag-and-drop functionality with the file browse dialog works as
+          follows:
+        </p>
+        <ul>
+          <li>
+            <strong>Dragover Event:</strong> When a file is dragged over the
+            drop zone, the <code>dragover</code> event is triggered. This
+            prevents the default behavior to allow the file to be dropped.
+          </li>
+          <li>
+            <strong>Drop Event:</strong> When the file is dropped into the drop
+            zone, the <code>drop</code> event is triggered. The file is
+            retrieved from <code>e.dataTransfer.files[0]</code>, and it is
+            checked to ensure it's an image.
+          </li>
+          <li>
+            <strong>File Reader:</strong> If the dropped file is an image, the
+            <code>FileReader</code> API reads the file as a base64 string and
+            displays it as an image in the drop zone.
+          </li>
+          <li>
+            <strong>File Input:</strong> The
+            <code>input[type="file"]</code> element is hidden and is triggered
+            when the user clicks on the drop zone. Once a file is selected, the
+            image is processed and displayed.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Conclusion</h2>
+        <p>
+          This implementation provides an intuitive user interface where users
+          can either drag and drop an image file or click the drop zone to
+          browse and select an image file. The image is then displayed inside
+          the drop zone without needing to upload it to a server.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
