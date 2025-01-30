@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EyeDropper API Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    p {
+      line-height: 1.6;
+    }
+    #color-box {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #333;
+      margin: 20px 0;
+    }
+    #output {
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #34495e;
+    }
+    code {
+      display: block;
+      background: #eaeaea;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>EyeDropper API Example</h1>
+  <p>
+    The <strong>EyeDropper API</strong> allows you to pick colors from the screen using a native color picker. 
+    This API is supported in modern browsers such as Chrome and Edge. Below is an interactive demo where you 
+    can click the "Pick Color" button to select a color from your screen. The selected color's value will be displayed.
+  </p>
+  <p>
+    Here's how it works:
+    <ul>
+      <li>When you click the button, the EyeDropper API is invoked.</li>
+      <li>The browser opens a color picker to select a color from the screen.</li>
+      <li>After selecting, the color's value is displayed in both HEX format and as a colored box.</li>
+    </ul>
+  </p>
+
+  <h2>Interactive Demo</h2>
+  <button id="pick-color-btn">Pick Color</button>
+  <div id="color-box"></div>
+  <p id="output">Selected Color: <span id="color-value">None</span></p>
+
+  <h2>Code Implementation</h2>
+  <p>Here's how you can implement the EyeDropper API in JavaScript:</p>
+  <code>
+    // Check if the EyeDropper API is supported
+    if ('EyeDropper' in window) {
+      const eyeDropper = new EyeDropper();
+      try {
+        const result = await eyeDropper.open();
+        console.log('Selected Color:', result.sRGBHex);
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    } else {
+      console.log('EyeDropper API is not supported in this browser.');
+    }
+  </code>
+
+  <h2>Detailed Steps</h2>
+  <p>
+    1. Create an instance of the EyeDropper API: <code>const eyeDropper = new EyeDropper();</code><br>
+    2. Call the <code>eyeDropper.open()</code> method to open the color picker.<br>
+    3. Use the returned promise to get the selected color in <code>result.sRGBHex</code>.<br>
+    4. Handle errors using a <code>try...catch</code> block to manage cases where the user cancels the action.
+  </p>
+
+  <h2>Browser Support</h2>
+  <p>
+    The EyeDropper API is currently supported in the following browsers:
+    <ul>
+      <li>Google Chrome (from version 95)</li>
+      <li>Microsoft Edge (from version 95)</li>
+    </ul>
+    Ensure your browser is updated to use this feature.
+  </p>
+
+  <script>
+    document.getElementById('pick-color-btn').addEventListener('click', async () => {
+      if ('EyeDropper' in window) {
+        const eyeDropper = new EyeDropper();
+        try {
+          const result = await eyeDropper.open();
+          document.getElementById('color-value').innerText = result.sRGBHex;
+          document.getElementById('color-box').style.backgroundColor = result.sRGBHex;
+        } catch (error) {
+          console.error('Error picking color:', error);
+          document.getElementById('color-value').innerText = 'None (Action canceled)';
+        }
+      } else {
+        alert('Your browser does not support the EyeDropper API.');
+      }
+    });
+  </script>
+</body>
+</html>
