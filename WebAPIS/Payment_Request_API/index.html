@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Payment Request API Documentation</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Payment API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./PaymentEx.html">Live Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container py-5">
+      <h1 class="text-center mb-5">Payment Request API Documentation</h1>
+      <div class="row">
+        <div class="col-12">
+          <h2>Overview</h2>
+          <p>
+            The Payment Request API provides a standardized way to handle
+            payments in the browser. It enables websites to request payment
+            information from users in a secure, efficient, and user-friendly
+            manner.
+          </p>
+
+          <h3>Methods</h3>
+          <p>The Payment Request API exposes the following methods:</p>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">PaymentRequest Constructor</h5>
+              <p>
+                The constructor is used to create a new instance of the
+                <code>PaymentRequest</code> object.
+              </p>
+              <h6>Syntax:</h6>
+              <pre
+                class="bg-light p-3"
+              ><code>let request = new PaymentRequest(methodData, details, options);</code></pre>
+              <ul>
+                <li>
+                  <strong>methodData:</strong> An array of objects containing
+                  payment method information.
+                </li>
+                <li>
+                  <strong>details:</strong> An object describing the details of
+                  the transaction (e.g., total amount, items).
+                </li>
+                <li>
+                  <strong>options:</strong> Optional settings, such as shipping
+                  options, request payer name, etc.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">show()</h5>
+              <p>
+                This method is used to display the payment request UI to the
+                user.
+              </p>
+              <h6>Syntax:</h6>
+              <pre
+                class="bg-light p-3"
+              ><code>request.show().then(handlePaymentResponse).catch(handleError);</code></pre>
+              <p>
+                Returns a <code>Promise</code> that resolves with the user's
+                payment information if successful or rejects with an error.
+              </p>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">abort()</h5>
+              <p>This method aborts the payment request process.</p>
+              <h6>Syntax:</h6>
+              <pre class="bg-light p-3"><code>request.abort();</code></pre>
+              <p>Calling this method cancels the payment request flow.</p>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">canMakePayment()</h5>
+              <p>
+                This method checks if the browser can process the requested
+                payment method.
+              </p>
+              <h6>Syntax:</h6>
+              <pre
+                class="bg-light p-3"
+              ><code>request.canMakePayment().then(result => { /* handle result */ });</code></pre>
+              <p>
+                Returns a <code>Promise</code> that resolves to
+                <code>true</code> if the payment method can be processed,
+                otherwise <code>false</code>.
+              </p>
+            </div>
+          </div>
+
+          <h3>Parameters and Options</h3>
+          <p>
+            Each of the methods accepts different parameters or options. Below
+            is a detailed explanation of the key parameters:
+          </p>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">methodData</h5>
+              <p>
+                An array of objects describing the payment method(s) that can be
+                used for the transaction. Each object should include a
+                <code>supportedMethods</code> key and optionally
+                <code>data</code> specific to the payment method.
+              </p>
+              <h6>Example:</h6>
+              <pre class="bg-light p-3"><code>
+let methodData = [
+    {
+        supportedMethods: 'basic-card',
+        data: {
+            supportedNetworks: ['visa', 'mastercard']
+        }
+    }
+];
+                        </code></pre>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">details</h5>
+              <p>
+                An object containing the details of the payment request, such as
+                the total price and other items being purchased.
+              </p>
+              <h6>Example:</h6>
+              <pre class="bg-light p-3"><code>
+let details = {
+    total: {
+        label: 'Total',
+        amount: { currency: 'USD', value: '25.00' }
+    },
+    displayItems: [
+        {
+            label: 'Item 1',
+            amount: { currency: 'USD', value: '20.00' }
+        },
+        {
+            label: 'Item 2',
+            amount: { currency: 'USD', value: '5.00' }
+        }
+    ]
+};
+                        </code></pre>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">options</h5>
+              <p>
+                This optional parameter provides additional options for the
+                payment request, such as shipping options and the need for payer
+                information.
+              </p>
+              <h6>Example:</h6>
+              <pre class="bg-light p-3"><code>
+let options = {
+    requestPayerName: true,
+    requestPayerEmail: true,
+    shippingType: 'shipping'
+};
+                        </code></pre>
+            </div>
+          </div>
+
+          <h3>Example Code</h3>
+          <p>
+            Here is a full example showing how to use the Payment Request API:
+          </p>
+          <pre class="bg-light p-3"><code>
+let methodData = [
+    {
+        supportedMethods: 'basic-card',
+        data: {
+            supportedNetworks: ['visa', 'mastercard']
+        }
+    }
+];
+
+let details = {
+    total: {
+        label: 'Total',
+        amount: { currency: 'USD', value: '25.00' }
+    },
+    displayItems: [
+        {
+            label: 'Item 1',
+            amount: { currency: 'USD', value: '20.00' }
+        },
+        {
+            label: 'Item 2',
+            amount: { currency: 'USD', value: '5.00' }
+        }
+    ]
+};
+
+let options = {
+    requestPayerName: true,
+    requestPayerEmail: true,
+    shippingType: 'shipping'
+};
+
+let request = new PaymentRequest(methodData, details, options);
+
+request.canMakePayment().then(function(result) {
+    if (result) {
+        request.show().then(function(paymentResponse) {
+            paymentResponse.complete('success');
+        }).catch(function(error) {
+            console.log('Payment failed: ', error);
+        });
+    } else {
+        console.log('Payment method not supported');
+    }
+});
+                </code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 JS (Optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
