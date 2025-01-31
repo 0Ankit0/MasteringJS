@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keyboard Events API - Key Combination Example</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .section-heading {
+        margin-top: 30px;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+      }
+      code {
+        background-color: #f8f9fa;
+        padding: 3px;
+        border-radius: 3px;
+      }
+      #content {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Keyboard Events API</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <header class="text-center mt-5">
+        <h1>Keyboard Events API</h1>
+        <p class="lead">
+          A Detailed Guide with Methods, Examples, and Use Cases
+        </p>
+      </header>
+
+      <section class="mt-5">
+        <h2 class="section-heading">Introduction</h2>
+        <p>
+          The <strong>Keyboard Events API</strong> in JavaScript allows
+          developers to detect and respond to user interactions via the
+          keyboard. Using this API, you can listen for specific key presses,
+          detect when keys are pressed or released, and perform actions based on
+          those events.
+        </p>
+        <p>
+          In this example, we will demonstrate how to register and listen for a
+          **key combination** (e.g., <b>Ctrl + S </b> or <b>Ctrl + A </b>).
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Live Working Example (Key Combination)</h2>
+        <p>
+          Below is an example where you can press <b>Ctrl + S </b> or
+          <b>Ctrl + A </b>, and it will display the detected key combination in
+          real-time.
+        </p>
+
+        <!-- Displaying the Key Combination -->
+        <div id="keyCombinationResult" class="mt-3">
+          <p>
+            <strong>Key Combination:</strong>
+            <span id="keyCombination">None</span>
+          </p>
+        </div>
+
+        <script>
+          const keyCombinationResult =
+            document.getElementById("keyCombination");
+
+          // Event listeners for keydown
+          document.addEventListener("keydown", (e) => {
+            // Detect Ctrl + S
+            if (e.ctrlKey && e.key === "s") {
+              e.preventDefault();
+              keyCombinationResult.textContent = "Ctrl + S was pressed!";
+            }
+            // Detect Shift + A
+            else if (e.ctrlKey && e.key === "a") {
+              e.preventDefault();
+              keyCombinationResult.textContent = "Ctrl + A was pressed!";
+            }
+            // Handle other combinations or reset
+            else {
+              keyCombinationResult.textContent = "No key combination detected";
+            }
+          });
+        </script>
+      </section>
+
+      <section>
+        <h2 class="section-heading">How the Key Combination Example Works</h2>
+        <p>Here's a breakdown of the key combination detection:</p>
+        <ul>
+          <li>
+            <strong>ctrlKey:</strong> This property is <code>true</code> if the
+            "Ctrl" key is pressed when the event occurs. We use this property to
+            detect when **Ctrl** is held down.
+          </li>
+          <li>
+            <strong>shiftKey:</strong> This property is <code>true</code> if the
+            "Shift" key is pressed when the event occurs. We use this property
+            to detect when **Shift** is held down.
+          </li>
+          <li>
+            <strong>key:</strong> This property returns the key value that was
+            pressed. For example, if the 'S' key is pressed,
+            <code>event.key</code> will return 's'. We use this property to
+            detect the specific key in the combination.
+          </li>
+        </ul>
+        <p>
+          When you press <b>Ctrl + S </b> or <b>Ctrl + A </b>, the corresponding
+          message will be displayed, showing how the combination was detected.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Understanding the Code</h2>
+        <p>
+          The code listens for the <code>keydown</code> event and checks for key
+          combinations:
+        </p>
+        <ul>
+          <li>
+            The <code>keydown</code> event is triggered whenever a key is
+            pressed down.
+          </li>
+          <li>
+            Inside the event listener, we use <code>e.ctrlKey</code> and
+            <code>e.shiftKey</code> to check if **Ctrl** or **Shift** is held
+            down during the key press.
+          </li>
+          <li>
+            We also check <code>e.key</code> to ensure the correct key is
+            pressed in combination with the modifier key.
+          </li>
+        </ul>
+        <p>
+          This allows us to register key combinations like <b>Ctrl + S </b> or
+          <b>Ctrl + A </b>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Conclusion</h2>
+        <p>
+          The Keyboard Events API can be used to create custom key combinations
+          that trigger specific actions, such as <b>Ctrl + S </b> to save or
+          **Shift + A** for any other functionality. By combining the properties
+          of the event (e.g., <code>ctrlKey</code>, <code>shiftKey</code>,
+          <code>key</code>), you can handle a variety of keyboard shortcuts and
+          improve the user experience in your web applications.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
