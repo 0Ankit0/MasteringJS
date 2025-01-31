@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navigation API Examples</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navigation API Examples</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="./NavigationEx.html">Examples</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+      <h1 class="text-primary mb-4">Examples: Navigation API</h1>
+
+      <!-- Intercepting Navigation Example -->
+      <section id="intercept-example" class="mb-5">
+        <h2 class="text-success">1. Intercepting Navigation</h2>
+        <p>
+          The <code>navigation.addEventListener('navigate')</code> method allows
+          you to intercept navigation requests and handle them programmatically.
+          This is especially useful for custom logic in SPAs or preventing
+          navigation based on specific conditions.
+        </p>
+
+        <h4>Code Snippet:</h4>
+        <pre
+          class="bg-light p-3 rounded"
+        ><code>// JavaScript for Intercepting Navigation
+navigation.addEventListener('navigate', (event) => {
+  // Prevent navigation if URL contains "restricted"
+  if (event.destination.url.includes('restricted')) {
+    event.preventDefault();
+    alert('Navigation to this page is restricted!');
+  } else {
+    console.log('Navigating to:', event.destination.url);
+  }
+});
+</code></pre>
+
+        <h4>Demo:</h4>
+        <p>
+          Try clicking on the buttons below to see how navigation interception
+          works:
+        </p>
+        <button id="navigate-allowed" class="btn btn-success mb-2">
+          Navigate to Allowed Page
+        </button>
+        <button id="navigate-restricted" class="btn btn-danger">
+          Navigate to Restricted Page
+        </button>
+      </section>
+
+      <!-- Scroll Management Example -->
+      <section id="scroll-example" class="mb-5">
+        <h2 class="text-success">2. Managing Scroll with Navigation API</h2>
+        <p>
+          Using the <code>scrollRestoration</code> property, you can control
+          whether the page should restore the previous scroll position when
+          navigating back or forward.
+        </p>
+
+        <h4>Code Snippet:</h4>
+        <pre
+          class="bg-light p-3 rounded"
+        ><code>// JavaScript for Scroll Management
+navigation.addEventListener('navigate', (event) => {
+  console.log('Scroll position will be managed manually.');
+  // Prevent automatic scroll restoration
+  event.scrollRestoration = 'manual';
+
+  // Simulate scrolling to the top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</code></pre>
+
+        <h4>Demo:</h4>
+        <p>Click the button below to simulate scrolling:</p>
+        <button id="scroll-btn" class="btn btn-primary">
+          Simulate Scroll to Top
+        </button>
+      </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Example 1: Intercepting Navigation
+      if ("navigation" in window) {
+        try {
+          navigation.addEventListener("navigate", (event) => {
+            // Example of restricting navigation to certain URLs
+            if (event.destination.url.includes("restricted")) {
+              event.preventDefault();
+              alert("Navigation to this page is restricted!");
+            } else if (event.destination.url.includes("allowed")) {
+              event.preventDefault();
+              alert("Navigating to: " + event.destination.url);
+            }
+          });
+        } catch (error) {}
+
+        // Buttons for testing
+        document
+          .getElementById("navigate-allowed")
+          .addEventListener("click", () => {
+            navigation.navigate("/allowed");
+          });
+
+        document
+          .getElementById("navigate-restricted")
+          .addEventListener("click", () => {
+            navigation.navigate("/restricted");
+          });
+      }
+
+      // Example 2: Managing Scroll with Navigation API
+      if ("navigation" in window) {
+        navigation.addEventListener("navigate", (event) => {
+          // Prevent default scroll restoration
+          event.scrollRestoration = "manual";
+
+          // Simulate smooth scrolling to the top
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          console.log("Scroll restored to the top.");
+        });
+
+        // Button to trigger scroll simulation
+        document.getElementById("scroll-btn").addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          console.log("Manual scroll to top triggered.");
+        });
+      }
+    </script>
+  </body>
+</html>
