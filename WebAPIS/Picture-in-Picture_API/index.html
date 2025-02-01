@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Picture-in-Picture API Documentation with Live Example</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .output {
+        margin-top: 20px;
+      }
+      video {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <header class="text-center mb-4">
+        <h1>Picture-in-Picture API Documentation with Live Example</h1>
+        <p class="lead">Test Picture-in-Picture API directly in the browser</p>
+      </header>
+
+      <section>
+        <h2>Overview</h2>
+        <p>
+          The Picture-in-Picture API allows web applications to open a video in
+          a floating window on top of other content. This feature can improve
+          user experience by letting users watch videos while interacting with
+          other parts of the web page.
+        </p>
+      </section>
+
+      <section>
+        <h2>Methods of Picture-in-Picture API</h2>
+
+        <!-- Requesting Picture-in-Picture -->
+        <div class="mb-4">
+          <h3>1. VideoElement.requestPictureInPicture()</h3>
+          <p>
+            The <code>requestPictureInPicture()</code> method allows a video
+            element to be shown in Picture-in-Picture mode.
+          </p>
+
+          <p><strong>Response:</strong></p>
+          <ul>
+            <li>
+              <strong>Promise resolves to a PictureInPictureWindow</strong>:
+              This indicates that the video has been successfully placed in
+              Picture-in-Picture mode.
+            </li>
+            <li>
+              <strong>Promise rejects</strong>: If the user or the browser
+              environment doesn't allow Picture-in-Picture, the promise will
+              reject, and an error will be thrown.
+            </li>
+          </ul>
+
+          <p>
+            <strong>Example:</strong> Request Picture-in-Picture for a Video
+          </p>
+          <pre><code>const videoElement = document.getElementById('video');
+videoElement.requestPictureInPicture().then(function() {
+  console.log('Video is now in Picture-in-Picture');
+}).catch(function(error) {
+  console.error('Error:', error);
+});</code></pre>
+          <button id="requestPIPBtn" class="btn btn-primary">
+            Request Picture-in-Picture
+          </button>
+          <div id="pipResult" class="output"></div>
+        </div>
+
+        <!-- Exiting Picture-in-Picture -->
+        <div class="mb-4">
+          <h3>2. Document.exitPictureInPicture()</h3>
+          <p>
+            The <code>exitPictureInPicture()</code> method allows a video in
+            Picture-in-Picture mode to be closed and return to the normal page
+            layout.
+          </p>
+
+          <p><strong>Response:</strong></p>
+          <ul>
+            <li>
+              <strong>Promise resolves</strong>: This indicates that the video
+              was successfully removed from Picture-in-Picture mode and is back
+              in the page.
+            </li>
+            <li>
+              <strong>Promise rejects</strong>: If no video is currently in
+              Picture-in-Picture, the promise will reject.
+            </li>
+          </ul>
+
+          <p><strong>Example:</strong> Exit Picture-in-Picture</p>
+          <pre><code>document.exitPictureInPicture().then(function() {
+  console.log('Exited Picture-in-Picture');
+}).catch(function(error) {
+  console.error('Error:', error);
+});</code></pre>
+          <button id="exitPIPBtn" class="btn btn-danger">
+            Exit Picture-in-Picture
+          </button>
+          <div id="exitPIPResult" class="output"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Browser Compatibility</h2>
+        <p>
+          The Picture-in-Picture API is supported in modern browsers like
+          Chrome, Firefox, and Edge, but may not be available on all devices or
+          browsers. Ensure compatibility before using in production.
+        </p>
+      </section>
+
+      <section class="mt-4">
+        <h2>Conclusion</h2>
+        <p>
+          The Picture-in-Picture API provides a seamless way to offer users a
+          better video experience by allowing them to interact with other
+          content while watching a video.
+        </p>
+      </section>
+
+      <section class="mt-5">
+        <h2>Live Example</h2>
+        <p>
+          Click the button to request Picture-in-Picture mode for the video. You
+          can also exit Picture-in-Picture by clicking the other button.
+        </p>
+        <video id="video" controls>
+          <source
+            src="https://www.w3schools.com/html/movie.mp4"
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Request Picture-in-Picture
+      document
+        .getElementById("requestPIPBtn")
+        .addEventListener("click", function () {
+          const videoElement = document.getElementById("video");
+          videoElement
+            .requestPictureInPicture()
+            .then(function () {
+              document.getElementById("pipResult").textContent =
+                "Video is now in Picture-in-Picture";
+            })
+            .catch(function (error) {
+              document.getElementById("pipResult").textContent =
+                "Error: " + error;
+            });
+        });
+
+      // Exit Picture-in-Picture
+      document
+        .getElementById("exitPIPBtn")
+        .addEventListener("click", function () {
+          document
+            .exitPictureInPicture()
+            .then(function () {
+              document.getElementById("exitPIPResult").textContent =
+                "Exited Picture-in-Picture";
+            })
+            .catch(function (error) {
+              document.getElementById("exitPIPResult").textContent =
+                "Error: " + error;
+            });
+        });
+    </script>
+  </body>
+</html>
