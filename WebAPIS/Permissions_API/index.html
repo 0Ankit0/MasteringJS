@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Permissions API Documentation with Live Example</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .output {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <header class="text-center mb-4">
+        <h1>Permissions API Documentation with Live Example</h1>
+        <p class="lead">Test Permissions API directly in the browser</p>
+      </header>
+
+      <section>
+        <h2>Overview</h2>
+        <p>
+          The Permissions API provides a way to check and request access to a
+          variety of features in a web browser. It allows web applications to
+          query the status of permissions for a given resource and request
+          changes to those permissions.
+        </p>
+      </section>
+
+      <section>
+        <h2>Methods of Permissions API</h2>
+
+        <!-- Permissions.query -->
+        <div class="mb-4">
+          <h3>1. Permissions.query()</h3>
+          <p>
+            The <code>Permissions.query()</code> method returns a promise that
+            resolves to a <strong>PermissionStatus</strong> object, which
+            indicates the current state of a requested permission.
+          </p>
+
+          <p><strong>Response States:</strong></p>
+          <ul>
+            <li>
+              <strong>'granted'</strong>: This state indicates that the
+              permission has been granted by the user. The web application can
+              now use the resource (e.g., access geolocation, use the camera,
+              etc.).
+            </li>
+            <li>
+              <strong>'denied'</strong>: This state indicates that the
+              permission has been denied by the user. The web application cannot
+              access the resource (e.g., cannot use geolocation, cannot access
+              the camera, etc.).
+            </li>
+            <li>
+              <strong>'prompt'</strong>: This state indicates that the browser
+              is waiting for the user to respond to a permission request. For
+              example, if you request geolocation access, the browser will show
+              a prompt asking the user if they want to share their location. The
+              permission has not been granted or denied yet.
+            </li>
+          </ul>
+
+          <p><strong>Example:</strong> Query Geolocation Permission</p>
+          <pre><code>navigator.permissions.query({ name: 'geolocation' })
+  .then(function(permissionStatus) {
+    console.log(permissionStatus.state);  // 'granted', 'denied', or 'prompt'
+  })
+  .catch(function(error) {
+    console.log('Error:', error);
+  });</code></pre>
+          <button id="queryGeolocationBtn" class="btn btn-primary">
+            Query Geolocation Permission
+          </button>
+          <div id="geolocationResult" class="output"></div>
+        </div>
+
+        <!-- Permissions.request -->
+        <div class="mb-4">
+          <h3>2. Permissions.request()</h3>
+          <p>
+            The <code>Permissions.request()</code> method allows a web
+            application to request a permission from the user.
+          </p>
+
+          <p><strong>Response States:</strong></p>
+          <ul>
+            <li>
+              <strong>'granted'</strong>: This state means the user has granted
+              the requested permission. The web application can now proceed to
+              use the feature.
+            </li>
+            <li>
+              <strong>'denied'</strong>: This state means the user has denied
+              the requested permission. The web application will not be able to
+              use the requested feature.
+            </li>
+          </ul>
+
+          <p><strong>Example:</strong> Request Notifications Permission</p>
+          <pre><code>Notification.requestPermission().then(function(permission) {
+  console.log(permission);  // 'granted' or 'denied'
+});</code></pre>
+          <button id="requestNotificationsBtn" class="btn btn-success">
+            Request Notifications Permission
+          </button>
+          <div id="notificationsResult" class="output"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Browser Compatibility</h2>
+        <p>
+          The Permissions API is supported in modern browsers like Chrome, Edge,
+          and Firefox. However, support may vary for older browsers or mobile
+          browsers. Make sure to check compatibility before using these features
+          in production.
+        </p>
+      </section>
+
+      <section class="mt-4">
+        <h2>Conclusion</h2>
+        <p>
+          The Permissions API is an excellent tool for improving user experience
+          and security. It allows web applications to interact with the user’s
+          permission settings in a structured and user-friendly way.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Function to query geolocation permission
+      document
+        .getElementById("queryGeolocationBtn")
+        .addEventListener("click", function () {
+          navigator.permissions
+            .query({ name: "geolocation" })
+            .then(function (permissionStatus) {
+              document.getElementById(
+                "geolocationResult"
+              ).textContent = `Geolocation Permission: ${permissionStatus.state}`;
+            })
+            .catch(function (error) {
+              document.getElementById("geolocationResult").textContent =
+                "Error querying geolocation permission: " + error;
+            });
+        });
+
+      // Function to request notifications permission
+      document
+        .getElementById("requestNotificationsBtn")
+        .addEventListener("click", function () {
+          Notification.requestPermission().then(function (permission) {
+            document.getElementById(
+              "notificationsResult"
+            ).textContent = `Notification Permission: ${permission}`;
+          });
+        });
+    </script>
+  </body>
+</html>
