@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reporting API Documentation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      .container {
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Reporting APIs Guide</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="./ReportEx.html">Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <h1 class="text-center mt-4">Reporting API Documentation</h1>
+      <p class="lead text-center">
+        This page explains the Reporting API, its methods, properties, and how
+        to use it.
+      </p>
+
+      <section>
+        <h2>Introduction</h2>
+        <p>
+          The Reporting API allows web applications to receive reports about
+          various issues on the page, such as performance problems, resource
+          loading issues, and security warnings. The API helps web developers
+          track and fix issues in their applications. The reports can be sent to
+          the server or other destinations for further analysis.
+        </p>
+      </section>
+
+      <section>
+        <h2>Key Interfaces</h2>
+
+        <h3>1. ReportingObserver</h3>
+        <p>
+          The <code>ReportingObserver</code> interface observes reports sent to
+          a report endpoint, which includes different types like
+          <code>deprecation</code>, <code>security</code>,
+          <code>performance</code>, etc.
+        </p>
+        <h4>Constructor</h4>
+        <p><code>new ReportingObserver(callback, options)</code></p>
+        <p>Parameters:</p>
+        <ul>
+          <li>
+            <strong>callback</strong>: A function that is called when reports
+            are received. This callback receives two arguments: an array of
+            <code>Report</code> objects and the observer itself.
+          </li>
+          <li>
+            <strong>options</strong>: An object that defines which types of
+            reports to observe. For example,
+            <code>types: ['deprecation', 'performance']</code>.
+          </li>
+        </ul>
+
+        <h3>2. Report</h3>
+        <p>
+          The <code>Report</code> interface represents a single report sent to
+          the browser. It can be created and dispatched using the
+          <code>Report.report()</code> method.
+        </p>
+        <h4>Constructor</h4>
+        <p><code>new Report(type, data)</code></p>
+        <p>Parameters:</p>
+        <ul>
+          <li>
+            <strong>type</strong>: A string indicating the type of report (e.g.,
+            <code>deprecation</code>, <code>security</code>).
+          </li>
+          <li>
+            <strong>data</strong>: An object containing the report's data,
+            typically a message and additional context about the report.
+          </li>
+        </ul>
+
+        <h4>Methods</h4>
+        <ul>
+          <li>
+            <strong>report()</strong>: Dispatches the report to the registered
+            observers and the relevant endpoint.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Report Types</h2>
+        <p>
+          Reports can be generated and sent for various issues encountered in a
+          web application. Below are the different types of reports supported by
+          the Reporting API:
+        </p>
+
+        <ul>
+          <li>
+            <strong>deprecation</strong>: Reports when a deprecated API is used.
+            This helps developers identify when they are using outdated or
+            deprecated features in their code.
+          </li>
+          <li>
+            <strong>performance</strong>: Reports performance-related issues
+            such as long load times, slow resource fetching, or rendering
+            delays.
+          </li>
+          <li>
+            <strong>security</strong>: Reports security issues such as mixed
+            content, violations of security policies, or other concerns
+            regarding content integrity.
+          </li>
+          <li>
+            <strong>navigation</strong>: Reports issues related to navigation
+            events, such as failed page transitions or issues loading resources
+            during navigation.
+          </li>
+        </ul>
+
+        <h3>Example of a Deprecation Report</h3>
+        <p>
+          Here's an example of how you can create and send a deprecation report:
+        </p>
+        <pre><code>
+const deprecationReport = new Report('deprecation', {
+    message: 'The document.write() method is deprecated.',
+    url: window.location.href,
+    feature: 'document.write()'
+});
+deprecationReport.report();
+            </code></pre>
+      </section>
+
+      <section>
+        <h2>HTTP Headers for Reporting API</h2>
+        <p>
+          The Reporting API allows you to configure how reports are sent to your
+          server or endpoint. You need to include specific HTTP headers to
+          ensure that reports are processed correctly by the receiving server.
+        </p>
+
+        <h4>Required HTTP Headers</h4>
+        <ul>
+          <li>
+            <strong>Content-Type</strong>: The server should accept the content
+            type <code>application/json</code> for the reports.
+          </li>
+          <li>
+            <strong>Reporting-Endpoint</strong>: The header where the reports
+            will be sent. This specifies the URL of the report receiver on the
+            server.
+          </li>
+        </ul>
+
+        <h4>Example: Sending Reports to a Custom Endpoint</h4>
+        <p>
+          To send reports to your custom endpoint, you need to define an HTTP
+          endpoint where reports will be sent. Here’s an example of a report
+          being sent to your server:
+        </p>
+        <pre><code>
+fetch('/your-endpoint', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Reporting-Endpoint': '/reporting-endpoint' // Custom reporting URL
+    },
+    body: JSON.stringify({
+        message: 'Test report',
+        url: window.location.href
+    })
+});
+            </code></pre>
+      </section>
+
+      <section>
+        <h2>How to Use</h2>
+        <p>To use the Reporting API, follow these steps:</p>
+        <ol>
+          <li>
+            Check if the API is supported in the browser (via
+            <code>'Report' in window</code>).
+          </li>
+          <li>
+            Create a <code>ReportingObserver</code> to capture and handle
+            reports.
+          </li>
+          <li>Optionally, create and dispatch <code>Report</code> objects.</li>
+        </ol>
+        <p>Here is a simple example to use the Reporting API:</p>
+        <pre><code>
+const observer = new ReportingObserver((reports, observer) => {
+    reports.forEach(report => {
+        console.log('Received report:', report);
+    });
+}, { types: ['deprecation', 'performance'] });
+
+observer.observe();
+
+// Create a test report
+const testReport = new Report('deprecation', { message: 'Deprecated API used' });
+testReport.report();
+            </code></pre>
+      </section>
+
+      <section>
+        <h2>Supported Events</h2>
+        <p>Reports can be triggered by different events:</p>
+        <ul>
+          <li>
+            <strong>deprecation</strong>: Reported when deprecated APIs are
+            used.
+          </li>
+          <li>
+            <strong>performance</strong>: Reported when performance-related
+            issues are observed.
+          </li>
+          <li>
+            <strong>security</strong>: Reported when a security issue is
+            detected (e.g., mixed content).
+          </li>
+          <li>
+            <strong>navigation</strong>: Reported for navigation-related issues.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Browser Support</h2>
+        <p>
+          The Reporting API is available in certain modern browsers. However, it
+          is a relatively new API, so make sure to check for compatibility in
+          browsers like Chrome and Edge.
+        </p>
+      </section>
+    </div>
+  </body>
+</html>
