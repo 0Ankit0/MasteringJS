@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Native Popover API Guide</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      [popover] {
+        background: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">Popover API Guide</a>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <h1 class="text-center">HTML Native Popover API Guide</h1>
+      <p class="lead text-center">
+        Learn how to use the new native <code>popover</code> attribute in HTML.
+      </p>
+
+      <hr />
+
+      <h2>What is the Native Popover API?</h2>
+      <p>
+        The Native Popover API is a built-in HTML feature that allows elements
+        to display small pop-up panels without requiring JavaScript.
+      </p>
+
+      <h2>Live Example</h2>
+      <p>Click the button below to see a native popover in action:</p>
+
+      <button id="showPopoverBtn" class="btn btn-primary">Show Popover</button>
+      <div id="examplePopover" popover>
+        <p>This is a native popover! 🎉</p>
+        <button id="closePopoverBtn" class="btn btn-sm btn-danger">
+          Close
+        </button>
+      </div>
+
+      <hr />
+
+      <h2>HTML Attributes for Popover</h2>
+      <p>The following attributes control popovers:</p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Description</th>
+            <th>Example Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>popover</code></td>
+            <td>Defines the element as a popover</td>
+            <td><code>&lt;div popover&gt;Content&lt;/div&gt;</code></td>
+          </tr>
+          <tr>
+            <td><code>popover-target</code></td>
+            <td>Specifies which popover should be triggered</td>
+            <td>
+              <code
+                >&lt;button popover-target="popoverID"&gt;Click
+                Me&lt;/button&gt;</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td><code>popover-auto</code></td>
+            <td>Automatically closes the popover when clicking outside</td>
+            <td>
+              <code
+                >&lt;div popover popover-auto&gt;Auto Close&lt;/div&gt;</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td><code>hidden</code></td>
+            <td>Hides the popover until triggered</td>
+            <td>
+              <code>&lt;div popover hidden&gt;Hidden Popover&lt;/div&gt;</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr />
+
+      <h2>CSS Features</h2>
+      <p>Native popovers can be styled using CSS:</p>
+      <pre><code class="language-css">
+/* Style for all popovers */
+[popover] {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+}
+
+/* Custom animation */
+[popover]:popover-open {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+        </code></pre>
+
+      <hr />
+
+      <h2>JavaScript Methods</h2>
+      <p>You can control popovers using JavaScript:</p>
+      <pre><code class="language-javascript">
+// Show the popover
+document.getElementById("examplePopover").showPopover();
+
+// Hide the popover
+document.getElementById("examplePopover").hidePopover();
+
+// Toggle the popover visibility
+document.getElementById("examplePopover").togglePopover();
+        </code></pre>
+
+      <hr />
+
+      <h2>Events</h2>
+      <p>Native popovers trigger the following events:</p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>beforetoggle</code></td>
+            <td>Fires before the popover is shown or hidden</td>
+          </tr>
+          <tr>
+            <td><code>toggle</code></td>
+            <td>Fires when the popover is shown or hidden</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Example Usage of Events</h3>
+      <pre><code class="language-javascript">
+document.getElementById("examplePopover").addEventListener("toggle", function(event) {
+    console.log("Popover toggled!");
+});
+        </code></pre>
+
+      <hr />
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const popover = document.getElementById("examplePopover");
+        const showBtn = document.getElementById("showPopoverBtn");
+        const closeBtn = document.getElementById("closePopoverBtn");
+
+        // Show popover when button is clicked
+        showBtn.addEventListener("click", function () {
+          popover.showPopover();
+        });
+
+        // Close popover when button inside it is clicked
+        closeBtn.addEventListener("click", function () {
+          popover.hidePopover();
+        });
+
+        // Log events
+        popover.addEventListener("toggle", function () {
+          console.log("Popover toggled!");
+        });
+      });
+    </script>
+  </body>
+</html>
