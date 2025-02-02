@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sensor API Documentation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      .container {
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Sensor Api Guide</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="./AmbientLightEx.html">Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <h1 class="text-center mt-4">Sensor API Documentation</h1>
+      <p class="lead text-center">
+        This page explains how to use the Sensor API to detect various device
+        sensors like Ambient Light, Accelerometer, Gyroscope, Magnetometer, and
+        Orientation Sensors.
+      </p>
+
+      <section>
+        <h2>Introduction</h2>
+        <p>
+          The Sensor API provides access to various sensors on the device,
+          enabling web applications to interact with and gather information from
+          sensors like the Ambient Light Sensor, Accelerometer, Gyroscope, and
+          others. These sensors can be used for various purposes such as motion
+          detection, environment lighting analysis, and device orientation
+          tracking.
+        </p>
+      </section>
+
+      <!-- Ambient Light Sensor -->
+      <section>
+        <h2>1. Ambient Light Sensor</h2>
+        <p>
+          The Ambient Light Sensor detects the intensity of light in the
+          environment.
+        </p>
+
+        <h4>Methods:</h4>
+        <ul>
+          <li>
+            <strong>start()</strong>: Starts the sensor to begin collecting
+            light data.
+          </li>
+          <li>
+            <strong>stop()</strong>: Stops the sensor from collecting light
+            data.
+          </li>
+        </ul>
+
+        <h4>Properties:</h4>
+        <ul>
+          <li><strong>illuminance</strong>: The current light level in lux.</li>
+          <li>
+            <strong>onreading</strong>: Triggered when a new reading is
+            available.
+          </li>
+          <li><strong>onerror</strong>: Triggered if an error occurs.</li>
+        </ul>
+
+        <h4>Events:</h4>
+        <ul>
+          <li>
+            <strong>reading</strong>: Event fired when the sensor provides
+            updated data.
+          </li>
+          <li>
+            <strong>error</strong>: Event fired when an error occurs with the
+            sensor.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Accelerometer -->
+      <section>
+        <h2>2. Accelerometer</h2>
+        <p>
+          The Accelerometer sensor provides the acceleration of the device along
+          the three axes (x, y, and z).
+        </p>
+
+        <h4>Methods:</h4>
+        <ul>
+          <li>
+            <strong>start()</strong>: Starts the accelerometer to monitor motion
+            data.
+          </li>
+          <li><strong>stop()</strong>: Stops collecting accelerometer data.</li>
+        </ul>
+
+        <h4>Properties:</h4>
+        <ul>
+          <li><strong>x</strong>: Acceleration along the x-axis.</li>
+          <li><strong>y</strong>: Acceleration along the y-axis.</li>
+          <li><strong>z</strong>: Acceleration along the z-axis.</li>
+          <li>
+            <strong>onreading</strong>: Triggered when new accelerometer data is
+            available.
+          </li>
+          <li><strong>onerror</strong>: Triggered if an error occurs.</li>
+        </ul>
+
+        <h4>Events:</h4>
+        <ul>
+          <li>
+            <strong>reading</strong>: Event fired when the accelerometer
+            provides updated data.
+          </li>
+          <li>
+            <strong>error</strong>: Event fired when an error occurs with the
+            accelerometer.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Gyroscope -->
+      <section>
+        <h2>3. Gyroscope</h2>
+        <p>
+          The Gyroscope sensor measures the device's rotational velocity around
+          the three axes (x, y, and z).
+        </p>
+
+        <h4>Methods:</h4>
+        <ul>
+          <li>
+            <strong>start()</strong>: Starts the gyroscope to begin collecting
+            rotation data.
+          </li>
+          <li><strong>stop()</strong>: Stops collecting gyroscope data.</li>
+        </ul>
+
+        <h4>Properties:</h4>
+        <ul>
+          <li>
+            <strong>x</strong>: The rotational velocity around the x-axis.
+          </li>
+          <li>
+            <strong>y</strong>: The rotational velocity around the y-axis.
+          </li>
+          <li>
+            <strong>z</strong>: The rotational velocity around the z-axis.
+          </li>
+          <li>
+            <strong>onreading</strong>: Triggered when new gyroscope data is
+            available.
+          </li>
+          <li><strong>onerror</strong>: Triggered if an error occurs.</li>
+        </ul>
+
+        <h4>Events:</h4>
+        <ul>
+          <li>
+            <strong>reading</strong>: Event fired when the gyroscope provides
+            updated data.
+          </li>
+          <li>
+            <strong>error</strong>: Event fired when an error occurs with the
+            gyroscope.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Magnetometer -->
+      <section>
+        <h2>4. Magnetometer</h2>
+        <p>
+          The Magnetometer sensor detects the Earth's magnetic field, helping to
+          measure the device's orientation with respect to the Earth's magnetic
+          poles.
+        </p>
+
+        <h4>Methods:</h4>
+        <ul>
+          <li>
+            <strong>start()</strong>: Starts the magnetometer to begin
+            collecting data.
+          </li>
+          <li>
+            <strong>stop()</strong>: Stops the magnetometer from collecting
+            data.
+          </li>
+        </ul>
+
+        <h4>Properties:</h4>
+        <ul>
+          <li>
+            <strong>x</strong>: The magnetic field strength along the x-axis.
+          </li>
+          <li>
+            <strong>y</strong>: The magnetic field strength along the y-axis.
+          </li>
+          <li>
+            <strong>z</strong>: The magnetic field strength along the z-axis.
+          </li>
+          <li>
+            <strong>onreading</strong>: Triggered when new magnetometer data is
+            available.
+          </li>
+          <li><strong>onerror</strong>: Triggered if an error occurs.</li>
+        </ul>
+
+        <h4>Events:</h4>
+        <ul>
+          <li>
+            <strong>reading</strong>: Event fired when the magnetometer provides
+            updated data.
+          </li>
+          <li>
+            <strong>error</strong>: Event fired when an error occurs with the
+            magnetometer.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Orientation Sensor -->
+      <section>
+        <h2>5. Orientation Sensor</h2>
+        <p>
+          The Orientation Sensor provides information about the device's
+          orientation (alpha, beta, gamma), which helps detect how the device is
+          rotated in space.
+        </p>
+
+        <h4>Methods:</h4>
+        <ul>
+          <li>
+            <strong>start()</strong>: Starts the orientation sensor to begin
+            monitoring the device's rotation.
+          </li>
+          <li><strong>stop()</strong>: Stops the orientation sensor.</li>
+        </ul>
+
+        <h4>Properties:</h4>
+        <ul>
+          <li>
+            <strong>alpha</strong>: The device's rotation around the z-axis
+            (0-360 degrees).
+          </li>
+          <li>
+            <strong>beta</strong>: The device's rotation around the x-axis (-180
+            to 180 degrees).
+          </li>
+          <li>
+            <strong>gamma</strong>: The device's rotation around the y-axis (-90
+            to 90 degrees).
+          </li>
+          <li>
+            <strong>onreading</strong>: Triggered when new orientation data is
+            available.
+          </li>
+          <li><strong>onerror</strong>: Triggered if an error occurs.</li>
+        </ul>
+
+        <h4>Events:</h4>
+        <ul>
+          <li>
+            <strong>reading</strong>: Event fired when the orientation sensor
+            provides updated data.
+          </li>
+          <li>
+            <strong>error</strong>: Event fired when an error occurs with the
+            orientation sensor.
+          </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>
