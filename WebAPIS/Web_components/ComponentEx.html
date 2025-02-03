@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Components - Different Methods</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Web Components - Different Methods</a>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <h1 class="text-center">Web Components - Different Methods</h1>
+      <p class="text-center">
+        Learn different methods of creating Web Components, including direct
+        JavaScript classes, templates, and more.
+      </p>
+
+      <!-- Overview -->
+      <section id="overview" class="mt-5">
+        <h2>🔹 What are Web Components?</h2>
+        <p>
+          Web Components allow you to create custom HTML elements with
+          encapsulated functionality and styling. They are built using four core
+          technologies:
+        </p>
+        <ul>
+          <li><b>Custom Elements</b> - Define new HTML tags.</li>
+          <li>
+            <b>Shadow DOM</b> - Encapsulate the internal structure and styles of
+            the element.
+          </li>
+          <li>
+            <b>HTML Templates</b> - Reusable HTML structures that can be cloned
+            into elements.
+          </li>
+          <li>
+            <b>HTML Imports</b> (deprecated) - Reuse custom elements by
+            importing files.
+          </li>
+        </ul>
+        <p>
+          This guide will show you different methods of creating Web Components,
+          such as defining them in JavaScript, using templates, and more.
+        </p>
+      </section>
+
+      <!-- Method 1: Define a Custom Element using JavaScript -->
+      <section id="method1" class="mt-5">
+        <h2>🔹 Method 1: Defining a Custom Element Using JavaScript</h2>
+        <p>
+          A basic way to define a Web Component is to use JavaScript to create a
+          class that extends the
+          <code>HTMLElement</code> class. You can then register this class as a
+          custom element using <code>customElements.define()</code>.
+        </p>
+
+        <pre><code class="language-javascript">&lt;!-- Create a custom element class --&gt;
+class MyGreeting extends HTMLElement {
+  constructor() {
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+    const span = document.createElement('span');
+    span.textContent = 'Hello, Web Components!';
+    this.shadow.appendChild(span);
+  }
+}
+
+&lt;!-- Register the custom element --&gt;
+customElements.define('my-greeting', MyGreeting);
+        </code></pre>
+
+        <p><b>Explanation:</b></p>
+        <ul>
+          <li>
+            We create a class <code>MyGreeting</code> extending
+            <code>HTMLElement</code>.
+          </li>
+          <li>
+            Inside the constructor, we attach a shadow DOM and create a
+            <code>span</code> element.
+          </li>
+          <li>
+            The text "Hello, Web Components!" is added to the span, and it's
+            appended to the shadow DOM.
+          </li>
+          <li>
+            Finally, the component is registered using
+            <code>customElements.define('my-greeting', MyGreeting)</code>.
+          </li>
+        </ul>
+        <p>Here is a live example of this method:</p>
+        <my-greeting></my-greeting>
+      </section>
+
+      <!-- Method 2: Using HTML Template and JavaScript -->
+      <section id="method2" class="mt-5">
+        <h2>🔹 Method 2: Using HTML Template and JavaScript</h2>
+        <p>
+          Another way to define a Web Component is by using an HTML template.
+          This method allows us to define the structure of our component
+          directly in the HTML, which can then be cloned into the component's
+          shadow DOM in JavaScript.
+        </p>
+
+        <pre><code class="language-html">&lt;!-- HTML template --&gt;
+&lt;template id="greeting-template"&gt;
+  &lt;style&gt;
+    span {
+      color: green;
+      font-size: 20px;
+    }
+  &lt;/style&gt;
+  &lt;span&gt;&lt;/span&gt;
+&lt;/template&gt;
+        </code></pre>
+
+        <pre><code class="language-javascript">&lt;!-- Define the custom element --&gt;
+class MyTemplateGreeting extends HTMLElement {
+  constructor() {
+    super();
+    const template = document.getElementById('greeting-template');
+    const templateContent = template.content;
+
+    this.attachShadow({ mode: 'open' }).appendChild(templateContent.cloneNode(true));
+
+    this.shadowRoot.querySelector('span').textContent = 'Hello from Template!';
+  }
+}
+
+&lt;!-- Register the custom element --&gt;
+customElements.define('my-template-greeting', MyTemplateGreeting);
+        </code></pre>
+
+        <p><b>Explanation:</b></p>
+        <ul>
+          <li>
+            The template is defined with an <code>&lt;template&gt;</code> tag
+            containing both styles and the HTML structure.
+          </li>
+          <li>
+            Inside the component's constructor, we access the template and clone
+            its content into the shadow DOM.
+          </li>
+          <li>
+            The text inside the <code>&lt;span&gt;</code> is updated using
+            JavaScript.
+          </li>
+          <li>
+            Finally, the component is registered as
+            <code>&lt;my-template-greeting&gt;</code>.
+          </li>
+        </ul>
+        <p>Here is a live example of this method:</p>
+        <my-template-greeting></my-template-greeting>
+      </section>
+
+      <!-- Method 3: Web Component with Attributes -->
+      <section id="method3" class="mt-5">
+        <h2>🔹 Method 3: Web Component with Attributes</h2>
+        <p>
+          Web Components can also react to attributes that are passed to them.
+          You can observe attribute changes using the
+          <code>attributeChangedCallback</code> method.
+        </p>
+
+        <pre><code class="language-javascript">&lt;!-- Create a class that responds to attributes --&gt;
+class ColorfulGreeting extends HTMLElement {
+  constructor() {
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+    this.span = document.createElement('span');
+    this.shadow.appendChild(this.span);
+  }
+
+  static get observedAttributes() {
+    return ['color'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'color') {
+      this.span.style.color = newValue;
+    }
+  }
+
+  connectedCallback() {
+    this.span.textContent = 'Hello with Color!';
+  }
+}
+
+&lt;!-- Register the custom element --&gt;
+customElements.define('colorful-greeting', ColorfulGreeting);
+        </code></pre>
+
+        <p><b>Explanation:</b></p>
+        <ul>
+          <li>
+            This component observes the <code>color</code> attribute using the
+            <code>observedAttributes</code> getter.
+          </li>
+          <li>
+            When the <code>color</code> attribute changes, the
+            <code>attributeChangedCallback</code> method is called.
+          </li>
+          <li>
+            The component displays the text "Hello with Color!" and updates the
+            color based on the <code>color</code> attribute.
+          </li>
+        </ul>
+        <p>Here is a live example of this method (try changing the color):</p>
+        <colorful-greeting color="red"></colorful-greeting>
+        <br />
+        <button
+          onclick="document.querySelector('colorful-greeting').setAttribute('color', 'blue')"
+        >
+          Change Color to Blue
+        </button>
+      </section>
+    </div>
+
+    <template id="greeting-template">
+      <style>
+        span {
+          color: green;
+          font-size: 20px;
+        }
+      </style>
+      <span></span>
+    </template>
+    <!-- JavaScript -->
+    <script>
+      hljs.highlightAll();
+
+      class MyGreeting extends HTMLElement {
+        constructor() {
+          super();
+          this.shadow = this.attachShadow({ mode: "open" });
+          const span = document.createElement("span");
+          span.textContent = "Hello, Web Components!";
+          this.shadow.appendChild(span);
+        }
+      }
+      customElements.define("my-greeting", MyGreeting);
+
+      class MyTemplateGreeting extends HTMLElement {
+        constructor() {
+          super();
+          const template = document.getElementById("greeting-template");
+          const templateContent = template.content;
+
+          this.attachShadow({ mode: "open" }).appendChild(
+            templateContent.cloneNode(true)
+          );
+
+          this.shadowRoot.querySelector("span").textContent =
+            "Hello from Template!";
+        }
+      }
+
+      customElements.define("my-template-greeting", MyTemplateGreeting);
+
+      class ColorfulGreeting extends HTMLElement {
+        constructor() {
+          super();
+          this.shadow = this.attachShadow({ mode: "open" });
+          this.span = document.createElement("span");
+          this.shadow.appendChild(this.span);
+        }
+
+        static get observedAttributes() {
+          return ["color"];
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+          if (name === "color") {
+            this.span.style.color = newValue;
+          }
+        }
+
+        connectedCallback() {
+          this.span.textContent = "Hello with Color!";
+        }
+      }
+
+      customElements.define("colorful-greeting", ColorfulGreeting);
+    </script>
+  </body>
+</html>
