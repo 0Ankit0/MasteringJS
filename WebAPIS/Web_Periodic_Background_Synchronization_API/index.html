@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Periodic Background Synchronization API Guide</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      h2 {
+        margin-top: 30px;
+      }
+      .container {
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Web APIs Guide</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="./Example.html">Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <h1 class="text-center mt-4">
+        Web Periodic Background Synchronization API
+      </h1>
+      <p class="lead text-center">
+        A detailed guide on the Web Periodic Background Synchronization API with
+        examples and usage.
+      </p>
+
+      <hr />
+
+      <h2>What is Web Periodic Background Synchronization API?</h2>
+      <p>
+        The Web Periodic Background Synchronization API provides a way for web
+        applications to register periodic sync tasks that can run even when the
+        application is in the background. This API allows your app to sync data
+        with the server in the background periodically, without requiring the
+        app to be active or in focus.
+      </p>
+
+      <h2>Key Features</h2>
+      <ul>
+        <li>Allows apps to register periodic sync events.</li>
+        <li>Runs background tasks without requiring user interaction.</li>
+        <li>
+          Helps optimize the app’s performance by syncing data at appropriate
+          intervals.
+        </li>
+      </ul>
+
+      <hr />
+
+      <h2>Example Usage</h2>
+      <p>
+        Here’s an example of how to use the Web Periodic Background
+        Synchronization API:
+      </p>
+
+      <h3>Registering for Periodic Background Sync</h3>
+      <pre><code class="language-javascript">
+if ('PeriodicSyncManager' in window) {
+    navigator.periodicSync.register('sync-tag', {
+        minInterval: 24 * 60 * 60 * 1000 // 24 hours
+    }).then(() => {
+        console.log('Periodic sync registered!');
+    }).catch(err => {
+        console.error('Error registering periodic sync:', err);
+    });
+}
+        </code></pre>
+
+      <p>
+        In the example above, we use `navigator.periodicSync.register()` to
+        register a sync task with a minimum interval of 24 hours.
+      </p>
+
+      <hr />
+
+      <h2>Methods of the PeriodicSyncManager</h2>
+
+      <h3>1. register()</h3>
+      <p>
+        This method registers a sync task with a given tag and options. The
+        options include `minInterval`, which specifies the minimum interval in
+        milliseconds between syncs, and other optional parameters.
+      </p>
+      <pre><code class="language-javascript">
+navigator.periodicSync.register(tag, options)
+    .then(() => {
+        // Sync registered successfully
+    })
+    .catch(error => {
+        // Handle error
+    });
+        </code></pre>
+
+      <h4>Parameters</h4>
+      <ul>
+        <li><strong>tag:</strong> A string used to identify the sync task.</li>
+        <li>
+          <strong>options:</strong> An object that contains configuration for
+          the sync task. The primary options include:
+        </li>
+        <ul>
+          <li>
+            <strong>minInterval:</strong> The minimum interval (in milliseconds)
+            between each sync operation. For example, `24 * 60 * 60 * 1000` for
+            24 hours.
+          </li>
+          <li>
+            <strong>powerState:</strong> Optional. Describes whether the sync is
+            required to happen during device idle time or at a specified time of
+            day.
+          </li>
+        </ul>
+      </ul>
+
+      <h3>2. getTags()</h3>
+      <p>
+        Returns a list of all registered sync tags. This is useful if you need
+        to know which sync tasks are currently active on the application.
+      </p>
+      <pre><code class="language-javascript">
+navigator.periodicSync.getTags()
+    .then(tags => {
+        console.log(tags);  // Prints the list of sync tags
+    })
+    .catch(error => {
+        console.error(error);  // Handle error
+    });
+        </code></pre>
+
+      <h3>3. unregister()</h3>
+      <p>Unregisters a periodic sync task that was previously registered.</p>
+      <pre><code class="language-javascript">
+navigator.periodicSync.unregister(tag)
+    .then(() => {
+        console.log('Sync task unregistered');
+    })
+    .catch(error => {
+        console.error('Failed to unregister sync task:', error);
+    });
+        </code></pre>
+
+      <hr />
+
+      <h2>Interfaces</h2>
+      <p>
+        The Web Periodic Background Synchronization API mainly involves the
+        following interfaces:
+      </p>
+
+      <h3>1. PeriodicSyncManager</h3>
+      <p>
+        This interface is the main component used to interact with the Periodic
+        Background Sync API. It provides methods to register, unregister, and
+        manage periodic sync tasks. It’s typically accessed through
+        <code>navigator.periodicSync</code>.
+      </p>
+
+      <h4>Methods:</h4>
+      <ul>
+        <li>
+          <strong>register(tag, options):</strong> Registers a sync task with a
+          given tag and options.
+        </li>
+        <li><strong>getTags():</strong> Returns all registered sync tags.</li>
+        <li>
+          <strong>unregister(tag):</strong> Unregisters a specific sync task by
+          its tag.
+        </li>
+      </ul>
+
+      <h3>2. PeriodicSyncOptions</h3>
+      <p>
+        The options object provided during the registration of a sync task. It
+        allows you to configure the sync interval, the time period between
+        syncs, and optionally restrict sync operations to specific conditions
+        (e.g., device idle state).
+      </p>
+
+      <h4>Properties:</h4>
+      <ul>
+        <li>
+          <strong>minInterval:</strong> Specifies the minimum interval (in
+          milliseconds) between each sync task.
+        </li>
+        <li>
+          <strong>powerState (optional):</strong> Defines whether the sync
+          should occur only when the device is idle or not.
+        </li>
+      </ul>
+
+      <hr />
+
+      <h2>Browser Support</h2>
+      <p>
+        As of now, the Periodic Sync API is supported by Chromium-based browsers
+        (e.g., Chrome, Edge) and is available behind a feature flag. Check for
+        the latest support status on MDN or Can I Use.
+      </p>
+
+      <hr />
+
+      <h2>Additional Resources</h2>
+      <ul>
+        <li>
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/API/PeriodicSyncManager"
+            >MDN Documentation</a
+          >
+        </li>
+        <li>
+          <a href="https://web.dev/periodic-background-sync/">Web.dev Guide</a>
+        </li>
+        <li>
+          <a href="https://caniuse.com/?search=periodic%20sync"
+            >Browser Support on Can I Use</a
+          >
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
