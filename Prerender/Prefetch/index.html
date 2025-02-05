@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prerendering vs Prefetching</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+
+    <!-- Prefetch example pages -->
+    <link rel="prefetch" href="prefetch-example1.html" />
+    <link rel="prefetch" href="prefetch-example2.html" />
+
+    <!-- Prerender example pages -->
+    <link rel="prerender" href="prerender-example2.html" />
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <h1 class="text-center">🚀 Prerendering vs Prefetching</h1>
+      <p class="lead text-center">
+        Optimize page speed by predicting user navigation.
+      </p>
+
+      <div class="row">
+        <!-- Prefetch Section -->
+        <div class="col-md-6">
+          <h3>🔹 <b>What is Prefetching?</b></h3>
+          <p>
+            Prefetching allows the browser to
+            <b>download resources in the background</b> that the user might need
+            next. However, the browser does
+            <b>not execute the resources</b> until the user actually navigates
+            to them.
+          </p>
+
+          <h5>🔧 <b>How to Implement?</b></h5>
+          <pre class="bg-dark text-light p-3">
+&lt;link rel="prefetch" href="next-page.html"&gt;
+                </pre
+          >
+
+          <h5>✅ <b>When to Use?</b></h5>
+          <ul>
+            <li>
+              When you <b>predict</b> the user might visit a specific page soon.
+            </li>
+            <li>
+              For assets like images, CSS, or JavaScript that enhance future
+              pages.
+            </li>
+            <li>
+              For <b>hover menus or dropdowns</b> that load additional styles.
+            </li>
+          </ul>
+
+          <h5>⚠️ <b>Considerations</b></h5>
+          <ul>
+            <li>
+              Does not guarantee an instant load—only <b>fetches</b> resources
+              in advance.
+            </li>
+            <li>
+              Not ideal for large files on slow networks, as it could waste
+              bandwidth.
+            </li>
+          </ul>
+
+          <h5>🛠️ <b>Real-World Use Cases</b></h5>
+          <ul>
+            <li>
+              <b>E-commerce</b>: Prefetches the product page when the user
+              hovers over a product.
+            </li>
+            <li>
+              <b>News websites</b>: Prefetches the next article in a series.
+            </li>
+          </ul>
+
+          <a href="prefetch-example1.html" class="btn btn-primary"
+            >🔗 Test Prefetch (Slow Page)</a
+          >
+          <a href="prefetch-example2.html" class="btn btn-secondary"
+            >🔗 Test Prefetch (Optimized)</a
+          >
+        </div>
+
+        <!-- Prerender Section -->
+        <div class="col-md-6">
+          <h3>🚀 <b>What is Prerendering?</b></h3>
+          <p>
+            Prerendering <b>fully loads and renders</b> the next page in the
+            background before the user clicks the link. When they navigate, the
+            page appears <b>instantly</b>.
+          </p>
+
+          <h5>🔧 <b>How to Implement?</b></h5>
+          <pre class="bg-dark text-light p-3">
+&lt;link rel="prerender" href="next-page.html"&gt;
+                </pre
+          >
+
+          <h5>✅ <b>When to Use?</b></h5>
+          <ul>
+            <li>
+              When you're <b>very certain</b> the user will visit a specific
+              page.
+            </li>
+            <li>For login pages, checkout flows, or key user actions.</li>
+            <li>For <b>next-step pages in multi-step forms</b>.</li>
+          </ul>
+
+          <h5>⚠️ <b>Considerations</b></h5>
+          <ul>
+            <li>
+              Uses <b>more system resources</b> (CPU & memory) since the page is
+              fully rendered.
+            </li>
+            <li>May <b>drain battery</b> on mobile devices.</li>
+            <li>
+              Should only be used when there's a <b>high probability</b> of
+              navigation.
+            </li>
+          </ul>
+
+          <h5>🛠️ <b>Real-World Use Cases</b></h5>
+          <ul>
+            <li>
+              <b>Search engines</b>: Google prerenders the
+              <b>first search result</b>.
+            </li>
+            <li>
+              <b>Checkout pages</b>: E-commerce sites prerender the checkout
+              after adding an item to the cart.
+            </li>
+          </ul>
+
+          <a href="prerender-example1.html" class="btn btn-danger"
+            >🔗 Test Prerender (Slow Page)</a
+          >
+          <a href="prerender-example2.html" class="btn btn-success"
+            >🔗 Test Prerender (Optimized)</a
+          >
+        </div>
+      </div>
+
+      <!-- What Happens in the Background Section -->
+      <div class="mt-5">
+        <h2>🛠️ <b>What Happens in the Background?</b></h2>
+
+        <h4>🔍 <b>Prefetching</b></h4>
+        <p>
+          When a browser prefetches a resource, it
+          <b>downloads the HTML, CSS, JavaScript, or images</b> that are likely
+          to be needed soon. However, it does
+          <b>not execute JavaScript or apply CSS</b>. Prefetching is only about
+          storing assets in the browser cache, making them available for quicker
+          retrieval when the user navigates to that page.
+          <b>API requests will not be resolved</b> at this stage; if the
+          prefetched page relies on API calls, those will still be executed when
+          the page is actually opened.
+        </p>
+
+        <h4>🚀 <b>Prerendering</b></h4>
+        <p>
+          Unlike prefetching, prerendering not only
+          <b>downloads the page</b> but also
+          <b>fully renders it in an invisible tab</b>. This means JavaScript
+          execution, API requests, and DOM rendering are already completed
+          before the user navigates to the page. If the page makes
+          <b>API requests, they will be resolved</b> in the background, and the
+          fetched data will be available immediately. When the user finally
+          visits the prerendered page, the browser simply swaps it into view,
+          making it appear <b>instantly loaded</b>.
+        </p>
+
+        <h3>💡 <b>Key Differences in Data Handling</b></h3>
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th><b>Feature</b></th>
+              <th><b>Prefetch</b></th>
+              <th><b>Prerender</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Loads HTML, CSS, JS, images?</b></td>
+              <td>✅ Yes</td>
+              <td>✅ Yes</td>
+            </tr>
+            <tr>
+              <td><b>Executes JavaScript?</b></td>
+              <td>❌ No</td>
+              <td>✅ Yes</td>
+            </tr>
+            <tr>
+              <td><b>Resolves API requests?</b></td>
+              <td>❌ No</td>
+              <td>✅ Yes</td>
+            </tr>
+            <tr>
+              <td><b>Loads full DOM?</b></td>
+              <td>❌ No</td>
+              <td>✅ Yes</td>
+            </tr>
+            <tr>
+              <td><b>Best use case?</b></td>
+              <td>Loading assets ahead of time</td>
+              <td>Loading pages before the user navigates</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section class="mt-5">
+        <h2>Combining service worker with prerender</h2>
+        <p>
+            The service worker in this implementation is responsible for prerendering a page when a user hovers over a link, caching it temporarily, and serving it instantly when the user clicks on the link within 3 seconds. If the user does not click, the cached page is discarded.
+        </p>
+    
+        <h3>Key Features of the Service Worker</h3>
+        <ul>
+            <li><b>Abort previous prerender requests:</b> If the user hovers over a new link before clicking the previous one, the old request is aborted to prevent unnecessary network usage.</li>
+            <li><b>Cache per URL:</b> Each URL is stored separately in a cache named after the URL itself.</li>
+            <li><b>Time-based expiration:</b> If the user does not click within 3 seconds, the cached page is removed.</li>
+            <li><b>Intercepting fetch requests:</b> When the user clicks a link, the service worker checks the cache first. If the page was prerendered, it is returned immediately; otherwise, a normal fetch request is performed.</li>
+        </ul>
+    
+        <h3>Detailed Breakdown of the Service Worker Code</h3>
+    
+        <h4>Global State Management</h4>
+        <pre>
+        <code>
+        let currentHoverUrl = null;
+        let currentHoverController = null;
+        let hoverTimer = null;
+        </code>
+        </pre>
+        <p>
+            These variables track the current URL being prerendered, the associated AbortController (to cancel previous fetch requests), and a timer handle for automatic cache cleanup.
+        </p>
+    
+        <h4>Installation and Activation</h4>
+        <pre>
+        <code>
+        self.addEventListener('install', event => {
+          self.skipWaiting();
+        });
+    
+        self.addEventListener('activate', event => {
+          event.waitUntil(self.clients.claim());
+        });
+        </code>
+        </pre>
+        <p>
+            The install event ensures the service worker takes control immediately using <b>skipWaiting()</b>. The activate event ensures it starts handling requests without requiring a reload.
+        </p>
+    
+        <h4>Handling Hover Events</h4>
+        <pre>
+        <code>
+        self.addEventListener('message', event => {
+          const data = event.data;
+          if (!data || !data.type) return;
+    
+          if (data.type === 'hover') {
+            const url = data.url;
+    
+            // Abort previous prerender if it exists
+            if (currentHoverController) {
+              currentHoverController.abort();
+              if (hoverTimer) {
+                clearTimeout(hoverTimer);
+                hoverTimer = null;
+              }
+              if (currentHoverUrl) {
+                caches.delete(currentHoverUrl);
+              }
+            }
+    
+            // Set new prerender target
+            currentHoverUrl = url;
+            currentHoverController = new AbortController();
+    
+            // Fetch and cache the page
+            fetch(url, { signal: currentHoverController.signal })
+              .then(response => {
+                return caches.open(url).then(cache => {
+                  return cache.put(url, response.clone());
+                });
+              })
+              .catch(err => {
+                console.error("Prerender fetch error or aborted:", err);
+              });
+    
+            // Set a timer to remove cache after 3 seconds if unused
+            hoverTimer = setTimeout(() => {
+              caches.delete(url).then(() => {
+                currentHoverUrl = null;
+                currentHoverController = null;
+                hoverTimer = null;
+              });
+            }, 3000);
+          }
+        });
+        </code>
+        </pre>
+        <p>
+            When a user hovers over a link, the service worker:
+            <ul>
+                <li>Aborts any previous prerender and clears its cache.</li>
+                <li>Fetches the new URL and stores it in a cache named after the URL.</li>
+                <li>Sets a 3-second timer to remove the cached page if the user does not click.</li>
+            </ul>
+        </p>
+    
+        <h4>Intercepting Fetch Requests</h4>
+        <pre>
+        <code>
+        self.addEventListener('fetch', event => {
+          if (event.request.method === 'GET' && currentHoverUrl && event.request.url === currentHoverUrl) {
+            event.respondWith(
+              caches.open(currentHoverUrl).then(cache => {
+                return cache.match(currentHoverUrl).then(response => {
+                  if (response) {
+                    // Remove cache after using
+                    cache.delete(currentHoverUrl);
+                    currentHoverUrl = null;
+                    if (hoverTimer) {
+                      clearTimeout(hoverTimer);
+                      hoverTimer = null;
+                    }
+                    currentHoverController = null;
+                    return response;
+                  } else {
+                    return fetch(event.request);
+                  }
+                });
+              })
+            );
+          }
+        });
+        </code>
+        </pre>
+        <p>
+            When the user clicks a link, the service worker:
+            <ul>
+                <li>Checks if the request URL matches the stored hover URL.</li>
+                <li>If a cached response exists, it is served immediately, and the cache is cleared.</li>
+                <li>If no cached response is found, the request is fetched normally.</li>
+            </ul>
+        </p>
+    
+        <h3>Conclusion</h3>
+        <p>
+            This service worker ensures that users experience fast page loads for links they are likely to click while minimizing unnecessary network requests. It intelligently handles hover-based prerendering, cache expiration, and fetch interception for an optimal browsing experience.
+        </p>
+    </section>
+    
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
