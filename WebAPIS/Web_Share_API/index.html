@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Share API Guide</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Web Share API Guide</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center">Web Share API Guide</h1>
+        <p class="text-center">Learn how to share text, URLs, and files using the Web Share API.</p>
+
+        <!-- Web Share API Overview -->
+        <section id="overview" class="mt-5">
+            <h2>🔹 What is the Web Share API?</h2>
+            <p>
+                The Web Share API allows web apps to share <b>text, links, and files</b> using the system's native sharing mechanism. 
+                This API is <b>only available in secure contexts</b> (<code>https://</code>) and works on <b>supported mobile and desktop browsers</b>.
+                It provides a simple interface for sharing content such as URLs, text, or files (images, PDFs, etc.) directly from a webpage.
+            </p>
+        </section>
+
+        <!-- Sharing Text & URLs -->
+        <section id="sharing-text" class="mt-5">
+            <h2>🔹 Sharing Text & URLs</h2>
+            <p>
+                You can share <b>plain text and links</b> using <code>navigator.share()</code>. This method triggers the system's 
+                native share dialog, allowing users to share content with apps installed on their device.
+            </p>
+            <pre><code class="language-javascript">
+async function shareText() {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: "Web Share API",
+                text: "This is a great way to share content across platforms.",
+                url: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API"
+            });
+            console.log("Shared successfully!");
+        } catch (error) {
+            console.error("Error sharing: ", error);
+        }
+    } else {
+        alert("Web Share API is not supported on this browser.");
+    }
+}
+            </code></pre>
+            <p><b>Explanation of Parameters:</b></p>
+            <ul>
+                <li><code>title</code>: The title of the content being shared. This will appear in the share dialog.</li>
+                <li><code>text</code>: A brief description or message that accompanies the shared URL.</li>
+                <li><code>url</code>: The link to the web page you are sharing.</li>
+            </ul>
+            <button class="btn btn-primary" onclick="shareText()">Share Text & URL</button>
+        </section>
+
+        <!-- Sharing Files -->
+        <section id="sharing-files" class="mt-5">
+            <h2>🔹 Sharing Files</h2>
+            <p>
+                The Web Share API also supports sharing <b>files</b> such as images, PDFs, and documents. This is done using the <code>files</code> 
+                parameter, which is an array of <code>File</code> objects. File sharing is supported on modern mobile and desktop browsers.
+            </p>
+            <pre><code class="language-javascript">
+async function shareFile() {
+    const file = new File(["Hello World"], "hello.txt", { type: "text/plain" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+            await navigator.share({
+                files: [file],
+                title: "Shared File",
+                text: "Check out this file!"
+            });
+            console.log("File shared successfully!");
+        } catch (error) {
+            console.error("Error sharing file:", error);
+        }
+    } else {
+        alert("File sharing is not supported on this browser.");
+    }
+}
+            </code></pre>
+            <p><b>Explanation of Parameters:</b></p>
+            <ul>
+                <li><code>files</code>: An array containing <code>File</code> objects that you want to share.</li>
+                <li><code>title</code>: The title of the shared content.</li>
+                <li><code>text</code>: A brief description of the shared content.</li>
+            </ul>
+            <button class="btn btn-success" onclick="shareFile()">Share a File</button>
+        </section>
+
+        <!-- Sharing Images -->
+        <section id="sharing-images" class="mt-5">
+            <h2>🔹 Sharing Images</h2>
+            <p>
+                You can share <b>image files</b> using an <code>&lt;input type="file"&gt;</code> element. When an image is selected, 
+                it can be shared through the Web Share API by including the image file in the <code>files</code> array.
+            </p>
+            <input type="file" id="imageInput" class="form-control mt-2">
+            <button class="btn btn-info mt-2" onclick="shareImage()">Share Selected Image</button>
+            <p><b>Explanation of Parameters:</b></p>
+            <ul>
+                <li><code>files</code>: The image selected by the user through the file input field.</li>
+                <li><code>title</code>: The title of the image being shared.</li>
+                <li><code>text</code>: A brief description of the shared image.</li>
+            </ul>
+        </section>
+
+        <!-- Web Share API Example Explanation -->
+        <section id="web-share-explanation" class="mt-5">
+            <h2>🔹 Example Explanation</h2>
+            <p>
+                In the examples above:
+                <ul>
+                    <li>The <code>shareText()</code> function shares a simple text message along with a URL.</li>
+                    <li>The <code>shareFile()</code> function demonstrates how to share a text file (<code>hello.txt</code>).</li>
+                    <li>The <code>shareImage()</code> function allows the user to select an image file and share it using the Web Share API.</li>
+                </ul>
+                All examples first check whether the Web Share API is supported on the current browser using <code>navigator.share</code> and <code>navigator.canShare</code> for file support.
+            </p>
+        </section>
+
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        async function shareText() {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: "Web Share API",
+                        text: "This is a great way to share content across platforms.",
+                        url: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API"
+                    });
+                    console.log("Shared successfully!");
+                } catch (error) {
+                    console.error("Error sharing: ", error);
+                }
+            } else {
+                alert("Web Share API is not supported on this browser.");
+            }
+        }
+
+        async function shareFile() {
+            const file = new File(["Hello World"], "hello.txt", { type: "text/plain" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: "Shared File",
+                        text: "Check out this file!"
+                    });
+                    console.log("File shared successfully!");
+                } catch (error) {
+                    console.error("Error sharing file:", error);
+                }
+            } else {
+                alert("File sharing is not supported on this browser.");
+            }
+        }
+
+        async function shareImage() {
+            const input = document.getElementById("imageInput");
+            if (input.files.length === 0) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            const file = input.files[0];
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: "Shared Image",
+                        text: "Check out this image!"
+                    });
+                    console.log("Image shared successfully!");
+                } catch (error) {
+                    console.error("Error sharing image:", error);
+                }
+            } else {
+                alert("Image sharing is not supported on this browser.");
+            }
+        }
+    </script>
+
+</body>
+</html>
