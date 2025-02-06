@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Webpack - Guide & Examples</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Task Runners & Bundlers</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="gulp.html">Gulp</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="webpack.html">Webpack</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">🚀 Webpack - Complete Guide & Examples</h1>
+
+      <section class="mb-5">
+        <h2>🔹 What is Webpack?</h2>
+        <p>
+          Webpack is a powerful module bundler that helps bundle JavaScript,
+          CSS, images, and other resources for modern web applications. It
+          processes these assets and bundles them into a few optimized files for
+          faster loading and better performance.
+        </p>
+        <p><b>Installation:</b> To install Webpack globally, use:</p>
+        <pre><code>npm install --global webpack webpack-cli</code></pre>
+        <p>To install it locally in a project:</p>
+        <pre><code>npm install --save-dev webpack webpack-cli</code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Webpack Configuration</h2>
+        <p>
+          A typical Webpack project requires a <b>webpack.config.js</b> file
+          where you define rules, plugins, and other configurations.
+        </p>
+        <pre><code>
+// webpack.config.js example
+module.exports = {
+    entry: './src/index.js',  // Entry file
+    output: {
+        path: __dirname + '/dist',
+        filename: 'bundle.js'  // Output bundled file
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: 'babel-loader'  // Transpile JS with Babel
+            }
+        ]
+    }
+};
+        </code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Webpack Methods and Customization</h2>
+        <p>
+          Here are some core methods and configurations to customize Webpack:
+        </p>
+
+        <h4>1️⃣ <b>entry</b></h4>
+        <p>
+          The <code>entry</code> property defines the entry point of your
+          application (usually a JavaScript file). Webpack will build a
+          dependency graph starting from this file.
+        </p>
+        <pre><code>
+module.exports = {
+    entry: './src/index.js'  // Defines the entry point for your app
+};
+        </code></pre>
+
+        <h4>2️⃣ <b>output</b></h4>
+        <p>
+          The <code>output</code> property specifies where to output the bundled
+          files.
+        </p>
+        <pre><code>
+module.exports = {
+    output: {
+        filename: 'bundle.js',  // Specifies the output file name
+        path: __dirname + '/dist'  // Specifies the output directory
+    }
+};
+        </code></pre>
+
+        <h4>3️⃣ <b>module</b> (Loaders)</h4>
+        <p>
+          The <code>module</code> property defines how files should be processed
+          by loaders. For example, you can use Babel to transpile JavaScript.
+        </p>
+        <pre><code>
+module: {
+    rules: [
+        {
+            test: /\.js$/,  // Match JavaScript files
+            exclude: /node_modules/,
+            use: 'babel-loader'  // Transpile with Babel
+        }
+    ]
+}
+        </code></pre>
+
+        <h4>4️⃣ <b>plugins</b></h4>
+        <p>
+          The <code>plugins</code> property allows you to extend Webpack
+          functionality. Common plugins include HTML injection, minification,
+          etc.
+        </p>
+        <pre><code>
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/index.html'
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css'
+        })
+    ]
+};
+        </code></pre>
+
+        <h4>5️⃣ <b>devServer</b></h4>
+        <p>
+          The <code>devServer</code> property is used to configure a development
+          server for live-reloading your application.
+        </p>
+        <pre><code>
+module.exports = {
+    devServer: {
+        contentBase: './dist',
+        hot: true  // Enable hot module replacement
+    }
+};
+        </code></pre>
+
+        <h4>6️⃣ <b>resolve</b></h4>
+        <p>
+          The <code>resolve</code> property helps Webpack understand how to
+          resolve modules, including file extensions and aliasing.
+        </p>
+        <pre><code>
+module.exports = {
+    resolve: {
+        extensions: ['.js', '.jsx'],  // Resolve these extensions automatically
+        alias: {
+            '@components': path.resolve(__dirname, 'src/components/')  // Alias for shorter import paths
+        }
+    }
+};
+        </code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Automating Tasks with Webpack</h2>
+        <h4>📌 Example: Transpiling JavaScript with Babel</h4>
+        <pre><code>
+module: {
+    rules: [
+        {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: 'babel-loader'  // Use Babel to transpile JavaScript
+        }
+    ]
+}
+        </code></pre>
+
+        <h4>📌 Example: Minifying JavaScript</h4>
+        <pre><code>
+const TerserPlugin = require('terser-webpack-plugin');
+
+optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+}
+        </code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Watching Files for Changes</h2>
+        <p>Webpack can automatically rebuild your bundle when files change.</p>
+        <pre><code>
+watch: true  // Enables file watching for live reloading
+        </code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Running Webpack</h2>
+        <p>Run Webpack using the following command:</p>
+        <pre><code>npx webpack --config webpack.config.js</code></pre>
+      </section>
+      <section id="webpack-plugins" class="mt-5">
+
+          <h2>📌 Webpack Plugins</h2>
+          <p>
+            Webpack has a variety of plugins to automate and enhance different
+            tasks in the build process:
+          </p>
+
+          <ul>
+            <li>
+              <b>webpack-clean-plugin</b>: Clean up the output folder before
+              each build.
+            </li>
+            <li>
+              <b>webpack-merge</b>: Merge multiple Webpack configurations
+              together.
+            </li>
+            <li>
+              <b>html-webpack-plugin</b>: Simplifies the creation of an HTML
+              file with bundled files injected.
+            </li>
+            <li>
+              <b>mini-css-extract-plugin</b>: Extract CSS into separate files
+              for better caching.
+            </li>
+            <li>
+              <b>terser-webpack-plugin</b>: Minify JavaScript files for smaller
+              bundle sizes.
+            </li>
+            <li>
+              <b>optimize-css-assets-webpack-plugin</b>: Minimize and optimize
+              CSS assets.
+            </li>
+            <li>
+              <b>copy-webpack-plugin</b>: Copy static files like images or fonts
+              to the build directory.
+            </li>
+            <li>
+              <b>file-loader</b>: Resolve import/require() on files and emit
+              them into the output directory.
+            </li>
+          </ul>
+        </section>
+        <section class="mb-5">
+          <h2>🔹 Real-World Use Cases</h2>
+          <ul>
+            <li>
+              🚀 <b>Automating CSS Extraction</b>: Extract styles into separate
+              CSS files to reduce bundle sizes.
+            </li>
+            <li>
+              📦 <b>Minifying JavaScript</b>: Use <b>TerserWebpackPlugin</b> to
+              minify and compress JavaScript for production.
+            </li>
+            <li>
+              🔧 <b>Optimizing CSS</b>: Use
+              <b>optimize-css-assets-webpack-plugin</b> to minimize CSS for
+              better performance.
+            </li>
+            <li>
+              🖥 <b>HTML Injection</b>: Dynamically inject bundled JavaScript
+              files into HTML using <b>html-webpack-plugin</b>.
+            </li>
+            <li>
+              🖼 <b>Asset Management</b>: Copy image files, fonts, and other
+              static assets with <b>copy-webpack-plugin</b>.
+            </li>
+            <li>
+              🧹 <b>Clean Build Directories</b>: Automatically clean old build
+              files using <b>webpack-clean-plugin</b> before each build to keep
+              the build directory organized.
+            </li>
+            <li>
+              🔀 <b>Managing Multiple Configurations</b>: Combine different
+              configurations for development and production environments using
+              <b>webpack-merge</b>.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="text-center mt-5">
+        <p>
+          📢 Learn more at
+          <a href="https://webpack.js.org/" target="_blank">webpack.js.org</a>
+        </p>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

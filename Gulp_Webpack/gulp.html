@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gulp.js - Guide & Examples</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Task Runners & Bundlers</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="gulp.html">Gulp</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="webpack.html">Webpack</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">🚀 Gulp.js - Complete Guide & Examples</h1>
+
+      <section class="mb-5">
+        <h2>🔹 What is Gulp.js?</h2>
+        <p>
+          Gulp.js is a task runner built on Node.js that helps automate
+          repetitive tasks like minifying CSS/JS, compiling Sass/LESS,
+          optimizing images, and more. It uses streams and
+          code-over-configuration principles for faster builds.
+        </p>
+        <p><b>Installation:</b> To install Gulp globally, use:</p>
+        <pre><code>npm install --global gulp-cli</code></pre>
+        <p>To install it locally in a project:</p>
+        <pre><code>npm install --save-dev gulp</code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Gulp Configuration</h2>
+        <p>
+          A Gulp project requires a <b>gulpfile.js</b> which defines tasks.
+          Below is a simple example:
+        </p>
+        <pre><code>
+// Import Gulp
+const gulp = require('gulp');
+
+// Define a simple task
+gulp.task('hello', function(done) {
+    console.log('Hello, Gulp!');
+    done();
+});
+        </code></pre>
+        <p>Run this task with:</p>
+        <pre><code>gulp hello</code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Gulp Methods and Customization</h2>
+        <p>Here are some core methods used in Gulp to automate tasks:</p>
+
+        <h4>1️⃣ <b>gulp.src()</b></h4>
+        <p>
+            The <code>gulp.src()</code> method is used to specify the source files that you want to process. It allows 
+            you to use wildcards to select multiple files at once.
+        </p>
+        <pre><code>
+const gulp = require('gulp');
+
+gulp.task('scripts', () => {
+    return gulp.src('src/js/**/*.js')  // Selects all JavaScript files in the src/js directory
+        .pipe(gulp.dest('dist/js'));  // Outputs to the dist/js directory
+});
+        </code></pre>
+
+        <h4>2️⃣ <b>gulp.dest()</b></h4>
+        <p>
+            The <code>gulp.dest()</code> method specifies the destination directory where the processed files should be saved.
+        </p>
+        <pre><code>
+gulp.task('styles', () => {
+    return gulp.src('src/scss/**/*.scss')
+        .pipe(sass())  // Compiles Sass to CSS
+        .pipe(gulp.dest('dist/css'));  // Saves the CSS to dist/css directory
+});
+        </code></pre>
+
+        <h4>3️⃣ <b>gulp.pipe()</b></h4>
+        <p>
+            The <code>gulp.pipe()</code> method is used to pass the files through various plugins to modify them (e.g., minification, 
+            transpilation, etc.). It allows chaining multiple operations on files.
+        </p>
+        <pre><code>
+const gulp = require('gulp');
+const uglify = require('gulp-uglify');
+
+gulp.task('minify', () => {
+    return gulp.src('src/js/**/*.js')
+        .pipe(uglify())  // Minifies the JavaScript files
+        .pipe(gulp.dest('dist/js'));  // Outputs minified files to dist/js
+});
+        </code></pre>
+
+        <h4>4️⃣ <b>gulp.watch()</b></h4>
+        <p>
+            The <code>gulp.watch()</code> method allows Gulp to "watch" specific files and automatically run tasks when those files change.
+        </p>
+        <pre><code>
+gulp.task('watch', () => {
+    gulp.watch('src/js/**/*.js', gulp.series('scripts'));  // Watches JavaScript files and runs the 'scripts' task on changes
+    gulp.watch('src/scss/**/*.scss', gulp.series('styles'));  // Watches Sass files and runs the 'styles' task
+});
+        </code></pre>
+
+        <h4>5️⃣ <b>gulp.series()</b> and <b>gulp.parallel()</b></h4>
+        <p>
+            Gulp provides two ways to control the order of task execution:
+            <ul>
+                <li><b>gulp.series():</b> Executes tasks sequentially (one after the other).</li>
+                <li><b>gulp.parallel():</b> Executes tasks concurrently (in parallel).</li>
+            </ul>
+        </p>
+        <pre><code>
+gulp.task('default', gulp.series('scripts', 'styles'));  // Runs tasks in sequence (first 'scripts', then 'styles')
+
+gulp.task('build', gulp.parallel('scripts', 'styles'));  // Runs tasks in parallel (both 'scripts' and 'styles' at the same time)
+        </code></pre>
+
+        <h4>6️⃣ <b>gulp.task()</b></h4>
+        <p>
+            The <code>gulp.task()</code> method registers a task with Gulp. Each task can have an action defined by a function.
+        </p>
+        <pre><code>
+gulp.task('default', () => {
+    console.log('Gulp is running!');
+});
+        </code></pre>
+    </section>
+
+      <section class="mb-5">
+        <h2>🔹 Automating Tasks with Gulp</h2>
+        <p>
+          Gulp can automate tasks like minification, compilation, image
+          optimization, etc.
+        </p>
+
+        <h4>📌 Example: Minify JavaScript</h4>
+        <pre><code>
+const gulp = require('gulp');
+const uglify = require('gulp-uglify');
+
+// Minify JavaScript
+gulp.task('minify-js', function() {
+    return gulp.src('src/js/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist/js'));
+});
+        </code></pre>
+
+        <h4>📌 Example: Compile Sass to CSS</h4>
+        <pre><code>
+const sass = require('gulp-sass')(require('sass'));
+
+gulp.task('compile-sass', function() {
+    return gulp.src('src/scss/*.scss')
+        .pipe(sass({ outputStyle: 'compressed' }))
+        .pipe(gulp.dest('dist/css'));
+});
+        </code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Watching Files for Changes</h2>
+        <p>Gulp can monitor files and rerun tasks when they change.</p>
+        <pre><code>
+gulp.task('watch', function() {
+    gulp.watch('src/scss/*.scss', gulp.series('compile-sass'));
+});
+        </code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Running a Default Task</h2>
+        <p>Define a default task that runs multiple tasks together.</p>
+        <pre><code>
+gulp.task('default', gulp.parallel('minify-js', 'compile-sass', 'watch'));
+        </code></pre>
+        <p>Run it with:</p>
+        <pre><code>gulp</code></pre>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Gulp Plugins</h2>
+        <p>Gulp has various plugins for automation:</p>
+        <ul>
+          <li><b>gulp-uglify:</b> Minify JavaScript</li>
+          <li><b>gulp-sass:</b> Compile Sass</li>
+          <li><b>gulp-imagemin:</b> Optimize images</li>
+          <li><b>gulp-concat:</b> Merge multiple files into one</li>
+          <li><b>gulp-autoprefixer:</b> Add vendor prefixes to CSS</li>
+        </ul>
+        <p>
+          Find more plugins at
+          <a href="https://gulpjs.com/plugins/" target="_blank"
+            >Gulp Plugins Directory</a
+          >.
+        </p>
+      </section>
+
+      <section class="mb-5">
+        <h2>🔹 Real-World Use Cases</h2>
+        <ul>
+          <li>🚀 Automating Sass/LESS compilation</li>
+          <li>📦 Minifying JavaScript and CSS</li>
+          <li>🖼 Optimizing images for better performance</li>
+          <li>📜 Concatenating multiple files into one</li>
+          <li>🔍 Linting JavaScript and CSS for errors</li>
+          <li>🔄 Auto-refreshing browser on code changes</li>
+        </ul>
+      </section>
+
+      <footer class="text-center mt-5">
+        <p>
+          📢 Learn more at
+          <a href="https://gulpjs.com/" target="_blank">gulpjs.com</a>
+        </p>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
