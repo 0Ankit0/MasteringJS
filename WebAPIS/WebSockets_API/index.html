@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WebSockets API Guide</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">WebSockets API Guide</a>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <h1 class="text-center">WebSockets API Guide</h1>
+      <p class="text-center">
+        Learn how to establish a WebSocket connection and communicate in
+        real-time.
+      </p>
+
+      <!-- WebSockets API Overview -->
+      <section id="overview" class="mt-5">
+        <h2>🔹 What is the WebSockets API?</h2>
+        <p>
+          The WebSockets API provides a way to open a persistent connection to a
+          server and exchange data in real-time. This allows for bidirectional
+          communication between a client and a server over a single, long-lived
+          connection. WebSockets are commonly used for applications such as live
+          chat, notifications, and real-time data feeds.
+        </p>
+      </section>
+
+      <!-- WebSockets API Methods -->
+      <section id="methods" class="mt-5">
+        <h2>🔹 WebSockets API Methods</h2>
+        <p>
+          The WebSockets API provides several important methods for establishing
+          and managing the WebSocket connection:
+        </p>
+        <ul>
+          <li>
+            <b>WebSocket(url, protocols)</b>: The constructor that creates a new
+            WebSocket object. The <code>url</code> parameter specifies the
+            WebSocket server's address, and the optional
+            <code>protocols</code> parameter specifies the subprotocols to use.
+          </li>
+          <li>
+            <b>ws.send(data)</b>: Sends data to the server. The
+            <code>data</code> can be a string, <code>Blob</code>,
+            <code>ArrayBuffer</code>, etc.
+          </li>
+          <li>
+            <b>ws.close([code], [reason])</b>: Closes the WebSocket connection.
+            Optionally, you can specify a closing <code>code</code> and a
+            <code>reason</code> message.
+          </li>
+          <li>
+            <b>ws.onopen</b>: Event handler that is triggered when the WebSocket
+            connection is established.
+          </li>
+          <li>
+            <b>ws.onmessage</b>: Event handler that is triggered when the client
+            receives a message from the server.
+          </li>
+          <li>
+            <b>ws.onerror</b>: Event handler that is triggered if an error
+            occurs during the WebSocket communication.
+          </li>
+          <li>
+            <b>ws.onclose</b>: Event handler that is triggered when the
+            WebSocket connection is closed.
+          </li>
+        </ul>
+      </section>
+
+      <!-- WebSocket Working Example -->
+      <section id="example" class="mt-5">
+        <h2>🔹 WebSocket Communication Example</h2>
+        <p>
+          Below is an example of a WebSocket connection that sends and receives
+          messages between the client and server in a real-world scenario. The
+          WebSocket server listens for connections and responds with a message
+          when it receives data from the client.
+        </p>
+
+        <h3>Client-Side WebSocket Code:</h3>
+        <pre><code class="language-javascript">
+// WebSocket client-side code
+
+// Establish a connection to the WebSocket server
+const socket = new WebSocket("ws://localhost:8080");  // The WebSocket server URL
+
+// Event handler for when the connection is open
+socket.onopen = function() {
+    console.log("WebSocket connection established.");
+    socket.send("Hello from client!");  // Send a message to the server
+};
+
+// Event handler for receiving messages from the server
+socket.onmessage = function(event) {
+    console.log("Received from server:", event.data);
+};
+
+// Event handler for any errors that occur
+socket.onerror = function(error) {
+    console.log("WebSocket error:", error);
+};
+
+// Event handler for when the connection is closed
+socket.onclose = function() {
+    console.log("WebSocket connection closed.");
+};
+        </code></pre>
+
+        <h3>Server-Side WebSocket Code (Node.js):</h3>
+        <pre><code class="language-javascript">
+// WebSocket server-side code (Node.js with the 'ws' library)
+
+const WebSocket = require('ws');
+
+// Create a WebSocket server
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Set up event listeners for client connections
+wss.on('connection', function connection(ws) {
+    console.log("Client connected");
+
+    // Event handler for receiving messages from the client
+    ws.on('message', function incoming(message) {
+        console.log("Received from client: " + message);
+        ws.send("Message received: " + message);  // Send a response to the client
+    });
+
+    // Send a welcome message to the client when they connect
+    ws.send("Welcome to the WebSocket server!");
+});
+        </code></pre>
+
+        <p><b>Explanation:</b></p>
+        <ul>
+          <li>
+            On the <b>client-side</b>, the client creates a WebSocket object by
+            calling <code>new WebSocket('ws://localhost:8080')</code>. This
+            connects to a WebSocket server running at
+            <code>localhost:8080</code>.
+          </li>
+          <li>
+            The client sends a message ("Hello from client!") to the server
+            using
+            <code>socket.send()</code>.
+          </li>
+          <li>
+            The client listens for any incoming messages from the server using
+            the <code>socket.onmessage</code> event handler, and it logs the
+            received message to the console.
+          </li>
+          <li>
+            On the <b>server-side</b>, the Node.js server (with the
+            <code>ws</code>
+            library) listens for WebSocket connections on port 8080. Once a
+            client connects, it sends a welcome message and listens for any
+            messages from the client.
+          </li>
+          <li>
+            When the server receives a message from the client, it sends a
+            response back using <code>ws.send()</code>, which the client
+            receives via the <code>socket.onmessage</code> handler.
+          </li>
+        </ul>
+
+        <p>
+          To run the example, you'll need to have a WebSocket server running.
+          You can use the provided Node.js code to run the server, or use any
+          WebSocket server implementation that listens on port 8080.
+        </p>
+      </section>
+    </div>
+  </body>
+</html>
