@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Advanced Higher-Order Functions: Real-Life Example</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      pre {
+        background: #e9ecef;
+        padding: 15px;
+        border-left: 5px solid #007bff;
+        overflow-x: auto;
+      }
+      code {
+        font-family: Consolas, monospace;
+      }
+      .section-header {
+        margin-top: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="./index.html">Debounce Demo</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="./index.html">Overview</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./Example.html">Example</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container mt-4">
+      <header class="text-center">
+        <h1 class="text-primary">
+          Advanced Higher-Order Functions in JavaScript
+        </h1>
+        <p class="lead">
+          A deep dive into function composition for building a real-life order
+          processing pipeline.
+        </p>
+      </header>
+
+      <!-- Overview Section -->
+      <section id="overview" class="section-header">
+        <h2>What are Higher-Order Functions?</h2>
+        <p>
+          A <strong>higher-order function</strong> is one that either accepts
+          functions as arguments or returns a function (or both). This allows
+          you to create more abstract, reusable, and modular code. In modern
+          JavaScript, higher-order functions are used extensively—from array
+          methods like <code>map</code>, <code>filter</code>, and
+          <code>reduce</code> to middleware pipelines in server frameworks.
+        </p>
+      </section>
+
+      <!-- Pipeline Example Section -->
+      <section id="pipeline" class="section-header">
+        <h2>Real-Life Example: Order Processing Pipeline</h2>
+        <p>
+          Consider an e-commerce system where each order needs to be processed
+          by a series of transformations:
+        </p>
+        <ul>
+          <li>Validate the order data.</li>
+          <li>Apply a discount (if applicable).</li>
+          <li>Calculate tax.</li>
+          <li>Format the final order details.</li>
+        </ul>
+        <p>
+          We can create a <code>compose</code> function to chain these
+          operations. This is a classic example of a higher-order function that
+          accepts multiple functions and returns a new function.
+        </p>
+        <pre><code>
+// Compose function: accepts multiple functions and returns a new function
+function compose(...functions) {
+  return function(initialValue) {
+    return functions.reduce((acc, fn) => fn(acc), initialValue);
+  };
+}
+
+// Step 1: Validate Order
+function validateOrder(order) {
+  // Simple validation: ensure price and quantity exist
+  if (!order.price || !order.quantity) {
+    throw new Error("Invalid order: missing price or quantity");
+  }
+  order.validated = true;
+  return order;
+}
+
+// Step 2: Apply Discount
+function applyDiscount(order) {
+  // For demonstration, apply a 10% discount if the order qualifies
+  if (order.eligibleForDiscount) {
+    order.price = order.price * 0.9;
+    order.discountApplied = true;
+  }
+  return order;
+}
+
+// Step 3: Calculate Tax
+function calculateTax(order) {
+  const taxRate = 0.07; // 7% tax rate
+  order.tax = order.price * order.quantity * taxRate;
+  return order;
+}
+
+// Step 4: Format Order
+function formatOrder(order) {
+  order.total = (order.price * order.quantity) + order.tax;
+  order.summary = `Order for ${order.quantity} item(s) at $${order.price.toFixed(2)} each. Total with tax: $${order.total.toFixed(2)}.`;
+  return order;
+}
+
+// Create the composed function (pipeline)
+const processOrder = compose(validateOrder, applyDiscount, calculateTax, formatOrder);
+
+// Sample order data
+const orderData = {
+  price: 100,
+  quantity: 3,
+  eligibleForDiscount: true
+};
+
+try {
+  const processedOrder = processOrder(orderData);
+  console.log(processedOrder);
+  // Expected Output:
+  // {
+  //   price: 90,            // discounted price
+  //   quantity: 3,
+  //   eligibleForDiscount: true,
+  //   validated: true,
+  //   discountApplied: true,
+  //   tax: 18.9,            // 7% tax on the discounted order amount
+  //   total: 288.9,         // final total with tax
+  //   summary: "Order for 3 item(s) at $90.00 each. Total with tax: $288.90."
+  // }
+} catch (error) {
+  console.error(error.message);
+}
+      </code></pre>
+      </section>
+
+      <!-- Detailed Explanation Section -->
+      <section id="explanation" class="section-header">
+        <h2>Step-by-Step Explanation</h2>
+        <ol>
+          <li>
+            <strong>compose Function:</strong>
+            <p>
+              The <code>compose</code> function takes any number of functions as
+              arguments (using rest parameters) and returns a new function. This
+              returned function, when called with an initial value, passes that
+              value through all functions in sequence using <code>reduce</code>.
+            </p>
+          </li>
+          <li>
+            <strong>validateOrder:</strong>
+            <p>
+              This function checks whether the order contains the necessary
+              fields (<code>price</code> and <code>quantity</code>). If
+              validation passes, it adds a flag (<code>validated: true</code>)
+              and returns the modified order.
+            </p>
+          </li>
+          <li>
+            <strong>applyDiscount:</strong>
+            <p>
+              This function applies a 10% discount if the order is eligible. It
+              modifies the <code>price</code> and marks that a discount was
+              applied.
+            </p>
+          </li>
+          <li>
+            <strong>calculateTax:</strong>
+            <p>
+              Based on the updated price and quantity, this function calculates
+              a tax (7% rate) and adds the tax to the order object.
+            </p>
+          </li>
+          <li>
+            <strong>formatOrder:</strong>
+            <p>
+              Finally, this function calculates the total cost (including tax)
+              and creates a summary string for display or logging.
+            </p>
+          </li>
+          <li>
+            <strong>Using the Pipeline:</strong>
+            <p>
+              The <code>processOrder</code> function is a composition of all
+              these steps. When you pass an order to <code>processOrder</code>,
+              it flows through each stage sequentially. This design allows you
+              to easily add, remove, or modify processing steps without changing
+              the overall structure.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Real-Life Usage Section -->
+      <section id="usage" class="section-header">
+        <h2>Real-Life Implementation Considerations</h2>
+        <ul>
+          <li>
+            <strong>Modularity:</strong>
+            Breaking down order processing into distinct functions makes
+            maintenance and testing easier.
+          </li>
+          <li>
+            <strong>Error Handling:</strong>
+            In production, you would include robust error handling at each stage
+            of the pipeline.
+          </li>
+          <li>
+            <strong>Extensibility:</strong>
+            New processing steps (like fraud detection or logging) can be added
+            to the pipeline by composing additional functions.
+          </li>
+          <li>
+            <strong>Reusability:</strong>
+            The <code>compose</code> pattern is reusable for other domains
+            (e.g., data transformations, middleware chains, etc.).
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
