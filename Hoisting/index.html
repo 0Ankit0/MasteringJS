@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JavaScript Hoisting and Temporal Dead Zone</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-top: 70px;
+      }
+      pre {
+        background: #e9ecef;
+        padding: 15px;
+        border-left: 5px solid #0d6efd;
+        overflow-x: auto;
+      }
+      code {
+        font-family: Consolas, monospace;
+      }
+      .section-header {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Hoisting &amp; TDZ</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#hoisting">Hoisting</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tdz">Temporal Dead Zone</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#examples">Examples</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#comparison">Key Differences</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+      <header class="text-center">
+        <h1 class="text-primary">
+          Understanding Hoisting and the Temporal Dead Zone in JavaScript
+        </h1>
+        <p class="lead">
+          Learn how variable and function declarations are handled by
+          JavaScript, and understand why block-scoped variables (let/const)
+          behave differently.
+        </p>
+      </header>
+
+      <!-- Hoisting Section -->
+      <section id="hoisting" class="section-header">
+        <h2>Hoisting in JavaScript</h2>
+        <p>
+          <strong>Hoisting</strong> is JavaScript's default behavior of moving
+          declarations to the top of the current scope (script or function).
+          Both variable declarations (using <code>var</code>) and function
+          declarations are hoisted.
+        </p>
+        <ul>
+          <li>
+            <strong>Variable Hoisting:</strong> Variables declared with
+            <code>var</code> are hoisted and initialized with
+            <code>undefined</code>. Their assignment remains in place.
+          </li>
+          <li>
+            <strong>Function Hoisting:</strong> Function declarations are
+            hoisted entirely, meaning you can call the function before its
+            definition in the code.
+          </li>
+        </ul>
+        <h3>Example: Variable Hoisting with var</h3>
+        <pre><code>
+// Using var: Declaration is hoisted, assignment is not.
+console.log(x); // Output: undefined
+var x = 5;
+console.log(x); // Output: 5
+      </code></pre>
+        <h3>Example: Function Hoisting</h3>
+        <pre><code>
+// Function declaration is hoisted completely.
+greet(); // Output: "Hello, World!"
+
+function greet() {
+  console.log("Hello, World!");
+}
+      </code></pre>
+        <p>Note that function expressions are not hoisted in the same way:</p>
+        <pre><code>
+// Function expression with var is hoisted as undefined
+console.log(sayHi); // Output: undefined
+var sayHi = function() {
+  console.log("Hi!");
+};
+// sayHi(); // Would throw an error if uncommented, because sayHi is undefined at this point.
+      </code></pre>
+      </section>
+
+      <!-- Temporal Dead Zone Section -->
+      <section id="tdz" class="section-header">
+        <h2>Temporal Dead Zone (TDZ)</h2>
+        <p>
+          Variables declared with <code>let</code> and <code>const</code> are
+          block-scoped and are not initialized until their declaration is
+          evaluated. The period from the start of the block until the
+          declaration is known as the <strong>Temporal Dead Zone (TDZ)</strong>.
+        </p>
+        <ul>
+          <li>
+            If you try to access a <code>let</code> or
+            <code>const</code> variable before its declaration, JavaScript
+            throws a <code>ReferenceError</code>.
+          </li>
+          <li>
+            This behavior prevents accidental use of uninitialized variables.
+          </li>
+        </ul>
+        <h3>Example: TDZ with let</h3>
+        <pre><code>
+// Attempting to access a let variable before declaration
+console.log(y); // Throws ReferenceError: Cannot access 'y' before initialization
+let y = 10;
+console.log(y); // Output: 10 (after declaration)
+      </code></pre>
+        <h3>Example: TDZ with const</h3>
+        <pre><code>
+// const works similarly; accessing it before declaration will throw an error.
+console.log(z); // Throws ReferenceError: Cannot access 'z' before initialization
+const z = 20;
+console.log(z); // Output: 20
+      </code></pre>
+      </section>
+
+      <!-- Examples Section -->
+      <section id="examples" class="section-header">
+        <h2>Detailed Examples</h2>
+        <p>
+          Below are side-by-side examples to highlight the differences between
+          var, let, and function declarations.
+        </p>
+        <h3>Example: var vs. let (TDZ)</h3>
+        <pre><code>
+// Example with var: Declaration is hoisted and initialized with undefined.
+console.log(a); // undefined
+var a = "var value";
+
+// Example with let: Variable is hoisted but not initialized, leading to TDZ.
+try {
+  console.log(b); // ReferenceError
+} catch (error) {
+  console.error("Error accessing 'b':", error.message);
+}
+let b = "let value";
+console.log(b); // "let value"
+      </code></pre>
+        <h3>Example: Function Declaration vs. Function Expression</h3>
+        <pre><code>
+// Function Declaration: fully hoisted
+sayHello(); // "Hello from declaration!"
+function sayHello() {
+  console.log("Hello from declaration!");
+}
+
+// Function Expression using var: variable is hoisted as undefined.
+try {
+  sayHi(); // TypeError: sayHi is not a function
+} catch (error) {
+  console.error("Error calling sayHi:", error.message);
+}
+var sayHi = function() {
+  console.log("Hello from expression!");
+};
+sayHi(); // "Hello from expression!"
+      </code></pre>
+      </section>
+
+      <!-- Comparison Section -->
+      <section id="comparison" class="section-header">
+        <h2>Key Differences: Hoisting vs. TDZ</h2>
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Aspect</th>
+              <th>var & Function Declarations</th>
+              <th>let & const Declarations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Hoisting</strong></td>
+              <td>
+                Declarations are hoisted and initialized (var is set to
+                <code>undefined</code>; function declarations are fully
+                hoisted).
+              </td>
+              <td>
+                Declarations are hoisted but not initialized. They reside in the
+                Temporal Dead Zone until their definition is evaluated.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Error on Early Access</strong></td>
+              <td>
+                Accessing a var-declared variable before assignment returns
+                <code>undefined</code> (no error).
+              </td>
+              <td>
+                Accessing a let/const variable before its declaration results in
+                a <code>ReferenceError</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Scope</strong></td>
+              <td>var is function-scoped or globally-scoped.</td>
+              <td>let and const are block-scoped.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          In summary, while hoisting applies to all declarations in JavaScript,
+          the key difference lies in initialization and error handling.
+          Variables declared with <code>var</code> and function declarations are
+          immediately available (albeit with <code>undefined</code> in the case
+          of <code>var</code>), whereas <code>let</code> and
+          <code>const</code> remain in the Temporal Dead Zone until the code
+          reaches their declaration.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
