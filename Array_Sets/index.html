@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JavaScript Arrays and Sets</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-top: 70px;
+      }
+      pre {
+        background: #e9ecef;
+        padding: 15px;
+        border-left: 5px solid #0d6efd;
+        overflow-x: auto;
+      }
+      code {
+        font-family: Consolas, monospace;
+      }
+      .section-header {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Arrays &amp; Sets</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#arrays">Arrays</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#sets">Sets</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#comparison">Comparison</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+      <header class="text-center">
+        <h1 class="text-primary">Understanding JavaScript Arrays and Sets</h1>
+        <p class="lead">
+          Learn about the built-in collection types in JavaScript, including
+          their methods, parameters, and use cases.
+        </p>
+      </header>
+
+      <!-- Arrays Section -->
+      <section id="arrays" class="section-header">
+        <h2>Arrays in JavaScript</h2>
+        <p>
+          An <strong>array</strong> is an ordered collection of values. Arrays
+          can store elements of any type (numbers, strings, objects, etc.) and
+          come with a wide range of built-in methods.
+        </p>
+        <h3>Common Array Methods</h3>
+        <ul>
+          <li>
+            <code>push(item)</code>: Adds one or more items to the end of the
+            array.
+          </li>
+          <li>
+            <code>pop()</code>: Removes and returns the last element of the
+            array.
+          </li>
+          <li><code>shift()</code>: Removes and returns the first element.</li>
+          <li>
+            <code>unshift(item)</code>: Adds one or more elements to the
+            beginning of the array.
+          </li>
+          <li>
+            <code>splice(start, deleteCount, ...items)</code>: Removes or
+            replaces existing elements and/or adds new ones. <br /><small
+              >Example: <code>splice(1, 2, 'a', 'b')</code> starts at index 1,
+              deletes 2 items, and inserts 'a' and 'b'.</small
+            >
+          </li>
+          <li>
+            <code>slice(start, end)</code>: Returns a shallow copy of a portion
+            of the array from <code>start</code> to <code>end</code> (not
+            inclusive).
+          </li>
+          <li>
+            <code>map(callback)</code>: Creates a new array with the results of
+            calling a provided function on every element. <br /><small
+              >Callback parameters:
+              <code>currentValue, index, array</code></small
+            >
+          </li>
+          <li>
+            <code>filter(callback)</code>: Creates a new array with all elements
+            that pass the test implemented by the provided function.
+            <br /><small
+              >Callback parameters:
+              <code>currentValue, index, array</code></small
+            >
+          </li>
+          <li>
+            <code>reduce(callback, initialValue)</code>: Executes a reducer
+            function on each element, resulting in a single output value.
+            <br /><small
+              >Callback parameters:
+              <code>accumulator, currentValue, index, array</code></small
+            >
+          </li>
+        </ul>
+        <h3>Example: Array Manipulation</h3>
+        <pre><code>
+// Create an array
+const fruits = ['apple', 'banana', 'cherry'];
+console.log("Initial array:", fruits);
+
+// Add an element at the end
+fruits.push('date');
+console.log("After push:", fruits);
+
+// Remove the last element
+const lastFruit = fruits.pop();
+console.log("After pop (removed):", lastFruit, fruits);
+
+// Add an element at the beginning
+fruits.unshift('avocado');
+console.log("After unshift:", fruits);
+
+// Remove the first element
+const firstFruit = fruits.shift();
+console.log("After shift (removed):", firstFruit, fruits);
+
+// Using splice to remove and add elements
+// Remove 1 element at index 1 and add 'blueberry' and 'cantaloupe'
+fruits.splice(1, 1, 'blueberry', 'cantaloupe');
+console.log("After splice:", fruits);
+
+// Using map to transform array elements
+const upperFruits = fruits.map(fruit => fruit.toUpperCase());
+console.log("Mapped array (upper case):", upperFruits);
+
+// Using filter to select items that start with 'c'
+const cFruits = fruits.filter(fruit => fruit.startsWith('c'));
+console.log("Filtered array (starts with 'c'):", cFruits);
+
+// Using reduce to concatenate all fruit names
+const allFruits = fruits.reduce((acc, fruit) => acc + ', ' + fruit);
+console.log("Reduced result:", allFruits);
+      </code></pre>
+        <p>
+          Notice how each method modifies or creates a new array. The parameters
+          for methods like <code>splice</code> or the callback functions for
+          <code>map</code> and <code>reduce</code> are essential for controlling
+          how the array is transformed.
+        </p>
+      </section>
+
+      <!-- Sets Section -->
+      <section id="sets" class="section-header">
+        <h2>Sets in JavaScript</h2>
+        <p>
+          A <strong>Set</strong> is a collection of unique values. Unlike
+          arrays, sets do not store duplicate items and are especially useful
+          when you need to enforce uniqueness.
+        </p>
+        <h3>Common Set Methods</h3>
+        <ul>
+          <li>
+            <code>add(value)</code>: Adds a new element to the set. If the
+            element already exists, the set remains unchanged.
+          </li>
+          <li>
+            <code>delete(value)</code>: Removes a specified element from the
+            set; returns <code>true</code> if the element was removed.
+          </li>
+          <li>
+            <code>has(value)</code>: Returns <code>true</code> if the set
+            contains the specified element.
+          </li>
+          <li><code>clear()</code>: Removes all elements from the set.</li>
+          <li>
+            <code>size</code>: A property that returns the number of elements in
+            the set.
+          </li>
+        </ul>
+        <h3>Example: Working with Sets</h3>
+        <pre><code>
+// Create a new set
+const numbers = new Set();
+
+// Add values to the set
+numbers.add(1);
+numbers.add(2);
+numbers.add(3);
+numbers.add(2); // duplicate, will not be added
+console.log("Set after adding elements:", numbers);
+
+// Check if a value exists
+console.log("Set has 2:", numbers.has(2));
+console.log("Set has 4:", numbers.has(4));
+
+// Get the size of the set
+console.log("Size of set:", numbers.size);
+
+// Remove a value
+numbers.delete(2);
+console.log("Set after deleting 2:", numbers);
+
+// Iterate over set values
+numbers.forEach(num => console.log("Iterating set value:", num));
+
+// Clear the set
+numbers.clear();
+console.log("Set after clear:", numbers);
+      </code></pre>
+        <p>
+          Sets are particularly useful when you need to store unique items. For
+          instance, if you want to remove duplicates from an array, you can
+          create a set from that array:
+        </p>
+        <pre><code>
+// Remove duplicates from an array using a Set
+const duplicateArray = [1, 2, 2, 3, 3, 3, 4];
+const uniqueArray = [...new Set(duplicateArray)];
+console.log("Unique array:", uniqueArray);
+      </code></pre>
+      </section>
+
+      <!-- Comparison Section -->
+      <section id="comparison" class="section-header">
+        <h2>Arrays vs. Sets: When to Use Which</h2>
+        <p>
+          <strong>Arrays</strong> are ordered collections that can contain
+          duplicate items and are best used when the order of elements matters
+          or when you need to perform operations like mapping or filtering on a
+          list.
+        </p>
+        <p>
+          <strong>Sets</strong> enforce uniqueness and provide faster lookup
+          times for checking if an item exists. Use sets when you need to ensure
+          that all elements are unique and when order is not a priority.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
