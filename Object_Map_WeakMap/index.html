@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JavaScript Object, Map, and WeakMap – Full Methods Guide</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-top: 70px;
+      }
+      pre {
+        background: #e9ecef;
+        padding: 15px;
+        border-left: 5px solid #0d6efd;
+        overflow-x: auto;
+      }
+      code {
+        font-family: Consolas, monospace;
+      }
+      .section-header {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Objects, Map &amp; WeakMap</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#object">Plain Object</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#map">Map</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#weakmap">WeakMap</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#comparison">Comparison</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+      <header class="text-center">
+        <h1 class="text-primary">
+          Understanding JavaScript: Object, Map, and WeakMap
+        </h1>
+        <p class="lead">
+          A comprehensive guide covering plain objects, Map, and WeakMap with
+          all key methods and properties.
+        </p>
+      </header>
+
+      <!-- Plain Object Section -->
+      <section id="object" class="section-header">
+        <h2>Plain Object</h2>
+        <p>
+          A plain object in JavaScript is a collection of key-value pairs. The
+          keys are typically strings or symbols. Objects are used for storing
+          and organizing related data.
+        </p>
+        <h3>Common Techniques & Methods</h3>
+        <ul>
+          <li>
+            <code>Accessing properties</code>: Use dot notation
+            (<code>obj.key</code>) or bracket notation
+            (<code>obj['key']</code>).
+          </li>
+          <li>
+            <code>hasOwnProperty(key)</code>: Checks if the object has a
+            property defined directly on itself.
+          </li>
+          <li>
+            <code>Object.keys(obj)</code>: Returns an array of the object’s own
+            enumerable property names.
+          </li>
+          <li>
+            <code>Object.values(obj)</code>: Returns an array of the object’s
+            own enumerable property values.
+          </li>
+          <li>
+            <code>Object.entries(obj)</code>: Returns an array of [key, value]
+            pairs.
+          </li>
+          <li>
+            <code>Object.fromEntries(iterable)</code>: Converts an iterable of
+            key-value pairs into an object. <br />
+          </li>
+          <li>
+            <code>Object.assign(target, ...sources)</code>: Copies enumerable
+            properties from source objects to the target object.
+          </li>
+          <li>
+            <code>Object.defineProperty(obj, prop, descriptor)</code>: Adds or
+            modifies a property with a descriptor (configurable, writable,
+            enumerable, etc.).
+          </li>
+          <li>
+            <code>Object.defineProperties(obj, descriptors)</code>: Defines
+            multiple properties on an object using descriptors.
+          </li>
+          <li>
+            <code>Object.getOwnPropertyNames(obj)</code>: Returns an array of
+            all properties found directly on the object (including
+            non-enumerable ones).
+          </li>
+          <li>
+            <code>Object.getOwnPropertySymbols(obj)</code>: Returns an array of
+            all symbol properties found directly on the object.
+          </li>
+          <li>
+            <code>Object.freeze(obj)</code>: Freezes an object, preventing
+            modifications to its properties.
+          </li>
+          <li>
+            <code>Object.seal(obj)</code>: Seals an object, preventing new
+            properties from being added and marking existing properties as
+            non-configurable.
+          </li>
+        </ul>
+        <h3>Example: Working with a Plain Object</h3>
+        <pre><code>
+// Creating an object literal
+const person = {
+  name: 'Alice',
+  age: 30,
+  occupation: 'Engineer'
+};
+
+
+console.log("Person object:", person);
+
+// Accessing properties
+console.log("Name:", person.name);
+console.log("Age:", person['age']);
+
+// Checking property existence
+if (person.hasOwnProperty('occupation')) {
+  console.log("Occupation exists.");
+}
+
+// Adding or updating properties using assignment
+person.email = 'alice@example.com';
+console.log("After adding email:", person);
+
+// Using Object.assign to merge objects
+const additionalInfo = { city: 'New York', country: 'USA' };
+const mergedPerson = Object.assign({}, person, additionalInfo);
+console.log("Merged person:", mergedPerson);
+
+// Listing keys, values, and entries
+console.log("Keys:", Object.keys(mergedPerson));
+console.log("Values:", Object.values(mergedPerson));
+console.log("Entries:", Object.entries(mergedPerson));
+
+// Converting entries back into an object with Object.fromEntries
+const newPerson = Object.fromEntries(Object.entries(mergedPerson));
+console.log("New person (from entries):", newPerson);
+
+// Defining a property with a descriptor
+Object.defineProperty(person, 'id', {
+  value: 101,
+  writable: false,
+  enumerable: true,
+  configurable: true
+});
+console.log("After defineProperty, person:", person);
+
+// Freezing and sealing the object
+Object.freeze(person);
+console.log("After freezing, person:", person);
+      </code></pre>
+        <p>
+          Plain objects are best when you need a simple key-value store with
+          string (or symbol) keys. They work well for most data storage needs.
+        </p>
+      </section>
+
+      <!-- Map Section -->
+      <section id="map" class="section-header">
+        <h2>Map</h2>
+        <p>
+          The <strong>Map</strong> object holds key-value pairs and maintains
+          the order of insertion. Unlike plain objects, a Map's keys can be of
+          any type.
+        </p>
+        <h3>Map Methods & Properties</h3>
+        <ul>
+          <li>
+            <code>set(key, value)</code>: Adds or updates a key-value pair.
+          </li>
+          <li>
+            <code>get(key)</code>: Returns the value associated with the key.
+          </li>
+          <li>
+            <code>has(key)</code>: Returns <code>true</code> if the key exists.
+          </li>
+          <li>
+            <code>delete(key)</code>: Removes the key-value pair and returns
+            <code>true</code> if successful.
+          </li>
+          <li><code>clear()</code>: Removes all key-value pairs.</li>
+          <li><code>size</code>: Returns the number of key-value pairs.</li>
+          <li><code>keys()</code>: Returns an iterator over the keys.</li>
+          <li><code>values()</code>: Returns an iterator over the values.</li>
+          <li>
+            <code>entries()</code>: Returns an iterator over [key, value] pairs.
+          </li>
+          <li>
+            <code>forEach(callback, thisArg)</code>: Executes a provided
+            function once for each key/value pair. <br /><small
+              >Callback parameters: <code>value, key, map</code></small
+            >
+          </li>
+        </ul>
+        <h3>Example: Using a Map</h3>
+        <pre><code>
+// Creating a new Map
+const userMap = new Map();
+
+// Add key-value pairs
+userMap.set('name', 'Alice');
+userMap.set('age', 30);
+
+// Using an object as a key
+const keyObj = { id: 1 };
+userMap.set(keyObj, 'Object as key');
+
+console.log("Map size:", userMap.size); // 3
+
+// Retrieve values
+console.log("Name:", userMap.get('name'));
+
+// Check existence of a key
+console.log("Has 'age':", userMap.has('age'));
+
+// Iterating using forEach
+userMap.forEach((value, key) => {
+  console.log(key, "=>", value);
+});
+
+// Using for...of loop over entries
+for (let [key, value] of userMap.entries()) {
+  console.log("Entry:", key, value);
+}
+
+// Removing an element and clearing the Map
+userMap.delete('age');
+console.log("After deletion, size:", userMap.size);
+
+userMap.clear();
+console.log("After clear, size:", userMap.size); // 0
+      </code></pre>
+      </section>
+
+      <!-- WeakMap Section -->
+      <section id="weakmap" class="section-header">
+        <h2>WeakMap</h2>
+        <p>
+          A <strong>WeakMap</strong> is similar to a Map, but its keys must be
+          objects and are held weakly. This means if there are no other
+          references to a key, it can be garbage-collected. Note that WeakMaps
+          are not enumerable and do not have a <code>size</code> property.
+        </p>
+        <h3>WeakMap Methods</h3>
+        <ul>
+          <li>
+            <code>set(key, value)</code>: Adds a key-value pair (key must be an
+            object).
+          </li>
+          <li>
+            <code>get(key)</code>: Returns the value associated with the key or
+            <code>undefined</code> if not found.
+          </li>
+          <li>
+            <code>has(key)</code>: Returns <code>true</code> if the key exists
+            in the WeakMap.
+          </li>
+          <li>
+            <code>delete(key)</code>: Removes the key-value pair and returns
+            <code>true</code> if successful.
+          </li>
+        </ul>
+        <h3>Example: Using a WeakMap</h3>
+        <pre><code>
+// Creating a WeakMap
+const wm = new WeakMap();
+
+let obj1 = { id: 1 };
+let obj2 = { id: 2 };
+
+// Adding key-value pairs
+wm.set(obj1, "First Object");
+wm.set(obj2, "Second Object");
+
+console.log("WeakMap has obj1:", wm.has(obj1)); // true
+console.log("Value for obj2:", wm.get(obj2)); // "Second Object"
+
+// Removing the reference to obj1 makes it eligible for garbage collection
+obj1 = null;
+
+// Note: WeakMaps are not iterable and have no size property.
+      </code></pre>
+      </section>
+
+      <!-- Comparison Section -->
+      <section id="comparison" class="section-header">
+        <h2>Comparison: Object vs. Map vs. WeakMap</h2>
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Feature</th>
+              <th>Plain Object</th>
+              <th>Map</th>
+              <th>WeakMap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Key Types</strong></td>
+              <td>Strings and symbols</td>
+              <td>Any type (primitive, object, function)</td>
+              <td>Only objects</td>
+            </tr>
+            <tr>
+              <td><strong>Ordering</strong></td>
+              <td>Generally unordered (with some exceptions)</td>
+              <td>Ordered by insertion</td>
+              <td>Not enumerable</td>
+            </tr>
+            <tr>
+              <td><strong>Garbage Collection</strong></td>
+              <td>Keys are strongly referenced</td>
+              <td>Keys are strongly referenced</td>
+              <td>Keys are weakly referenced</td>
+            </tr>
+            <tr>
+              <td><strong>Enumerability</strong></td>
+              <td>
+                Enumerable via <code>for...in</code>,
+                <code>Object.keys()</code>, etc.
+              </td>
+              <td>
+                Iterable via <code>forEach</code>, <code>keys()</code>,
+                <code>values()</code>, <code>entries()</code>
+              </td>
+              <td>Not enumerable</td>
+            </tr>
+            <tr>
+              <td><strong>Size</strong></td>
+              <td>
+                No built-in property (use <code>Object.keys(obj).length</code>)
+              </td>
+              <td><code>size</code> property available</td>
+              <td>No <code>size</code> property</td>
+            </tr>
+            <tr>
+              <td><strong>Additional Methods</strong></td>
+              <td>
+                <code>Object.assign</code>, <code>Object.defineProperty</code>,
+                <code>Object.freeze</code>, <code>Object.fromEntries</code>,
+                etc.
+              </td>
+              <td>
+                <code>set</code>, <code>get</code>, <code>has</code>,
+                <code>delete</code>, <code>clear</code>, <code>keys</code>,
+                <code>values</code>, <code>entries</code>, <code>forEach</code>
+              </td>
+              <td>
+                <code>set</code>, <code>get</code>, <code>has</code>,
+                <code>delete</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Use a <strong>plain object</strong> for simple key-value storage when
+          keys are strings or symbols. Choose a <strong>Map</strong> when you
+          need keys of any type with predictable iteration order. Use a
+          <strong>WeakMap</strong> when you need keys to be garbage-collected
+          when no longer referenced (e.g., for caching or metadata).
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
