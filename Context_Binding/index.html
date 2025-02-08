@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Understanding Context Binding in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        display: block;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Concepts</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                >Context Binding</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Other Topics</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <header class="mb-4">
+        <h1 class="display-5">Understanding Context Binding in JavaScript</h1>
+        <p class="lead">
+          In JavaScript, the value of <code>this</code> is determined by how a
+          function is called rather than where it is defined. In this guide, we
+          explore the binding rules and explain how methods like
+          <code>call()</code>, <code>apply()</code>, and
+          <code>bind()</code> work—including details about their parameters,
+          common use cases, and any limitations.
+        </p>
+      </header>
+
+      <!-- What is Context Binding? -->
+      <section class="mb-5">
+        <h2>What Is Context Binding?</h2>
+        <p>
+          Context binding refers to the rules by which JavaScript assigns a
+          value to the <code>this</code> keyword. The binding of
+          <code>this</code> depends on the invocation pattern:
+        </p>
+        <ul>
+          <li>
+            <strong>Default Binding:</strong> In a simple function call,
+            <code>this</code> refers to the global object (or
+            <code>undefined</code> in strict mode).
+          </li>
+          <li>
+            <strong>Implicit Binding:</strong> When a function is called as a
+            method of an object, <code>this</code> is set to that object.
+          </li>
+          <li>
+            <strong>Explicit Binding:</strong> You can explicitly specify
+            <code>this</code> using <code>call()</code>, <code>apply()</code>,
+            or <code>bind()</code>.
+          </li>
+          <li>
+            <strong>New Binding:</strong> When a function is invoked with the
+            <code>new</code> keyword, <code>this</code> refers to the newly
+            created object.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Using call() -->
+      <section class="mb-5">
+        <h2>Using <code>call()</code></h2>
+        <p>
+          The <code>call()</code> method allows you to invoke a function with a
+          specific <code>this</code> value and arguments provided individually.
+        </p>
+        <p>
+          <strong>Syntax:</strong>
+          <code>func.call(thisArg, arg1, arg2, ...)</code>
+        </p>
+        <ul>
+          <li>
+            <strong>thisArg:</strong> The object to be used as
+            <code>this</code> inside the function. In non-strict mode, if
+            <code>null</code> or <code>undefined</code> is passed, it defaults
+            to the global object.
+          </li>
+          <li>
+            <strong>arg1, arg2, ...:</strong> Arguments to be passed to the
+            function.
+          </li>
+        </ul>
+        <p><strong>Use Cases:</strong></p>
+        <ul>
+          <li>Borrowing methods from one object to use on another.</li>
+          <li>Invoking a function with a custom context.</li>
+        </ul>
+        <p><strong>Limitations:</strong></p>
+        <ul>
+          <li>
+            If the function depends on a dynamic context, using
+            <code>call()</code> may override that dynamic behavior.
+          </li>
+        </ul>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a function that uses "this"
+function introduce() {
+  console.log("Hello, my name is " + this.name);
+}
+
+// An object to bind as the context
+const person = { name: "Alice" };
+
+// Using call() - arguments are passed individually
+introduce.call(person); // Output: Hello, my name is Alice
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Using apply() -->
+      <section class="mb-5">
+        <h2>Using <code>apply()</code></h2>
+        <p>
+          The <code>apply()</code> method is similar to <code>call()</code> but
+          accepts arguments as an array (or array-like object) instead of
+          individual values.
+        </p>
+        <p>
+          <strong>Syntax:</strong> <code>func.apply(thisArg, [argsArray])</code>
+        </p>
+        <ul>
+          <li>
+            <strong>thisArg:</strong> The object to use as <code>this</code>.
+          </li>
+          <li>
+            <strong>[argsArray]:</strong> An array or array-like object of
+            arguments to pass to the function.
+          </li>
+        </ul>
+        <p><strong>Use Cases:</strong></p>
+        <ul>
+          <li>
+            When you need to pass a variable number of arguments stored in an
+            array.
+          </li>
+        </ul>
+        <p><strong>Limitations:</strong></p>
+        <ul>
+          <li>
+            Similar to <code>call()</code>, the context is fixed, so it may not
+            be suitable if the function expects a dynamic
+            <code>this</code> binding.
+          </li>
+        </ul>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a function that uses "this"
+function sum(a, b, c) {
+  console.log(this.prefix + (a + b + c));
+}
+
+// An object to bind as the context
+const data = { prefix: "Total: " };
+
+// Using apply() - pass arguments as an array
+sum.apply(data, [1, 2, 3]); // Output: Total: 6
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Using bind() -->
+      <section class="mb-5">
+        <h2>Using <code>bind()</code></h2>
+        <p>
+          The <code>bind()</code> method returns a new function with a
+          permanently bound <code>this</code> value and, optionally, some
+          pre-specified initial arguments.
+        </p>
+        <p>
+          <strong>Syntax:</strong>
+          <code>const boundFunc = func.bind(thisArg, arg1, arg2, ...)</code>
+        </p>
+        <ul>
+          <li>
+            <strong>thisArg:</strong> The object to be bound as
+            <code>this</code>.
+          </li>
+          <li>
+            <strong>arg1, arg2, ... (optional):</strong> Arguments to prepend to
+            the arguments provided when the bound function is called.
+          </li>
+        </ul>
+        <p><strong>Use Cases:</strong></p>
+        <ul>
+          <li>Creating event handlers where you need a specific context.</li>
+          <li>Partially applying functions to create specialized versions.</li>
+        </ul>
+        <p><strong>Limitations:</strong></p>
+        <ul>
+          <li>
+            The returned function is permanently bound; you cannot rebind its
+            <code>this</code> value.
+          </li>
+          <li>
+            If overused, it might lead to less flexible code in scenarios where
+            dynamic context is needed.
+          </li>
+        </ul>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a function that uses "this"
+function greet() {
+  console.log("Hi, " + this.name);
+}
+
+// An object to bind as the context
+const user = { name: "Bob" };
+
+// Create a new function with "this" bound to user
+const greetUser = greet.bind(user);
+
+greetUser(); // Output: Hi, Bob
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Arrow Functions and Lexical this -->
+      <section class="mb-5">
+        <h2>Arrow Functions and Lexical <code>this</code></h2>
+        <p>
+          Arrow functions do not have their own <code>this</code> binding.
+          Instead, they inherit <code>this</code> from the surrounding lexical
+          context.
+        </p>
+        <p>
+          <strong>Use Cases:</strong> Arrow functions are ideal for cases where
+          you want to preserve the <code>this</code> value of the outer
+          function, such as in callbacks or array methods.
+        </p>
+        <p>
+          <strong>Limitations:</strong> Because arrow functions lack their own
+          <code>this</code>, they are not suited for object methods where
+          dynamic binding is needed.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// An object with a method using an arrow function for a callback
+const group = {
+  name: "Developers",
+  listMembers: function() {
+    const members = ["Charlie", "Dana", "Eli"];
+    // Arrow function: inherits "this" from listMembers
+    members.forEach(member => {
+      console.log(this.name + " member: " + member);
+    });
+  }
+};
+
+group.listMembers();
+// Output:
+// Developers member: Charlie
+// Developers member: Dana
+// Developers member: Eli
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Mastering context binding in JavaScript is essential for writing
+          predictable and maintainable code. Understanding how
+          <code>this</code> is set through default, implicit, explicit, and new
+          binding—and knowing when to use <code>call()</code>,
+          <code>apply()</code>, <code>bind()</code>, or arrow functions—allows
+          you to control function execution with precision. Each method comes
+          with its parameters, use cases, and limitations, so choose the one
+          that best fits your scenario.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
