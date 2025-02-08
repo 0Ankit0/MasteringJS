@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Understanding First-Class Functions in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        display: block;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Concepts</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                >First-Class Functions</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Other Topics</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <header class="mb-4">
+        <h1 class="display-5">
+          Understanding First-Class Functions in JavaScript
+        </h1>
+        <p class="lead">
+          In JavaScript, functions are considered
+          <strong>first-class citizens</strong>. This means that functions can
+          be treated like any other value: they can be assigned to variables,
+          passed as arguments to other functions, returned from functions, and
+          stored in data structures. This capability is a cornerstone of
+          JavaScript’s flexibility and supports functional programming
+          techniques.
+        </p>
+      </header>
+
+      <!-- What Are First-Class Functions? -->
+      <section class="mb-5">
+        <h2>What Are First-Class Functions?</h2>
+        <p>
+          A programming language that supports first-class functions allows
+          functions to:
+        </p>
+        <ul>
+          <li>
+            <strong>Be assigned to a variable:</strong> You can store a function
+            in a variable just like any other data type.
+          </li>
+          <li>
+            <strong>Be passed as an argument:</strong> Functions can be provided
+            as parameters to other functions.
+          </li>
+          <li>
+            <strong>Be returned from other functions:</strong> Functions can
+            generate and return other functions.
+          </li>
+        </ul>
+        <p>
+          This ability is fundamental to writing modular, reusable, and
+          expressive code.
+        </p>
+      </section>
+
+      <!-- Code Example: Assigning a Function to a Variable -->
+      <section class="mb-5">
+        <h2>Example: Assigning a Function to a Variable</h2>
+        <p>
+          In the example below, the <code>greet</code> function is assigned to a
+          variable called <code>sayHello</code>, which can then be used like any
+          other function.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a function
+function greet(name) {
+  return "Hello, " + name + "!";
+}
+
+// Assign the function to a variable
+const sayHello = greet;
+
+console.log(sayHello("Alice")); // Output: Hello, Alice!
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Code Example: Passing a Function as an Argument -->
+      <section class="mb-5">
+        <h2>Example: Passing a Function as an Argument</h2>
+        <p>
+          Here, the <code>processInput</code> function accepts a callback
+          function as an argument and uses it to process a value.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a function
+function greet(name) {
+  return "Hi, " + name + "!";
+}
+
+// Function that takes another function as a parameter
+function processInput(callback) {
+  let name = "Bob";
+  console.log(callback(name));
+}
+
+processInput(greet); // Output: Hi, Bob!
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Code Example: Returning a Function -->
+      <section class="mb-5">
+        <h2>Example: Returning a Function from a Function</h2>
+        <p>
+          The following code demonstrates how a function can return another
+          function. This pattern is often used to create specialized functions
+          dynamically.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Function that returns another function
+function createMultiplier(factor) {
+  return function(number) {
+    return number * factor;
+  };
+}
+
+const double = createMultiplier(2);
+console.log(double(5)); // Output: 10
+
+const triple = createMultiplier(3);
+console.log(triple(5)); // Output: 15
+        </code></pre>
+        </div>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          First-class functions are a key feature of JavaScript, enabling
+          higher-order programming and more flexible code patterns. By
+          understanding how functions can be treated as values, you can create
+          more modular and reusable code. Embracing this concept is essential to
+          mastering JavaScript.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
