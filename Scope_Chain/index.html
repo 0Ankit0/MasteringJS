@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Understanding the Scope Chain in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        display: block;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Concepts</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                >Scope Chain</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Other Topics</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <header class="mb-4">
+        <h1 class="display-5">Understanding the Scope Chain in JavaScript</h1>
+        <p class="lead">
+          The <strong>scope chain</strong> is a fundamental concept in
+          JavaScript that determines how variable names are resolved in nested
+          functions. When a variable is referenced, JavaScript first looks in
+          the current (local) scope and then moves outward until it finds the
+          variable or reaches the global scope.
+        </p>
+      </header>
+
+      <!-- What is the Scope Chain? -->
+      <section class="mb-5">
+        <h2>What Is the Scope Chain?</h2>
+        <p>
+          Every execution context in JavaScript has an associated
+          <em>lexical environment</em>. This environment consists of the local
+          variables defined within that context. When a variable is referenced,
+          the engine searches for it in the following order:
+        </p>
+        <ul>
+          <li>
+            <strong>Local Scope:</strong> Variables declared inside the current
+            function or block.
+          </li>
+          <li>
+            <strong>Enclosing (Parent) Scopes:</strong> Variables declared in
+            any outer functions.
+          </li>
+          <li>
+            <strong>Global Scope:</strong> Variables declared outside of any
+            function.
+          </li>
+        </ul>
+        <p>This ordered search is what forms the <em>scope chain</em>.</p>
+      </section>
+
+      <!-- Code Example: Basic Scope Chain -->
+      <section class="mb-5">
+        <h2>Example: Basic Scope Chain</h2>
+        <p>
+          In this example, the function <code>innerFunction()</code> accesses
+          variables defined in its own scope, in its parent
+          (<code>outerFunction()</code>), and in the global scope.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Global Scope
+let globalVar = "I am global";
+
+function outerFunction() {
+  let outerVar = "I am from the outer function";
+
+  function innerFunction() {
+    let innerVar = "I am from the inner function";
+    console.log(innerVar);   // Found in innerFunction's scope
+    console.log(outerVar);   // Found in outerFunction's scope
+    console.log(globalVar);  // Found in global scope
+  }
+
+  innerFunction();
+}
+
+outerFunction();
+        </code></pre>
+        </div>
+        <p>
+          When <code>innerFunction()</code> is called, the JavaScript engine
+          first checks for <code>innerVar</code> within its local scope. It then
+          looks for <code>outerVar</code> in the parent function and finally
+          finds <code>globalVar</code> in the global scope.
+        </p>
+      </section>
+
+      <!-- Code Example: Nested Blocks -->
+      <section class="mb-5">
+        <h2>Example: Scope Chain in Nested Blocks</h2>
+        <p>
+          The following example demonstrates how the scope chain works with
+          nested blocks using <code>let</code>:
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+let a = "global a";
+
+{
+  let b = "block b";
+  console.log(a); // "global a" from global scope
+  console.log(b); // "block b" from current block
+
+  {
+    let c = "inner block c";
+    console.log(a); // "global a"
+    console.log(b); // "block b"
+    console.log(c); // "inner block c"
+  }
+  
+  // console.log(c); // Error: c is not defined (c is only in the inner block)
+}
+        </code></pre>
+        </div>
+        <p>
+          In this case, the innermost block has access to variables defined in
+          its own block and in the outer blocks up to the global scope.
+        </p>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Mastering the scope chain is key to understanding how JavaScript
+          resolves variables across different contexts. By understanding the
+          order in which scopes are searched, you can write more predictable and
+          maintainable code.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
