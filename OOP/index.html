@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      Prototypal Inheritance & Object-Oriented Programming in JavaScript
+    </title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        display: block;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Concepts</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                >Prototypal Inheritance</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Other Topics</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <header class="mb-4">
+        <h1 class="display-5">
+          Prototypal Inheritance & Object-Oriented Programming in JavaScript
+        </h1>
+        <p class="lead">
+          JavaScript’s object system is built on prototypal inheritance, where
+          objects inherit properties and methods from other objects. This page
+          explains how prototypal inheritance works, how it supports
+          object‑oriented programming (OOP) in JavaScript, and provides code
+          examples using constructor functions, <code>Object.create()</code>,
+          and ES6 classes.
+        </p>
+      </header>
+
+      <!-- What is Prototypal Inheritance? -->
+      <section class="mb-5">
+        <h2>What is Prototypal Inheritance?</h2>
+        <p>
+          In JavaScript, every object has an internal link to another object
+          called its <em>prototype</em>. This link forms a chain known as the
+          <strong>prototype chain</strong>. When you attempt to access a
+          property or method on an object, JavaScript will first check the
+          object itself. If it isn’t found, it then looks up the chain to the
+          object’s prototype, and so on until it either finds the property or
+          reaches the end of the chain (usually <code>Object.prototype</code>).
+        </p>
+        <p>
+          This mechanism allows you to share properties and methods across
+          objects, which is the basis for JavaScript’s object‑oriented
+          programming.
+        </p>
+      </section>
+
+      <!-- Using Constructor Functions and Prototype -->
+      <section class="mb-5">
+        <h2>Example: Constructor Functions & Prototypes</h2>
+        <p>
+          Prior to ES6, JavaScript developers commonly used constructor
+          functions to create objects. Methods and properties shared among all
+          instances are defined on the constructor’s <code>prototype</code>.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Constructor function for a Person
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+// Adding a method to Person's prototype
+Person.prototype.introduce = function() {
+  return "Hi, I'm " + this.name + " and I'm " + this.age + " years old.";
+};
+
+const alice = new Person("Alice", 30);
+console.log(alice.introduce()); // Output: Hi, I'm Alice and I'm 30 years old.
+        </code></pre>
+        </div>
+        <p>
+          <strong>Explanation:</strong>
+          The <code>Person</code> constructor creates objects with
+          <code>name</code> and <code>age</code> properties. The
+          <code>introduce</code> method is added to
+          <code>Person.prototype</code> so that all instances share the same
+          method, reducing memory usage.
+        </p>
+      </section>
+
+      <!-- Using Object.create() -->
+      <section class="mb-5">
+        <h2>Example: Object.create()</h2>
+        <p>
+          <code>Object.create()</code> allows you to create a new object with a
+          specified prototype.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a prototype object
+const animal = {
+  speak: function() {
+    return this.name + " makes a noise.";
+  }
+};
+
+// Create a new object that inherits from animal
+const dog = Object.create(animal);
+dog.name = "Buddy";
+
+console.log(dog.speak()); // Output: Buddy makes a noise.
+        </code></pre>
+        </div>
+        <p>
+          <strong>Explanation:</strong>
+          Here, <code>dog</code> is created with <code>animal</code> as its
+          prototype. This means that <code>dog</code> inherits the
+          <code>speak</code> method from <code>animal</code>.
+        </p>
+      </section>
+
+      <!-- Using ES6 Classes -->
+      <section class="mb-5">
+        <h2>Example: ES6 Classes</h2>
+        <p>
+          With ES6, JavaScript introduced <em>classes</em> as syntactic sugar
+          over prototypal inheritance, making it easier to write object‑oriented
+          code.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Define a class using ES6 syntax
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  introduce() {
+    return `Hi, I'm ${this.name} and I'm ${this.age} years old.`;
+  }
+}
+
+const bob = new Person("Bob", 25);
+console.log(bob.introduce()); // Output: Hi, I'm Bob and I'm 25 years old.
+        </code></pre>
+        </div>
+        <p>
+          <strong>Explanation:</strong>
+          The <code>class</code> syntax provides a cleaner and more intuitive
+          way to create constructor functions and manage the prototype. Under
+          the hood, classes still use prototypal inheritance.
+        </p>
+      </section>
+
+      <!-- Benefits and Limitations -->
+      <section class="mb-5">
+        <h2>Benefits and Limitations</h2>
+        <p>
+          <strong>Benefits:</strong>
+        </p>
+        <ul>
+          <li>
+            Promotes code reuse by allowing shared properties and methods.
+          </li>
+          <li>
+            Reduces memory footprint by having shared methods on the prototype.
+          </li>
+          <li>
+            ES6 classes offer a familiar syntax for developers from classical
+            OOP languages.
+          </li>
+        </ul>
+        <p>
+          <strong>Limitations:</strong>
+        </p>
+        <ul>
+          <li>
+            Prototypal inheritance can be less intuitive compared to classical
+            inheritance models.
+          </li>
+          <li>
+            Overuse of inheritance can lead to complex and hard-to-maintain
+            prototype chains.
+          </li>
+          <li>
+            The class syntax may obscure the underlying prototypal nature of
+            JavaScript.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Prototypal inheritance is the core mechanism behind JavaScript’s
+          object‑oriented programming. Whether you use constructor functions,
+          <code>Object.create()</code>, or ES6 classes, understanding how
+          objects inherit from one another is key to writing effective and
+          efficient code in JavaScript.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
