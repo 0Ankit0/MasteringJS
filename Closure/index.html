@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Understanding JavaScript Closures</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        line-height: 1.6;
+        margin: 20px;
+      }
+      header,
+      footer {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      section {
+        background: #fff;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      h1,
+      h2 {
+        color: #0056b3;
+      }
+      pre {
+        background-color: #eee;
+        padding: 10px;
+        border-left: 3px solid #ccc;
+        overflow-x: auto;
+      }
+      code {
+        font-family: Consolas, monospace;
+      }
+      ul {
+        margin-left: 20px;
+      }
+      footer p {
+        font-size: 0.9em;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Understanding JavaScript Closures</h1>
+    </header>
+
+    <!-- Introduction Section -->
+    <section id="introduction">
+      <h2>Introduction</h2>
+      <p>
+        A <strong>closure</strong> in JavaScript is a function bundled together
+        with its lexical environment. In other words, a closure gives a function
+        access to its outer (enclosing) scope even after that scope has finished
+        executing. This powerful concept allows you to create "private"
+        variables and maintain state between function calls.
+      </p>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works">
+      <h2>How It Works</h2>
+      <p>
+        When a function is defined, it captures the environment in which it was
+        created—this includes any local variables, parameters, and even
+        functions defined in that scope. Even if the outer function completes
+        execution, the inner function (the closure) still retains access to
+        those variables.
+      </p>
+      <p>
+        This behavior underpins many design patterns in JavaScript, such as data
+        encapsulation, function factories, currying, and more.
+      </p>
+    </section>
+
+    <!-- Counter Example Section -->
+    <section id="code-example-counter">
+      <h2>Example: Counter Using a Closure</h2>
+      <p>
+        In the example below, the <code>createCounter</code> function defines a
+        private variable <code>count</code> that can only be accessed and
+        updated by the returned function.
+      </p>
+      <pre><code>
+// Create a counter using a closure
+function createCounter() {
+  let count = 0; // private variable
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const counter = createCounter();
+console.log(counter()); // Output: 1
+console.log(counter()); // Output: 2
+console.log(counter()); // Output: 3
+    </code></pre>
+    </section>
+
+    <!-- Adder Example Section -->
+    <section id="code-example-adder">
+      <h2>Example: Function Factory (makeAdder)</h2>
+      <p>
+        This example demonstrates a function factory. The
+        <code>makeAdder</code> function creates a new function that adds a
+        preset value (<code>x</code>) to its argument (<code>y</code>). Each
+        returned function “remembers” the value of <code>x</code> from its
+        creation context.
+      </p>
+      <pre><code>
+function makeAdder(x) {
+  return function(y) {
+    return x + y;
+  };
+}
+
+const add5 = makeAdder(5);
+const add10 = makeAdder(10);
+
+console.log(add5(2));  // Output: 7
+console.log(add10(2)); // Output: 12
+    </code></pre>
+    </section>
+
+    <!-- Private Methods Example Section -->
+    <section id="advanced">
+      <h2>Advanced Example: Emulating Private Methods</h2>
+      <p>
+        Closures can also be used to emulate private methods and variables. The
+        following example uses an Immediately Invoked Function Expression (IIFE)
+        to create a module that encapsulates a private variable, exposing only
+        public methods to interact with it.
+      </p>
+      <pre><code>
+const counterModule = (function() {
+  let privateCounter = 0; // private variable
+
+  function changeBy(val) {
+    privateCounter += val;
+  }
+
+  return {
+    increment: function() {
+      changeBy(1);
+    },
+    decrement: function() {
+      changeBy(-1);
+    },
+    value: function() {
+      return privateCounter;
+    }
+  };
+})();
+
+console.log(counterModule.value()); // Output: 0
+counterModule.increment();
+counterModule.increment();
+console.log(counterModule.value()); // Output: 2
+counterModule.decrement();
+console.log(counterModule.value()); // Output: 1
+    </code></pre>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases">
+      <h2>Common Use Cases for Closures</h2>
+      <ul>
+        <li>
+          <strong>Data Encapsulation:</strong> Keep variables private and expose
+          only necessary methods.
+        </li>
+        <li>
+          <strong>Function Factories:</strong> Generate functions with pre-set
+          parameters (as shown in the <code>makeAdder</code> example).
+        </li>
+        <li>
+          <strong>Maintaining State:</strong> Preserve state between function
+          calls without polluting the global scope.
+        </li>
+        <li>
+          <strong>Currying & Partial Application:</strong> Pre-fill some
+          arguments of a function to create a new function.
+        </li>
+      </ul>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion">
+      <h2>Conclusion</h2>
+      <p>
+        Closures are a fundamental and powerful concept in JavaScript. They
+        allow functions to retain access to their lexical scope even after their
+        outer functions have executed. Mastering closures is key to writing more
+        modular, secure, and maintainable JavaScript code.
+      </p>
+    </section>
+  </body>
+</html>
