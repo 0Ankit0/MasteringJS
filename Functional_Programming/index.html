@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Functional Programming Concepts in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        display: block;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Concepts</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#"
+                >Functional Programming</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Other Topics</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <header class="mb-4">
+        <h1 class="display-5">Functional Programming Concepts in JavaScript</h1>
+        <p class="lead">
+          Functional programming (FP) is a paradigm where functions are treated
+          as first‑class citizens and computation is treated as the evaluation
+          of mathematical functions. In JavaScript, FP emphasizes pure
+          functions, immutability, and higher‑order functions, among other
+          concepts.
+        </p>
+      </header>
+
+      <!-- What is Functional Programming? -->
+      <section class="mb-5">
+        <h2>What is Functional Programming?</h2>
+        <p>
+          Functional programming is a style of programming that treats
+          computation as the evaluation of mathematical functions without
+          changing state or mutable data. This means:
+        </p>
+        <ul>
+          <li>
+            <strong>Pure Functions:</strong> Functions that always produce the
+            same output for the same input and have no side effects.
+          </li>
+          <li>
+            <strong>Higher‑Order Functions:</strong> Functions that can take
+            other functions as arguments or return functions.
+          </li>
+          <li>
+            <strong>Immutability:</strong> Data that cannot be modified once
+            created; instead, new data is returned with changes.
+          </li>
+          <li>
+            <strong>Currying & Composition:</strong> Breaking down functions
+            into smaller, reusable parts and composing them to form new
+            functions.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Pure Functions -->
+      <section class="mb-5">
+        <h2>Pure Functions</h2>
+        <p>A pure function is one that:</p>
+        <ul>
+          <li>Always returns the same output given the same input.</li>
+          <li>Has no side effects (does not modify any external state).</li>
+        </ul>
+        <p><strong>Example:</strong></p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+// Pure function: same output for same input, no side effects.
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add(2, 3)); // Output: 5
+console.log(add(2, 3)); // Always outputs 5
+        </code></pre>
+        </div>
+        <p>
+          Pure functions make your code more predictable and easier to test.
+        </p>
+      </section>
+
+      <!-- Higher-Order Functions -->
+      <section class="mb-5">
+        <h2>Higher-Order Functions</h2>
+        <p>
+          Higher-order functions are functions that take other functions as
+          arguments or return functions as their result. They enable functional
+          patterns such as callbacks, mapping, filtering, and reducing.
+        </p>
+        <p>
+          <strong>Example:</strong> Using <code>map()</code> to transform an
+          array.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+const numbers = [1, 2, 3, 4];
+const doubled = numbers.map(num => num * 2);
+console.log(doubled); // Output: [2, 4, 6, 8]
+        </code></pre>
+        </div>
+        <p>
+          In this example, the <code>map()</code> function is a higher‑order
+          function that accepts a function (the arrow function) as an argument
+          to perform a transformation on each element.
+        </p>
+      </section>
+
+      <!-- Immutability -->
+      <section class="mb-5">
+        <h2>Immutability</h2>
+        <p>
+          Immutability means that once data is created, it cannot be changed.
+          Instead, operations that modify data return a new copy of the data
+          with the changes. This helps prevent side effects and makes your
+          programs easier to reason about.
+        </p>
+        <p>
+          <strong>Example:</strong> Using the spread operator to create a new
+          object.
+        </p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+const original = { a: 1, b: 2 };
+// Instead of modifying the original, create a new object
+const updated = { ...original, b: 3, c: 4 };
+console.log(original); // Output: { a: 1, b: 2 }
+console.log(updated);  // Output: { a: 1, b: 3, c: 4 }
+        </code></pre>
+        </div>
+        <p>
+          Immutability is especially useful in state management and functional
+          programming to avoid unexpected behavior.
+        </p>
+      </section>
+
+      <!-- Currying & Function Composition -->
+      <section class="mb-5">
+        <h2>Currying & Function Composition</h2>
+        <p>
+          <strong>Currying</strong> is the process of transforming a function
+          that takes multiple arguments into a sequence of functions, each
+          taking a single argument.
+        </p>
+        <p><strong>Example: Currying</strong></p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+function multiply(a) {
+  return function(b) {
+    return a * b;
+  };
+}
+
+const double = multiply(2);
+console.log(double(5)); // Output: 10
+        </code></pre>
+        </div>
+        <p>
+          <strong>Function Composition</strong> involves combining two or more
+          functions to produce a new function. This enables you to build complex
+          operations by composing simple functions.
+        </p>
+        <p><strong>Example: Function Composition</strong></p>
+        <div class="bg-light p-3 rounded">
+          <pre><code class="language-js">
+const add = x => x + 2;
+const multiply = x => x * 3;
+
+// Compose functions: first add, then multiply.
+const composedFunction = x => multiply(add(x));
+console.log(composedFunction(4)); // (4+2)=6, then 6*3=18
+        </code></pre>
+        </div>
+        <p>
+          Currying and function composition help in creating more modular and
+          reusable code.
+        </p>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Functional programming in JavaScript emphasizes the use of pure
+          functions, higher-order functions, immutability, and function
+          composition to write more predictable, concise, and maintainable code.
+          By mastering these concepts, you can reduce side effects and build
+          applications that are easier to test and debug.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
