@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Understanding Generators and Iterators in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        display: block;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Generators & Iterators</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#iterators">Iterators</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#generators">Generators</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#usecases">Real-life Use Cases</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+      <header class="mb-4">
+        <h1 class="display-4">
+          Understanding Generators and Iterators in JavaScript
+        </h1>
+        <p class="lead">
+          A deep dive into how iterators and generators work in JavaScript along
+          with practical examples and detailed explanations.
+        </p>
+      </header>
+
+      <!-- Section: Iterators -->
+      <section id="iterators" class="mb-5">
+        <h2>Iterators in JavaScript</h2>
+        <p>
+          In JavaScript, an <strong>iterator</strong> is an object that adheres
+          to the iterator protocol by having a <code>next()</code>
+          method. This method returns an object with two properties:
+        </p>
+        <ul>
+          <li><code>value</code>: The next value in the sequence.</li>
+          <li>
+            <code>done</code>: A boolean indicating if the iteration has
+            completed.
+          </li>
+        </ul>
+        <p>
+          To be iterable (i.e., to be used in a <code>for...of</code> loop), an
+          object must implement the <code>Symbol.iterator</code>
+          method, which returns the iterator itself.
+        </p>
+        <h5>JavaScript Iterator Example</h5>
+        <pre><code>
+// Define a custom iterator object
+const myIterator = {
+  items: [10, 20, 30, 40], // An array of items to iterate over
+  index: 0,               // Starting index for iteration
+  // The next() method returns the next item in the sequence
+  next() {
+    if (this.index < this.items.length) {
+      // Return current item and mark iteration as not done, then increment the index
+      return { value: this.items[this.index++], done: false };
+    } else {
+      // Once all items are iterated, return done: true
+      return { done: true };
+    }
+  },
+  // Implementing the iterable protocol by returning itself as the iterator
+  [Symbol.iterator]() {
+    return this;
+  }
+};
+
+// Using the custom iterator with a for...of loop
+for (const item of myIterator) {
+  console.log(item); // Outputs: 10, then 20, then 30, then 40
+}
+      </code></pre>
+        <p>
+          <strong>In-depth Explanation:</strong>
+          This code creates an object <code>myIterator</code> with an array of
+          items. The <code>index</code> property keeps track of the current
+          position in the array. The <code>next()</code> method checks if there
+          are remaining items. If yes, it returns the current item with
+          <code>done: false</code> and increments the index. Once all items have
+          been processed, it returns an object with
+          <code>done: true</code> indicating the end of iteration. The object
+          implements the <code>[Symbol.iterator]()</code> method to return
+          itself, making it compatible with the <code>for...of</code> loop,
+          which automatically calls <code>next()</code> until the iteration is
+          complete.
+        </p>
+      </section>
+
+      <!-- Section: Generators -->
+      <section id="generators" class="mb-5">
+        <h2>Generators in JavaScript</h2>
+        <p>
+          A <strong>generator</strong> is a special type of function that can
+          pause and resume its execution. Generators are defined using the
+          <code>function*</code> syntax and use the <code>yield</code> keyword
+          to produce a sequence of values on demand.
+        </p>
+        <h5>JavaScript Generator Example</h5>
+        <pre><code>
+// Define a generator function using the function* syntax
+function* numberGenerator() {
+  // Each yield pauses the function and returns a value to the caller
+  yield 100;
+  yield 200;
+  yield 300;
+}
+
+// Create a generator object by calling the generator function
+const gen = numberGenerator();
+
+// Iterate over the generator using a for...of loop
+for (const num of gen) {
+  console.log(num); // Outputs: 100, then 200, then 300
+}
+      </code></pre>
+        <p>
+          <strong>In-depth Explanation:</strong>
+          When <code>numberGenerator()</code> is called, it does not run its
+          code immediately. Instead, it returns a generator object that
+          implements the iterator protocol. Each call to the generator’s
+          <code>next()</code> method (implicitly done by the
+          <code>for...of</code> loop) executes the function until a
+          <code>yield</code> statement is encountered. The generator then
+          pauses, returning the yielded value. The state of the generator,
+          including local variables and the current execution point, is
+          preserved until the next call to <code>next()</code>. This allows you
+          to produce values on-demand without computing them all at once, making
+          generators ideal for working with large or potentially infinite
+          sequences.
+        </p>
+      </section>
+
+      <!-- Section: Real-life Use Cases -->
+      <section id="usecases" class="mb-5">
+        <h2>Real-life Use Cases</h2>
+        <p>
+          Both iterators and generators are powerful features of JavaScript with
+          practical applications in modern development:
+        </p>
+        <ul>
+          <li>
+            <strong>Lazy Data Processing:</strong> They allow you to process
+            large datasets one item at a time, reducing memory consumption.
+            Instead of loading an entire dataset into memory, you can fetch or
+            compute each item only when needed.
+          </li>
+          <li>
+            <strong>Custom Data Structures:</strong> By implementing iterators,
+            you can create custom data structures (like trees or graphs) that
+            can be easily iterated using standard loops, making your code more
+            consistent and intuitive.
+          </li>
+          <li>
+            <strong>Asynchronous Workflows:</strong> Generators can be combined
+            with promises to manage asynchronous operations in a way that reads
+            more synchronously. This pattern simplifies complex asynchronous
+            code and can improve error handling.
+          </li>
+          <li>
+            <strong>Stateful Iterations:</strong> They are ideal for situations
+            where maintaining state is important, such as paginating data in web
+            applications or handling streaming data.
+          </li>
+        </ul>
+        <p>
+          These use cases show how iterators and generators not only enhance
+          code readability and efficiency but also provide flexibility in
+          handling various data processing tasks.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS (dependencies and main bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
