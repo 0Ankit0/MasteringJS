@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Understanding Symbols in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        display: block;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">JS Symbols</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#introduction">Introduction</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#examples">Examples</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#usecases">Real-life Use Cases</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+      <header class="mb-4">
+        <h1 class="display-4">Understanding Symbols in JavaScript</h1>
+        <p class="lead">
+          A comprehensive guide to understanding and using Symbols in JavaScript
+          with detailed explanations and practical code examples.
+        </p>
+      </header>
+
+      <!-- Introduction Section -->
+      <section id="introduction" class="mb-5">
+        <h2>Introduction to Symbols</h2>
+        <p>
+          In JavaScript, a <strong>Symbol</strong> is a unique and immutable
+          primitive value introduced in ES6. Symbols are often used to create
+          unique keys for object properties, ensuring that there are no naming
+          conflicts.
+        </p>
+        <p>
+          Unlike strings or numbers, each Symbol is guaranteed to be unique—even
+          if they share the same description. This uniqueness is valuable when
+          you want to add properties to objects that won't accidentally clash
+          with other properties.
+        </p>
+      </section>
+
+      <!-- Examples Section -->
+      <section id="examples" class="mb-5">
+        <h2>Examples and In-depth Explanations</h2>
+
+        <h5>Creating and Using Symbols</h5>
+        <pre><code>
+// Creating symbols with a description
+const sym1 = Symbol('description');
+const sym2 = Symbol('description');
+
+console.log(sym1 === sym2); // false, each Symbol is unique
+
+// Using symbols as object keys
+const myObject = {};
+myObject[sym1] = 'Value associated with sym1';
+
+console.log(myObject[sym1]); // Outputs: Value associated with sym1
+      </code></pre>
+        <p>
+          <strong>Explanation:</strong>
+          In this example, two symbols (<code>sym1</code> and <code>sym2</code>)
+          are created with the same description. However, since Symbols are
+          inherently unique, even identical descriptions do not make them equal
+          (as shown by the equality check returning <code>false</code>). When
+          used as object keys, symbols prevent accidental collisions with other
+          properties, making them ideal for creating properties that should
+          remain unique.
+        </p>
+
+        <h5>Global Symbols with Symbol.for()</h5>
+        <pre><code>
+// Creating or retrieving a global symbol using Symbol.for
+const globalSym1 = Symbol.for('globalKey');
+const globalSym2 = Symbol.for('globalKey');
+
+console.log(globalSym1 === globalSym2); // true, the same symbol is retrieved from the global registry
+      </code></pre>
+        <p>
+          <strong>Explanation:</strong>
+          The <code>Symbol.for()</code> method checks a global symbol registry
+          for a symbol with the specified key. If a symbol with that key exists,
+          it returns the existing symbol; otherwise, it creates a new one. This
+          mechanism allows symbols to be shared across different parts of your
+          application or even between different execution contexts, ensuring
+          that the same key always maps to the same symbol.
+        </p>
+
+        <h5>Well-known Symbols: Customizing Object Behavior</h5>
+        <pre><code>
+// Using the well-known symbol Symbol.iterator to make an object iterable
+const iterableObject = {
+  data: [1, 2, 3],
+  [Symbol.iterator]() {
+    let index = 0;
+    const data = this.data;
+    return {
+      next() {
+        if (index < data.length) {
+          return { value: data[index++], done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+for (const num of iterableObject) {
+  console.log(num); // Outputs: 1, then 2, then 3
+}
+      </code></pre>
+        <p>
+          <strong>Explanation:</strong>
+          JavaScript includes several well-known symbols that allow you to
+          customize the behavior of objects. In this example,
+          <code>Symbol.iterator</code> is implemented on
+          <code>iterableObject</code> so that it becomes iterable. The method
+          returns an iterator object with a <code>next()</code> method that
+          defines how to access each element in the <code>data</code> array.
+          This implementation allows the object to be used with a
+          <code>for...of</code> loop, seamlessly iterating over its elements.
+        </p>
+      </section>
+
+      <!-- Real-life Use Cases Section -->
+      <section id="usecases" class="mb-5">
+        <h2>Real-life Use Cases of Symbols</h2>
+        <p>
+          Symbols are not just a language feature—they have practical
+          applications in everyday JavaScript development:
+        </p>
+        <ul>
+          <li>
+            <strong>Unique Object Property Keys:</strong>
+            When building libraries or frameworks, symbols can be used to attach
+            properties to objects without risk of naming collisions with
+            user-defined properties.
+          </li>
+          <li>
+            <strong>Implementing Private-like Properties:</strong>
+            While JavaScript does not have true private properties, symbols can
+            be used to simulate privacy. Since symbol keys are not accessible by
+            accidental enumeration, they provide a layer of protection.
+          </li>
+          <li>
+            <strong>Customizing Built-in Behaviors:</strong>
+            Well-known symbols (such as <code>Symbol.iterator</code>) allow
+            developers to modify or extend the behavior of built-in operations,
+            like iteration, type conversion, or string matching.
+          </li>
+          <li>
+            <strong>Global Sharing of Identifiers:</strong>
+            By using <code>Symbol.for()</code>, developers can ensure that
+            certain keys remain consistent across different parts of an
+            application or even between different modules, avoiding duplicate or
+            mismatched identifiers.
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS (dependencies and main bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
