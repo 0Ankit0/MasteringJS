@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Optional Chaining & Nullish Coalescing in JavaScript</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      pre code {
+        display: block;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"
+          >JS Optional Chaining & Nullish Coalescing</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#introduction">Introduction</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#optional-chaining"
+                >Optional Chaining</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#nullish-coalescing"
+                >Nullish Coalescing</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#usecases">Real-life Use Cases</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+      <header class="mb-4">
+        <h1 class="display-4">
+          Optional Chaining & Nullish Coalescing in JavaScript
+        </h1>
+        <p class="lead">
+          Learn how Optional Chaining and Nullish Coalescing simplify safe
+          property access and default value handling in JavaScript.
+        </p>
+      </header>
+
+      <!-- Section: Introduction -->
+      <section id="introduction" class="mb-5">
+        <h2>Introduction</h2>
+        <p>
+          Modern JavaScript provides two powerful operators to simplify handling
+          of undefined or null values:
+        </p>
+        <ul>
+          <li>
+            <strong>Optional Chaining (?.):</strong> Safely access nested object
+            properties without having to check each level for null or undefined.
+          </li>
+          <li>
+            <strong>Nullish Coalescing (??):</strong> Provide a default value
+            when a variable is <code>null</code> or <code>undefined</code>.
+          </li>
+        </ul>
+        <p>
+          These operators improve code readability and reduce the need for
+          repetitive checks.
+        </p>
+      </section>
+
+      <!-- Section: Optional Chaining -->
+      <section id="optional-chaining" class="mb-5">
+        <h2>Optional Chaining</h2>
+        <p>
+          Optional Chaining allows you to safely access deeply nested
+          properties. If a reference is <code>null</code> or
+          <code>undefined</code>, the expression short-circuits and returns
+          <code>undefined</code> without causing an error.
+        </p>
+
+        <h5>Example: Safe Property Access</h5>
+        <pre><code>
+// Define an object with nested properties
+const user = {
+  name: "Alice",
+  address: {
+    city: "New York",
+    zip: "10001"
+  }
+};
+
+// Accessing nested properties safely
+console.log(user?.address?.city); // "New York"
+console.log(user?.contact?.phone); // undefined, no error thrown
+      </code></pre>
+        <p>
+          <strong>In-depth Explanation:</strong><br />
+          In the example above, <code>user?.address?.city</code> safely accesses
+          the <code>city</code> property. If <code>user</code> or
+          <code>user.address</code> were <code>null</code> or
+          <code>undefined</code>, the expression would immediately return
+          <code>undefined</code> without throwing an error. This is particularly
+          useful when dealing with data from APIs where some fields may be
+          missing.
+        </p>
+      </section>
+
+      <!-- Section: Nullish Coalescing -->
+      <section id="nullish-coalescing" class="mb-5">
+        <h2>Nullish Coalescing</h2>
+        <p>
+          The Nullish Coalescing operator (<code>??</code>) returns the
+          right-hand operand when the left-hand operand is <code>null</code> or
+          <code>undefined</code>. It is especially useful for setting default
+          values.
+        </p>
+
+        <h5>Example: Providing Default Values</h5>
+        <pre><code>
+// Example with nullish coalescing
+const input = null;
+const defaultValue = "Default Value";
+
+// If input is null or undefined, defaultValue is used
+const result = input ?? defaultValue;
+console.log(result); // "Default Value"
+
+// Even if input is falsy (like 0 or ""), it won't trigger the default unless it's null/undefined
+const number = 0;
+console.log(number ?? 42); // 0, because 0 is a valid value
+      </code></pre>
+        <p>
+          <strong>In-depth Explanation:</strong><br />
+          In the code above, the variable <code>input</code> is
+          <code>null</code>, so <code>input ?? defaultValue</code> evaluates to
+          <code>"Default Value"</code>. The nullish coalescing operator only
+          considers <code>null</code> and <code>undefined</code> as nullish.
+          Values like <code>0</code>, <code>""</code>, or <code>false</code> are
+          treated as valid and will not trigger the fallback.
+        </p>
+      </section>
+
+      <!-- Section: Real-life Use Cases -->
+      <section id="usecases" class="mb-5">
+        <h2>Real-life Use Cases</h2>
+        <p>
+          Optional Chaining and Nullish Coalescing are especially useful in
+          scenarios such as:
+        </p>
+        <ul>
+          <li>
+            <strong>API Response Handling:</strong> Safely access nested data in
+            API responses without needing to check each level, and provide
+            default values when data is missing.
+          </li>
+          <li>
+            <strong>User Input and Forms:</strong> Set default values for form
+            fields where input might be missing or incomplete.
+          </li>
+          <li>
+            <strong>Configuration Objects:</strong> Access configuration
+            settings safely and apply fallback defaults when necessary.
+          </li>
+          <li>
+            <strong>Complex Data Structures:</strong> Manage and traverse deeply
+            nested objects, especially when working with dynamic data.
+          </li>
+        </ul>
+        <p>
+          These operators reduce boilerplate code, improve code readability, and
+          prevent common runtime errors associated with accessing properties on
+          <code>null</code> or <code>undefined</code> values.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
