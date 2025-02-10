@@ -1,7 +1,3 @@
-Below is a comprehensive README.md you can use for your project:
-
----
-
 # MasteringJS
 
 MasteringJS is a curated collection of advanced JavaScript techniques and concepts designed to help you take your JavaScript skills to the next level. In this repository, you’ll find detailed explanations and code snippets covering a wide range of topics—from fundamental concepts like closures and hoisting to modern features such as async iterators and optional chaining.
