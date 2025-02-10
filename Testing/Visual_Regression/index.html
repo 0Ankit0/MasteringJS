@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Visual Regression Testing with Percy – Detailed Guide</title>
+    <!-- Bootstrap 5.3.0 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom styling for code blocks */
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        display: block;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <!-- Header -->
+      <header class="mb-5">
+        <h1 class="display-4 text-center">
+          Visual Regression Testing with Percy
+        </h1>
+        <p class="lead text-center">
+          A comprehensive guide to capturing UI snapshots and detecting visual
+          changes using Percy with Cypress.
+        </p>
+        <hr />
+      </header>
+
+      <!-- Introduction Section -->
+      <section id="introduction" class="mb-5">
+        <h2>What is Visual Regression Testing?</h2>
+        <p>
+          Visual regression testing checks that the look and feel of your
+          application remains consistent after code changes. By comparing
+          screenshots (snapshots) taken at different times, you can
+          automatically detect unintended UI changes.
+        </p>
+        <p>
+          Percy integrates seamlessly with Cypress to capture these snapshots
+          and compare them against approved baselines. This helps ensure that UI
+          changes are intentional and approved.
+          (&#8203;:contentReference[oaicite:0]{index=0})
+        </p>
+      </section>
+
+      <!-- Setup Section -->
+      <section id="setup" class="mb-5">
+        <h2>Setting Up Percy with Cypress</h2>
+        <p>To get started, install the Percy Cypress package:</p>
+        <pre><code>npm install --save-dev @percy/cypress</code></pre>
+        <p>
+          Then, import Percy’s commands in your Cypress support file (usually
+          <code>cypress/support/commands.js</code>):
+        </p>
+        <pre><code>import '@percy/cypress';</code></pre>
+        <p>
+          Once set up, you can use <code>cy.percySnapshot()</code> in your tests
+          to capture visual snapshots.
+        </p>
+      </section>
+
+      <!-- Methods & Options Section -->
+      <section id="methods" class="mb-5">
+        <h2>Percy Methods and Options</h2>
+
+        <h3>1. Basic Snapshot</h3>
+        <p>Capture a simple snapshot with a descriptive name:</p>
+        <pre><code>// Captures a basic snapshot named "Homepage"
+cy.percySnapshot('Homepage');</code></pre>
+
+        <h3>2. Snapshot with Advanced Options</h3>
+        <p>
+          You can customize the snapshot by passing an options object. Common
+          options include:
+        </p>
+        <ul>
+          <li>
+            <strong>widths</strong>: An array of viewport widths to capture
+            snapshots at multiple resolutions. <br /><em>Example:</em>
+            <code>widths: [320, 768, 1024]</code>
+          </li>
+          <li>
+            <strong>minHeight</strong>: Specifies a minimum height for the
+            snapshot. <br /><em>Example:</em> <code>minHeight: 800</code>
+          </li>
+          <li>
+            <strong>percyCSS</strong>: Custom CSS to be applied before capturing
+            the snapshot (e.g. hiding dynamic elements). <br /><em>Example:</em>
+            <pre><code>percyCSS: '.ad-banner, .dynamic { display: none !important; }'</code></pre>
+          </li>
+          <li>
+            <strong>scope</strong>: A CSS selector that defines the specific
+            element to snapshot rather than the entire page. <br /><em
+              >Example:</em
+            >
+            <code>scope: '#main-content'</code>
+          </li>
+        </ul>
+        <pre><code>// Advanced snapshot with multiple options
+cy.percySnapshot('Responsive Homepage', {
+  widths: [320, 768, 1280],
+  minHeight: 1024,
+  percyCSS: '.ads, .dynamic-banner { display: none !important; }',
+  scope: '#app'
+});</code></pre>
+
+        <h3>3. Multiple Snapshots in One Test</h3>
+        <p>
+          You can capture multiple snapshots at different stages of your test.
+        </p>
+        <pre><code>// Capture snapshot before and after an interaction
+cy.visit('http://localhost:3000');
+cy.percySnapshot('Homepage - Before Click');
+cy.get('.expand-button').click();
+cy.percySnapshot('Homepage - After Click');</code></pre>
+
+        <h3>4. Snapshot with Custom Timing</h3>
+        <p>
+          If your UI has animations or dynamic content, consider waiting for a
+          stable state before capturing the snapshot.
+        </p>
+        <pre><code>// Wait for animations to complete
+cy.get('.loading-indicator').should('not.exist');
+cy.wait(500); // extra buffer
+cy.percySnapshot('Stable Homepage');</code></pre>
+      </section>
+
+      <!-- Additional Considerations Section -->
+      <section id="additional" class="mb-5">
+        <h2>Additional Considerations</h2>
+        <ul>
+          <li>
+            <strong>Baseline Management:</strong> Review and approve snapshot
+            changes during your CI/CD pipeline to update baselines when intended
+            changes occur.
+          </li>
+          <li>
+            <strong>Environment Consistency:</strong> Ensure that your test
+            environment is stable (no dynamic ads, random elements, etc.) to
+            avoid false positives.
+          </li>
+          <li>
+            <strong>Snapshot Frequency:</strong> Strike a balance between
+            capturing enough snapshots to cover critical changes and not
+            overwhelming your snapshot review process.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Conclusion Section -->
+      <section id="conclusion" class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Visual regression testing helps ensure that UI changes are intentional
+          and that your application’s appearance remains consistent. With Percy
+          and Cypress, you can leverage a single
+          command—<code>cy.percySnapshot()</code>—with a range of options to
+          capture detailed snapshots across multiple viewports, hide dynamic
+          content, and focus on specific sections of your page.
+        </p>
+        <p>
+          Use these methods as a foundation for integrating visual regression
+          testing into your CI/CD pipeline and keeping your user interface
+          consistent.
+        </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5.3.0 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
