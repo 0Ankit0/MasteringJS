@@ -185,8 +185,6 @@ Feel free to modify and expand this README as you add new topics or update exist
 
 ---
 
-This README consolidates the key information from your repository and provides a clear, organized guide for users to navigate and learn from the different JavaScript concepts you have compiled. 
-
 References:  
 [W3club Web Api](https://docs.w3cub.com/dom/)
 
