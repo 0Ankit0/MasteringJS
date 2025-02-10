@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Advanced Integration Testing with Jest &amp; Supertest</title>
+    <!-- Updated Bootstrap 5.3.0 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom styling for code blocks */
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        display: block;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <!-- Header -->
+      <header class="mb-5">
+        <h1 class="display-4 text-center">
+          Advanced Integration Testing with Jest &amp; Supertest
+        </h1>
+        <p class="lead text-center">
+          A comprehensive guide on testing API endpoints with detailed methods
+          and code examples.
+        </p>
+        <hr />
+      </header>
+
+      <!-- Introduction Section -->
+      <section id="introduction" class="mb-5">
+        <h2>What is Integration Testing?</h2>
+        <p>
+          Integration testing verifies that multiple modules or services work
+          together as expected. In a web API, this means testing endpoints to
+          ensure that your routes, middleware, and database interactions operate
+          correctly in concert.
+        </p>
+        <p>
+          In this guide, we focus on a Node.js/Express API tested with Jest and
+          Supertest. (&#8203;:contentReference[oaicite:0]{index=0})
+        </p>
+      </section>
+
+      <!-- Setup Section -->
+      <section id="setup" class="mb-5">
+        <h2>Project Setup</h2>
+        <p>First, install Jest and Supertest as development dependencies:</p>
+        <pre><code>npm install --save-dev jest supertest</code></pre>
+        <p>Update your <code>package.json</code> with a test script:</p>
+        <pre><code>{
+  "scripts": {
+    "test": "jest"
+  }
+}</code></pre>
+        <p>(If needed, configure Babel or Node for ES modules.)</p>
+      </section>
+
+      <!-- Express API Example -->
+      <section id="express-api" class="mb-5">
+        <h2>Express API Example (<code>server.js</code>)</h2>
+        <p>The following Express server demonstrates several endpoints:</p>
+        <pre><code>
+// server.js
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// GET endpoint
+app.get('/api/hello', (req, res) =&gt; {
+  res.json({ message: 'Hello, world!' });
+});
+
+// GET endpoint with query parameters
+app.get('/api/items', (req, res) =&gt; {
+  const { category } = req.query;
+  if (category) {
+    return res.json({ items: [`Item in ${category}`] });
+  }
+  res.json({ items: ['Item1', 'Item2', 'Item3'] });
+});
+
+// POST endpoint for creating a user
+app.post('/api/users', (req, res) =&gt; {
+  const user = req.body;
+  if (!user.name || !user.email) {
+    return res.status(400).json({ error: 'Missing user data' });
+  }
+  // Simulate user creation
+  res.status(201).json({ id: 1, ...user });
+});
+
+// PUT endpoint for updating a user
+app.put('/api/users/:id', (req, res) =&gt; {
+  const { id } = req.params;
+  const updates = req.body;
+  // Simulate update
+  res.json({ id, ...updates });
+});
+
+// DELETE endpoint for deleting a user
+app.delete('/api/users/:id', (req, res) =&gt; {
+  // Simulate deletion
+  res.status(204).send();
+});
+
+module.exports = app;
+      </code></pre>
+      </section>
+
+      <!-- Integration Testing Methods Section -->
+      <section id="integration-methods" class="mb-5">
+        <h2>Integration Testing Methods &amp; Code Snippets</h2>
+        <p>
+          The following examples demonstrate how to test the above endpoints
+          using different HTTP methods and options with Supertest.
+        </p>
+
+        <h3>1. Testing a GET Endpoint</h3>
+        <pre><code>// server.test.js - Testing GET /api/hello
+const request = require('supertest');
+const app = require('./server');
+
+describe('GET /api/hello', () =&gt; {
+  test('should return greeting message', async () =&gt; {
+    const response = await request(app).get('/api/hello');
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toBe('Hello, world!');
+  });
+});
+      </code></pre>
+
+        <h3>2. Testing GET with Query Parameters</h3>
+        <pre><code>// Testing GET /api/items with a query parameter
+describe('GET /api/items', () =&gt; {
+  test('should return items for a given category', async () =&gt; {
+    const response = await request(app)
+      .get('/api/items')
+      .query({ category: 'books' });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.items).toContain('Item in books');
+  });
+
+  test('should return default items when no category provided', async () =&gt; {
+    const response = await request(app).get('/api/items');
+    expect(response.statusCode).toBe(200);
+    expect(response.body.items).toEqual(['Item1', 'Item2', 'Item3']);
+  });
+});
+      </code></pre>
+
+        <h3>3. Testing a POST Endpoint</h3>
+        <pre><code>// Testing POST /api/users with valid and invalid data
+describe('POST /api/users', () =&gt; {
+  test('should create a new user when valid data is provided', async () =&gt; {
+    const newUser = { name: 'Alice', email: 'alice@example.com' };
+    const response = await request(app)
+      .post('/api/users')
+      .send(newUser)
+      .set('Accept', 'application/json');
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toMatchObject(newUser);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  test('should return 400 when required data is missing', async () =&gt; {
+    const incompleteUser = { name: 'Bob' };
+    const response = await request(app)
+      .post('/api/users')
+      .send(incompleteUser)
+      .set('Accept', 'application/json');
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Missing user data');
+  });
+});
+      </code></pre>
+
+        <h3>4. Testing a PUT Endpoint</h3>
+        <pre><code>// Testing PUT /api/users/:id to update a user
+describe('PUT /api/users/:id', () =&gt; {
+  test('should update an existing user', async () =&gt; {
+    const updates = { name: 'Alice Updated' };
+    const response = await request(app)
+      .put('/api/users/1')
+      .send(updates)
+      .set('Accept', 'application/json');
+    expect(response.statusCode).toBe(200);
+    // Note: route parameter 'id' is returned as a string if not converted
+    expect(response.body).toMatchObject({ id: '1', ...updates });
+  });
+});
+      </code></pre>
+
+        <h3>5. Testing a DELETE Endpoint</h3>
+        <pre><code>// Testing DELETE /api/users/:id
+describe('DELETE /api/users/:id', () =&gt; {
+  test('should delete a user and return 204', async () =&gt; {
+    const response = await request(app).delete('/api/users/1');
+    expect(response.statusCode).toBe(204);
+  });
+});
+      </code></pre>
+
+        <h3>6. Using Lifecycle Hooks for Setup and Teardown</h3>
+        <p>
+          If your tests need a running server or a database connection, use
+          Jest’s lifecycle hooks:
+        </p>
+        <pre><code>// Using beforeAll and afterAll to start and stop a server instance
+let server;
+beforeAll((done) =&gt; {
+  server = app.listen(4000, () =&gt; {
+    console.log('Test server running on port 4000');
+    done();
+  });
+});
+
+afterAll((done) =&gt; {
+  server.close(() =&gt; {
+    console.log('Test server closed');
+    done();
+  });
+});
+
+describe('GET /api/hello on running server', () =&gt; {
+  test('should return greeting message', async () =&gt; {
+    const response = await request('http://localhost:4000').get('/api/hello');
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toBe('Hello, world!');
+  });
+});
+      </code></pre>
+      </section>
+
+      <!-- Conclusion Section -->
+      <section id="conclusion" class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Advanced integration testing ensures that various parts of your
+          application work together as expected. With Jest and Supertest you can
+          simulate requests using different HTTP methods, query parameters, and
+          request bodies. Additionally, lifecycle hooks help you manage the test
+          environment.
+        </p>
+        <p>
+          This guide provided detailed examples for GET, POST, PUT, DELETE
+          endpoints, and more. (&#8203;:contentReference[oaicite:1]{index=1})
+        </p>
+      </section>
+
+
+
+    <!-- Bootstrap 5.3.0 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
