@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cypress Methods &amp; API – A Detailed Guide</title>
+  <!-- Bootstrap 5.3.0 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    /* Custom styling for code blocks */
+    pre code {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      display: block;
+      border-radius: 0.25rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-5">
+    <!-- Header -->
+    <header class="mb-5">
+      <h1 class="display-4 text-center">Cypress Methods &amp; API – A Detailed Guide</h1>
+      <p class="lead text-center">
+        Explore the wide range of Cypress commands with detailed descriptions and code examples.
+      </p>
+      <hr>
+    </header>
+
+    <!-- Introduction Section -->
+    <section id="introduction" class="mb-5">
+      <h2>Introduction</h2>
+      <p>
+        Cypress is a modern end-to-end testing framework built for the web. It runs in the same run-loop as your application, providing fast, reliable tests and rich debugging capabilities.
+      </p>
+      <p>
+        This guide covers many of the commonly used Cypress commands and their parameters—from basic commands for visiting pages and interacting with elements, to advanced features such as network stubbing and custom commands.
+      </p>
+    </section>
+
+    <!-- Basic Commands Section -->
+    <section id="basic-commands" class="mb-5">
+      <h2>Basic Cypress Commands</h2>
+      <p>
+        Below are some of the fundamental Cypress commands you will use in almost every test.
+      </p>
+      
+      <h3>1. <code>cy.visit(url, [options])</code></h3>
+      <p>
+        <code>cy.visit()</code> navigates to a given URL. Optional parameters let you customize the request (e.g. setting headers, query parameters, etc.).
+      </p>
+      <pre><code>// Visit a URL with default settings
+cy.visit('http://localhost:3000');
+
+// Visit with options
+cy.visit('http://localhost:3000', {
+  timeout: 10000,           // Wait up to 10 seconds for the page to load
+  onBeforeLoad (win) {
+    // Manipulate the window object before the page loads
+    win.someGlobalVar = 'test';
+  }
+});
+      </code></pre>
+      
+      <h3>2. <code>cy.get(selector, [options])</code></h3>
+      <p>
+        <code>cy.get()</code> queries the DOM using a CSS selector. You can pass options such as a timeout or specify whether to include hidden elements.
+      </p>
+      <pre><code>// Get an element by its class name
+cy.get('.btn-submit');
+
+// Get an element with a longer timeout
+cy.get('#username', { timeout: 5000 });
+      </code></pre>
+
+      <h3>3. <code>cy.contains(content, [options])</code></h3>
+      <p>
+        Finds a DOM element containing a specific text. Useful for buttons, links, or any element that displays text.
+      </p>
+      <pre><code>// Find an element that contains the text "Login"
+cy.contains('Login');
+
+// Find a specific element type containing text
+cy.contains('button', 'Submit');
+      </code></pre>
+
+      <h3>4. <code>cy.click([options])</code></h3>
+      <p>
+        Clicks on a DOM element. Options can control the position of the click or force the action.
+      </p>
+      <pre><code>// Click a button normally
+cy.get('button').click();
+
+// Click with options (e.g. force the click even if the element is covered)
+cy.get('.modal-close').click({ force: true });
+      </code></pre>
+
+      <h3>5. <code>cy.type(text, [options])</code></h3>
+      <p>
+        Types text into an input field. You can include options such as delay between keystrokes.
+      </p>
+      <pre><code>// Type into an input field
+cy.get('#email').type('user@example.com');
+
+// Type with a delay between keystrokes
+cy.get('#password').type('P@ssw0rd', { delay: 100 });
+      </code></pre>
+
+      <h3>6. Assertions with <code>cy.should()</code> and <code>cy.expect()</code></h3>
+      <p>
+        Cypress uses <code>should()</code> to chain assertions on a subject. You can also use <code>expect()</code> inside <code>then()</code> callbacks.
+      </p>
+      <pre><code>// Assert an element is visible
+cy.get('.welcome-message').should('be.visible');
+
+// Assert element text content
+cy.get('h1').should('have.text', 'Welcome to My App');
+
+// Using then() for more complex assertions
+cy.get('ul li').then((items) =&gt; {
+  expect(items).to.have.length(5);
+});
+      </code></pre>
+
+      <h3>7. <code>cy.wait()</code></h3>
+      <p>
+        Waits for a specified amount of time or until an alias (such as an intercepted network request) is resolved.
+      </p>
+      <pre><code>// Wait for 2 seconds
+cy.wait(2000);
+
+// Wait for an aliased network call (see advanced section)
+cy.wait('@getUser');
+      </code></pre>
+
+      <h3>8. <code>cy.request(options)</code></h3>
+      <p>
+        Makes an HTTP request and allows you to assert on the response. Useful for testing API endpoints outside of the UI.
+      </p>
+      <pre><code>// Make a GET request and assert the response
+cy.request('https://jsonplaceholder.typicode.com/users/1')
+  .its('status')
+  .should('equal', 200);
+      </code></pre>
+
+      <h3>9. <code>cy.fixture(filePath)</code></h3>
+      <p>
+        Loads a fixed set of data located in the <code>cypress/fixtures</code> folder. Fixtures are useful for mocking data.
+      </p>
+      <pre><code>// Load a JSON fixture and use its data
+cy.fixture('user').then((userData) =&gt; {
+  expect(userData.name).to.equal('John Doe');
+});
+      </code></pre>
+
+      <h3>10. <code>cy.reload()</code>, <code>cy.url()</code>, and <code>cy.title()</code></h3>
+      <p>
+        <code>cy.reload()</code> refreshes the page. <code>cy.url()</code> and <code>cy.title()</code> retrieve the current URL and page title respectively.
+      </p>
+      <pre><code>// Reload the page and then check URL and title
+cy.reload();
+cy.url().should('include', 'localhost');
+cy.title().should('eq', 'My App');
+      </code></pre>
+    </section>
+
+    <!-- Advanced Commands Section -->
+    <section id="advanced-commands" class="mb-5">
+      <h2>Advanced Cypress Commands</h2>
+      <p>
+        In addition to basic commands, Cypress offers several advanced features for more complex testing scenarios.
+      </p>
+      
+      <h3>1. <code>cy.intercept()</code> (Network Stubbing)</h3>
+      <p>
+        <code>cy.intercept()</code> allows you to spy on, stub, or modify network requests and responses. This is especially useful for testing error handling or simulating slow networks.
+      </p>
+      <pre><code>// Stub a GET request
+cy.intercept('GET', '/api/users', { fixture: 'users.json' }).as('getUsers');
+
+// Visit the page and wait for the intercepted call
+cy.visit('http://localhost:3000/users');
+cy.wait('@getUsers').its('response.statusCode').should('eq', 200);
+      </code></pre>
+
+      <h3>2. <code>cy.wrap()</code></h3>
+      <p>
+        <code>cy.wrap()</code> wraps an object so that you can chain Cypress commands on it.
+      </p>
+      <pre><code>// Wrap a plain object to use Cypress assertions
+const obj = { name: 'Alice', age: 30 };
+cy.wrap(obj).should('have.property', 'age', 30);
+      </code></pre>
+
+      <h3>3. <code>cy.then()</code></h3>
+      <p>
+        <code>cy.then()</code> allows you to work with the subject yielded by the previous command. It’s useful for making assertions that require synchronous JavaScript.
+      </p>
+      <pre><code>// Using cy.then() for custom logic
+cy.get('.item-list li').then((items) =&gt; {
+  // Convert jQuery element to array and check length
+  const itemCount = Cypress.$(items).length;
+  expect(itemCount).to.be.greaterThan(0);
+});
+      </code></pre>
+
+      <h3>4. Iterating with <code>cy.each()</code></h3>
+      <p>
+        <code>cy.each()</code> iterates over a set of elements, performing assertions or actions on each.
+      </p>
+      <pre><code>// Iterate over a list of items
+cy.get('ul li').each(($el, index, $list) =&gt; {
+  cy.wrap($el).should('contain.text', 'Item');
+});
+      </code></pre>
+
+      <h3>5. Invoking Methods with <code>cy.invoke()</code></h3>
+      <p>
+        <code>cy.invoke()</code> calls a function on the previously yielded subject.
+      </p>
+      <pre><code>// Invoke a jQuery method on an element
+cy.get('input')
+  .invoke('val', 'New Value')
+  .should('have.value', 'New Value');
+      </code></pre>
+
+      <h3>6. Custom Commands</h3>
+      <p>
+        You can define your own reusable commands in Cypress. Place custom commands in <code>cypress/support/commands.js</code> so they are automatically available.
+      </p>
+      <pre><code>// In cypress/support/commands.js
+Cypress.Commands.add('login', (username, password) =&gt; {
+  cy.request({
+    method: 'POST',
+    url: '/api/login',
+    body: { username, password }
+  }).then((resp) =&gt; {
+    window.localStorage.setItem('token', resp.body.token);
+  });
+});
+
+// Then use it in a test:
+cy.login('user1', 'password123');
+      </code></pre>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion" class="mb-5">
+      <h2>Conclusion</h2>
+      <p>
+        Cypress offers a rich set of commands and parameters that allow you to simulate user interactions, control network requests, and build robust end-to-end tests. By mastering both basic and advanced methods—from <code>cy.visit()</code> and <code>cy.get()</code> to network stubbing with <code>cy.intercept()</code> and creating custom commands—you can ensure your application works as expected in real-world scenarios.
+      </p>
+      <p>
+        This guide provides detailed examples and explanations of many Cypress commands. As you expand your test suite, you’ll discover even more capabilities that Cypress provides to simplify and strengthen your testing process.
+      </p>
+    </section>
+
+
+
+  <!-- Bootstrap 5.3.0 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
