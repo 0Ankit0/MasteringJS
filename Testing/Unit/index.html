@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unit Testing with Jest &amp; Bootstrap 5</title>
+    <!-- Bootstrap 5 CSS (using CDN) -->
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+    <style>
+      /* Additional custom styling for code blocks */
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        display: block;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <!-- Header -->
+      <header class="mb-4">
+        <h1 class="display-4 text-center">Unit Testing with Jest</h1>
+        <p class="lead text-center">
+          A detailed guide covering Jest’s API and methods—with Bootstrap 5
+          styling.
+        </p>
+        <hr />
+      </header>
+
+      <!-- Introduction Section -->
+      <section id="introduction" class="mb-5">
+        <h2>Introduction to Unit Testing and Jest</h2>
+        <p>
+          <strong>Unit testing</strong> involves testing the smallest parts
+          (units) of an application in isolation to verify that each part
+          functions as expected. <strong>Jest</strong> is a comprehensive
+          JavaScript testing framework that includes a test runner, an assertion
+          library, and powerful mocking tools. It was created by Facebook and is
+          popular for testing both frontend (especially React) and backend code.
+          (&#8203;:contentReference[oaicite:0]{index=0})
+        </p>
+      </section>
+
+      <!-- Setup Section -->
+      <section id="setup" class="mb-5">
+        <h2>Setting Up Jest in Your Project</h2>
+        <p>To install Jest as a development dependency, run:</p>
+        <pre><code>npm install --save-dev jest</code></pre>
+        <p>
+          Then, update your <code>package.json</code> by adding a test script:
+        </p>
+        <pre><code>{
+  "scripts": {
+    "test": "jest"
+  }
+}</code></pre>
+      </section>
+
+      <!-- Basic Structure Section -->
+      <section id="basic-structure" class="mb-5">
+        <h2>Basic Structure of a Jest Test</h2>
+        <p>
+          A typical Jest test file is organized using
+          <code>describe</code> blocks and individual test cases defined by
+          <code>test()</code> or its alias <code>it()</code>. For example:
+        </p>
+        <pre><code>describe('Array operations', () => {
+  test('adds an element to an array', () => {
+    const arr = [];
+    arr.push(1);
+    expect(arr).toEqual([1]);
+  });
+});</code></pre>
+      </section>
+
+      <!-- Jest Methods and Matchers Section -->
+      <section id="jest-methods" class="mb-5">
+        <h2>Jest Methods and Matchers</h2>
+
+        <h3>1. Test Functions</h3>
+        <ul>
+          <li>
+            <code>test(name, fn)</code> or <code>it(name, fn)</code>: Defines an
+            individual test case.
+          </li>
+          <li>
+            <code>describe(name, fn)</code>: Groups related tests together.
+          </li>
+        </ul>
+
+        <h3>2. Lifecycle Methods</h3>
+        <ul>
+          <li>
+            <code>beforeEach(fn)</code>: Runs before every test in the block.
+          </li>
+          <li>
+            <code>afterEach(fn)</code>: Runs after every test in the block.
+          </li>
+          <li><code>beforeAll(fn)</code>: Runs once before all tests.</li>
+          <li><code>afterAll(fn)</code>: Runs once after all tests.</li>
+        </ul>
+
+        <h3>3. Assertions Using <code>expect</code></h3>
+        <p>
+          The <code>expect</code> function creates an expectation object. You
+          can then chain matcher methods to assert the desired outcome. Common
+          matchers include:
+        </p>
+        <ul>
+          <li>
+            <code>toBe(value)</code>: Checks for strict equality (using
+            <code>===</code>).
+          </li>
+          <li>
+            <code>toEqual(value)</code>: Performs a deep equality check (ideal
+            for objects and arrays).
+          </li>
+          <li>
+            <code>toBeNull()</code>, <code>toBeDefined()</code>,
+            <code>toBeUndefined()</code>, <code>toBeTruthy()</code>,
+            <code>toBeFalsy()</code>: Check for specific conditions.
+          </li>
+          <li>
+            <code>toBeGreaterThan(n)</code> / <code>toBeLessThan(n)</code>:
+            Numeric comparisons.
+          </li>
+          <li><code>toMatch(regexp)</code>: For string pattern matching.</li>
+          <li>
+            <code>toContain(item)</code>: Checks if an array contains a specific
+            item.
+          </li>
+          <li>
+            <code>toThrow()</code>: Verifies that a function throws an error.
+          </li>
+        </ul>
+        <p>Examples:</p>
+        <pre><code>// Numeric comparisons
+test('value is greater than 5 and less than 20', () => {
+  const value = 10;
+  expect(value).toBeGreaterThan(5);
+  expect(value).toBeLessThan(20);
+});
+
+// Object comparison
+test('object equality', () => {
+  const obj = { a: 1, b: 2 };
+  expect(obj).toEqual({ a: 1, b: 2 });
+});
+
+// Error throwing
+test('throws an error', () => {
+  const errorFunc = () => { throw new Error('failure'); };
+  expect(errorFunc).toThrow('failure');
+});</code></pre>
+
+        <h3>4. Parameterized Tests</h3>
+        <p>
+          Use <code>test.each()</code> to run the same test with different
+          inputs:
+        </p>
+        <pre><code>test.each([
+  [1, 2, 3],
+  [2, 2, 4],
+  [3, 3, 6]
+])('adds %i and %i to equal %i', (a, b, expected) => {
+  expect(a + b).toBe(expected);
+});</code></pre>
+
+        <h3>5. Mocking and Spying</h3>
+        <ul>
+          <li><code>jest.fn()</code>: Creates a new mock function.</li>
+          <li><code>jest.mock(moduleName)</code>: Mocks an entire module.</li>
+          <li>
+            <code>jest.spyOn(object, methodName)</code>: Creates a spy on an
+            object method so you can track its calls.
+          </li>
+        </ul>
+        <p>Example of a mock function:</p>
+        <pre><code>const mockCallback = jest.fn(x =&gt; 42 + x);
+[0, 1, 2].forEach(mockCallback);
+expect(mockCallback).toHaveBeenCalledTimes(3);
+expect(mockCallback).toHaveBeenCalledWith(1);</code></pre>
+
+        <h3>6. Snapshot Testing</h3>
+        <p>
+          Snapshot tests capture the rendered output of a component (or the
+          return value of a function) and compare it to a stored version. For
+          example, in React:
+        </p>
+        <pre><code>test('renders correctly', () =&gt; {
+  const tree = renderer.create(&lt;MyComponent /&gt;).toJSON();
+  expect(tree).toMatchSnapshot();
+});</code></pre>
+        <p>
+          This ensures that if the UI (or output) changes unexpectedly, the test
+          will fail until you review and update the snapshot.
+        </p>
+      </section>
+
+      <!-- Advanced Features Section -->
+      <section id="advanced" class="mb-5">
+        <h2>Advanced Jest Features</h2>
+        <p>
+          Jest also supports testing asynchronous code using
+          <code>async/await</code> or Promises. For example:
+        </p>
+        <pre><code>test('async test with async/await', async () =&gt; {
+  const data = await fetchData();
+  expect(data).toBeDefined();
+});
+
+// Testing for a rejected promise:
+test('async function throws error', async () =&gt; {
+  await expect(asyncFunction()).rejects.toThrow('error message');
+});</code></pre>
+        <p>
+          These capabilities help you test asynchronous flows and error handling
+          with ease.
+        </p>
+      </section>
+
+      <!-- Conclusion Section -->
+      <section id="conclusion" class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+          Jest provides a comprehensive, zero-configuration testing framework
+          with a rich API that includes methods for organizing tests, asserting
+          outcomes with a variety of matchers, parameterized testing, mocking
+          functions, and even snapshot testing. Combined with Bootstrap 5 for
+          styling, you can create clear, professional documentation and examples
+          that help both in writing robust tests and in educating others about
+          best testing practices.
+        </p>
+        <p>
+          For more details on Jest’s philosophy and full API, visit the official
+          website. (&#8203;:contentReference[oaicite:1]{index=1}) Additionally,
+          this page uses Bootstrap 5 for styling as described in its
+          documentation. (&#8203;:contentReference[oaicite:2]{index=2})
+        </p>
+      </section>
+
+ 
+
+    <!-- Bootstrap 5 JS Bundle with Popper (optional for interactive components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+  </body>
+</html>
