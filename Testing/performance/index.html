@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Load Testing with k6 – Detailed Guide</title>
+    <!-- Bootstrap 5.3.0 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom styling for code blocks */
+      pre code {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        display: block;
+        border-radius: 0.25rem;
+        overflow-x: auto;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <!-- Header -->
+      <h1 class="display-4 text-center">
+        Performance Testing with k6 – Detailed Guide
+      </h1>
+      <p class="lead text-center">
+        Explore various performance testing types with k6, including load,
+        stress, endurance, spike, and more, complete with code examples.
+      </p>
+      <hr />
+    </header>
+
+      <!-- Introduction Section -->
+      <section id="introduction" class="mb-5">
+        <h2>What is Performance Testing?</h2>
+        <p>
+          Performance testing evaluates how a system performs under various
+          conditions. It encompasses several testing types, each designed to
+          assess specific performance characteristics. k6 is a modern,
+          developer-centric tool that uses JavaScript to script your test
+          scenarios.
+        </p>
+      </section>
+
+      <!-- Setup Section -->
+      <section id="setup" class="mb-5">
+        <h2>Setting Up k6</h2>
+        <p>Install k6 using your preferred method. For example:</p>
+        <pre><code># Using Homebrew (macOS)
+brew install k6
+
+# Using Chocolatey (Windows)
+choco install k6
+
+# Using Docker
+docker pull loadimpact/k6</code></pre>
+        <p>
+          Save your load test scripts as JavaScript files (e.g.,
+          <code>script.js</code>) and run them with:
+        </p>
+        <pre><code>k6 run script.js</code></pre>
+      </section>
+
+      <!-- Detailed Methods Section -->
+      <section id="detailed-methods" class="mb-5">
+        <h2>Detailed k6 Methods and Options</h2>
+
+        <h3>1. The <code>options</code> Object</h3>
+        <p>
+          The <code>options</code> object configures your load test. Key
+          properties include:
+        </p>
+        <ul>
+          <li>
+            <strong>vus</strong>: Number of virtual users. <br /><em
+              >Example:</em
+            >
+            <code>vus: 10</code>
+          </li>
+          <li>
+            <strong>duration</strong>: Total test duration. <br /><em
+              >Example:</em
+            >
+            <code>duration: '30s'</code>
+          </li>
+          <li>
+            <strong>stages</strong>: A series of steps to gradually change load.
+            <br /><em>Example:</em>
+            <pre><code>stages: [
+  { duration: '30s', target: 50 },
+  { duration: '1m', target: 50 },
+  { duration: '30s', target: 0 }
+]</code></pre>
+          </li>
+          <li>
+            <strong>thresholds</strong>: Define performance criteria. <br /><em
+              >Example:</em
+            >
+            <pre><code>thresholds: {
+  'http_req_duration': ['p(95)<500']
+}</code></pre>
+          </li>
+        </ul>
+
+        <h3>2. HTTP Request Methods</h3>
+        <p>
+          k6’s <code>http</code> module provides methods for various HTTP
+          actions:
+        </p>
+        <ul>
+          <li>
+            <strong>http.get(url, params?)</strong>: Sends a GET request.
+            <br /><em>Example:</em>
+            <code>let res = http.get('http://localhost:3000');</code>
+          </li>
+          <li>
+            <strong>http.post(url, body, params?)</strong>: Sends a POST request
+            with a payload. <br /><em>Example:</em>
+            <pre><code>let payload = JSON.stringify({ name: 'Alice' });
+let params = { headers: { 'Content-Type': 'application/json' } };
+let res = http.post('http://localhost:3000/api/users', payload, params);</code></pre>
+          </li>
+          <li>
+            <strong>http.put(url, body, params?)</strong> and
+            <strong>http.del(url, params?)</strong>: For PUT and DELETE
+            requests.
+          </li>
+          <li>
+            <strong>http.patch(url, body, params?)</strong>: For partial
+            updates.
+          </li>
+          <li>
+            <strong>http.batch(requests)</strong>: Executes an array of HTTP
+            requests concurrently. <br /><em>Example:</em>
+            <pre><code>let responses = http.batch([
+  ['GET', 'http://localhost:3000/api/endpoint1'],
+  ['GET', 'http://localhost:3000/api/endpoint2']
+]);</code></pre>
+          </li>
+        </ul>
+
+        <h3>3. Custom Metrics</h3>
+        <p>k6 lets you define custom metrics to track performance data.</p>
+        <pre><code>import { Trend, Counter, Rate } from 'k6/metrics';
+
+let myTrend = new Trend('my_response_time');
+let myCounter = new Counter('my_requests');
+let myRate = new Rate('my_success_rate');
+
+export default function () {
+  let res = http.get('http://localhost:3000');
+  myTrend.add(res.timings.duration);
+  myCounter.add(1);
+  myRate.add(res.status === 200);
+  check(res, {
+    'status is 200': (r) =&gt; r.status === 200,
+  });
+  sleep(1);
+}</code></pre>
+
+        <h3>4. Utility Functions</h3>
+        <p>
+          <code>sleep(seconds)</code> pauses the virtual user, simulating real
+          user think-time.
+        </p>
+        <pre><code>// Pause for 2 seconds
+sleep(2);</code></pre>
+
+        <h3>5. Using Environment Variables</h3>
+        <p>
+          You can pass environment variables to your k6 tests using the
+          <code>__ENV</code> object.
+        </p>
+        <pre><code>// Access an environment variable named BASE_URL
+const baseUrl = __ENV.BASE_URL || 'http://localhost:3000';
+let res = http.get(baseUrl + '/api/hello');</code></pre>
+      </section>
+
+      <section id="test-types" class="mb-5">
+        <h2>Types of Performance Testing</h2>
+        <h3>1. Load Testing</h3>
+        <p>Simulates expected user loads to measure performance.</p>
+        <pre><code>import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export let options = {
+  vus: 50,
+  duration: '1m',
+};
+
+export default function () {
+  let res = http.get('https://test-api.com');
+  check(res, { 'status is 200': (r) => r.status === 200 });
+  sleep(1);
+}</code></pre>
+
+        <h3>2. Stress Testing</h3>
+        <p>Increases load beyond normal levels to find breaking points.</p>
+        <pre><code>export let options = {
+  stages: [
+    { duration: '2m', target: 100 },
+    { duration: '5m', target: 500 },
+    { duration: '2m', target: 0 },
+  ],
+};
+
+export default function () {
+  let res = http.get('https://test-api.com');
+  check(res, { 'status is 200': (r) => r.status === 200 });
+}</code></pre>
+
+        <h3>3. Soak Testing</h3>
+        <p>Runs a load test over an extended period to detect memory leaks.</p>
+        <pre><code>export let options = {
+  vus: 50,
+  duration: '12h',
+};
+
+export default function () {
+  let res = http.get('https://test-api.com');
+  check(res, { 'status is 200': (r) => r.status === 200 });
+  sleep(2);
+}</code></pre>
+
+        <h3>4. Spike Testing</h3>
+        <p>Measures system response to sudden surges in traffic.</p>
+        <pre><code>export let options = {
+  stages: [
+    { duration: '10s', target: 10 },
+    { duration: '10s', target: 500 },
+    { duration: '10s', target: 10 },
+  ],
+};
+
+export default function () {
+  let res = http.get('https://test-api.com');
+  check(res, { 'status is 200': (r) => r.status === 200 });
+}</code></pre>
+
+        <h3>5. Scalability Testing</h3>
+        <p>Determines how performance changes as the load increases.</p>
+        <pre><code>export let options = {
+  stages: [
+    { duration: '1m', target: 50 },
+    { duration: '1m', target: 100 },
+    { duration: '1m', target: 200 },
+  ],
+};
+
+export default function () {
+  let res = http.get('https://test-api.com');
+  check(res, { 'status is 200': (r) => r.status === 200 });
+}</code></pre>
+      </section>
+
+      <!-- Conclusion Section -->
+      <section id="conclusion" class="mb-5">
+        <h2>Conclusion</h2>
+        <p>
+            Performance testing is crucial for ensuring system reliability and scalability. k6 provides powerful scripting capabilities, allowing you to test different scenarios efficiently.
+          </p>
+      </section>
+    </div>
+
+    <!-- Bootstrap 5.3.0 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
