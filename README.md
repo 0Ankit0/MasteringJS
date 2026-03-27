@@ -35,6 +35,7 @@ MasteringJS is a curated collection of advanced JavaScript techniques and concep
   - [Web APIs](#web-apis)
   - [Web Workers](#web-workers)
 - [Getting Started](#getting-started)
+- [Documentation Migration](#documentation-migration)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
@@ -151,6 +152,14 @@ To start exploring the repository, follow these steps:
    - Many topics include HTML files for interactive demos.
    - Open these files in your browser or execute JavaScript code in your development environment as needed.
 
+## Documentation Migration
+
+To track ongoing documentation standardization and upcoming updates:
+
+- Web APIs learning map: `WebAPIS/index.html`
+- Migration tracker: `docs-migration-status.md`
+- Documentation QA checklist: `README-docs-checklist.md`
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions, improvements, or additional techniques to add:
@@ -187,4 +196,3 @@ Feel free to modify and expand this README as you add new topics or update exist
 
 References:  
 [W3club Web Api](https://docs.w3cub.com/dom/)
-
