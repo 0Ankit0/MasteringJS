@@ -3,102 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Understanding Broadcast Channel API in JavaScript</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <title>Broadcast Channel API (In-Depth Beginner Guide)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
       <div class="container-fluid">
         <a class="navbar-brand" href="./index.html">Broadcast Channel API</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./index.html"
-                >Home</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="./BroadcastEx.html"
-                >Broadcast Example</a
-              >
-            </li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="./index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="./BroadcastEx.html">Broadcast Example</a></li>
           </ul>
         </div>
       </div>
     </nav>
-    <div class="container mt-5">
-      <h1>Broadcast Channel API</h1>
-      <button class="btn btn-primary" id="send-message">Send Message</button>
 
-      <p>
-        The Broadcast Channel API allows simple communication between browsing
-        contexts (such as tabs, iframes, web workers, and service workers) of
-        the same origin.
+    <main class="container mt-5">
+      <h1>Broadcast Channel API</h1>
+      <p class="lead">
+        Broadcast Channel provides same-origin communication between tabs, windows, iframes,
+        and workers without a server roundtrip.
       </p>
 
-      <h2>Methods</h2>
+      <h2>Why beginners should care</h2>
       <ul>
-        <li>
-          <strong>postMessage(message):</strong> Sends a message to all
-          BroadcastChannel objects listening to the channel.
-        </li>
-        <li>
-          <strong>close():</strong> Closes the BroadcastChannel object, ending
-          the connection to the channel.
-        </li>
+        <li>Sync login/logout state across tabs.</li>
+        <li>Instantly refresh data in every open tab after one tab updates it.</li>
+        <li>Share simple notifications in multi-tab applications.</li>
       </ul>
 
-      <h2>Implementation</h2>
-      <p>Below is an example of how to use the Broadcast Channel API:</p>
-      <pre><code class="language-javascript">
-// Create a new BroadcastChannel
-const channel = new BroadcastChannel('test_channel');
+      <h2>Core API</h2>
+      <ul>
+        <li><code>new BroadcastChannel(name)</code>: opens a channel.</li>
+        <li><code>channel.postMessage(data)</code>: sends data to listeners.</li>
+        <li><code>channel.onmessage = handler</code>: receives data.</li>
+        <li><code>channel.close()</code>: releases resources.</li>
+      </ul>
 
-// Listen for messages
+      <h2>Minimal example</h2>
+      <pre><code class="language-javascript">const channel = new BroadcastChannel("app-sync");
+
 channel.onmessage = (event) => {
-  console.log('Received:', event.data);
+  console.log("Received from another tab:", event.data);
 };
 
-// Send a message
-channel.postMessage('Hello, Broadcast Channel!');
+function publishUpdate() {
+  channel.postMessage({ type: "PROFILE_UPDATED", at: Date.now() });
+}
 
-// Close the channel
-channel.close();
-      </code></pre>
-    </div>
+window.addEventListener("beforeunload", () => channel.close());</code></pre>
+
+      <button class="btn btn-primary" id="send-message">Send Demo Message</button>
+      <p class="mt-3 text-muted">Open this page in two tabs, then click the button.</p>
+    </main>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-      // Page 1 script
-      const worker = new SharedWorker("shared-worker.js");
-      const broadcastChannel = new BroadcastChannel("shared-worker-channel");
-
-      const sendMessageButton = document.getElementById("send-message");
-      sendMessageButton.addEventListener("click", () => {
-        // Send a message to the worker
-        worker.port.postMessage("Message from Page 1");
+    <script>
+      const channel = new BroadcastChannel("demo-channel");
+      document.getElementById("send-message").addEventListener("click", () => {
+        channel.postMessage({ text: "Hello from this tab", timestamp: new Date().toISOString() });
       });
-
-      // Listen for messages
-      broadcastChannel.onmessage = (event) => {
-        alert("Message received in Page 1:", event.data);
+      channel.onmessage = (event) => {
+        alert(`Message received: ${JSON.stringify(event.data)}`);
       };
-
-      // Start communication
-      worker.port.start();
+      window.addEventListener("beforeunload", () => channel.close());
     </script>
   </body>
 </html>
