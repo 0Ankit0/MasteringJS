@@ -3,178 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Server-Sent Events (SSE) Documentation</title>
-
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-
+    <title>Server-Sent Events (SSE) Beginner Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
-      body {
-        background-color: #f8f9fa;
-      }
-      pre {
-        background: #2d2d2d;
-        color: #f8f8f2;
-        padding: 10px;
-        border-radius: 5px;
-        overflow-x: auto;
-      }
-      .example-box {
-        background: white;
-        padding: 15px;
-        border-radius: 5px;
-        margin-top: 20px;
-        border-left: 5px solid #0d6efd;
-      }
+      pre { background: #212529; color: #f8f9fa; padding: 12px; border-radius: 8px; overflow-x: auto; }
+      .example-box { background: #fff; border: 1px solid #dee2e6; padding: 16px; border-radius: 8px; }
     </style>
   </head>
-  <body>
-    <!-- Header -->
-    <div class="container mt-4">
-      <h1 class="text-center text-primary">
-        📢 Server-Sent Events (SSE) Documentation
-      </h1>
-      <p class="text-center text-muted">
-        A guide to understanding and implementing SSE with a live example.
+  <body class="bg-light">
+    <main class="container py-5">
+      <h1 class="text-primary">Server-Sent Events (SSE)</h1>
+      <p class="lead">
+        SSE lets a server push one-way real-time updates to the browser over standard HTTP.
       </p>
-    </div>
 
-    <!-- Documentation -->
-    <div class="container mt-4">
-      <h2 class="text-dark">🔹 What are Server-Sent Events?</h2>
-      <p>
-        <strong>Server-Sent Events (SSE)</strong> is a technology that allows
-        <b>servers to push real-time updates</b> to a web page over an HTTP
-        connection. It is part of <b>HTML5</b> and is supported by modern
-        browsers.
-      </p>
-      <p>SSE is commonly used in:</p>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          📩 Live notifications (email, chat alerts)
-        </li>
-        <li class="list-group-item">📈 Stock market updates</li>
-        <li class="list-group-item">📰 News feeds</li>
-        <li class="list-group-item">📊 Real-time analytics dashboards</li>
+      <h2>When SSE is a good fit</h2>
+      <ul>
+        <li>Live dashboards and notifications.</li>
+        <li>Activity feeds and status updates.</li>
+        <li>Any server → client stream where client doesn’t need a full duplex channel.</li>
       </ul>
 
-      <h2 class="mt-4 text-dark">🔹 How Does SSE Work?</h2>
-      <p>SSE is based on the following process:</p>
-      <ol class="list-group list-group-numbered">
-        <li class="list-group-item">
-          The client creates an <b>EventSource</b> connection to the server.
-        </li>
-        <li class="list-group-item">
-          The server keeps the connection <b>open</b> and sends real-time
-          updates.
-        </li>
-        <li class="list-group-item">
-          The browser listens for these updates and displays them immediately.
-        </li>
-      </ol>
-
-      <h2 class="mt-4 text-dark">🔹 SSE vs WebSockets</h2>
-      <table class="table table-bordered mt-3">
-        <thead class="table-dark">
-          <tr>
-            <th>Feature</th>
-            <th>SSE</th>
-            <th>WebSockets</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Connection Type</td>
-            <td>Unidirectional (Server → Client)</td>
-            <td>Bidirectional (Client ↔ Server)</td>
-          </tr>
-          <tr>
-            <td>Use Case</td>
-            <td>Live feeds, notifications</td>
-            <td>Chats, multiplayer games</td>
-          </tr>
-          <tr>
-            <td>Protocol</td>
-            <td>Uses HTTP</td>
-            <td>Uses WebSocket Protocol</td>
-          </tr>
-          <tr>
-            <td>Browser Support</td>
-            <td>✅ Widely supported</td>
-            <td>✅ Widely supported</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2 class="mt-4 text-dark">
-        🔹 Live SSE Example (Using a Mock Server in Service Worker)
-      </h2>
+      <h2>SSE vs WebSocket (quick rule)</h2>
       <p>
-        Below is a <b>live Server-Sent Events (SSE) example</b>, where updates
-        will appear automatically.
+        Use SSE for simple server-to-client streams. Use WebSocket when the client must send frequent realtime messages back.
       </p>
 
-      <div class="example-box">
-        <h3 class="text-primary">🟢 Live SSE Data:</h3>
-        <div id="sse-data" class="fs-4 text-success">Waiting for events...</div>
-      </div>
-
-      <h2 class="mt-4 text-dark">🔹 Understanding the Code</h2>
-
-      <h3 class="mt-3 text-secondary">1️⃣ Registering the Service Worker</h3>
-      <p>
-        The <b>Service Worker (`sw.js`)</b> acts as a mock server that
-        intercepts requests to `/mock-sse` and responds with SSE-like events.
-      </p>
-      <pre><code>if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-        .then(() => console.log("Service Worker Registered"))
-        .catch(err => console.error("Service Worker Registration Failed", err));
-}</code></pre>
-
-      <h3 class="mt-3 text-secondary">2️⃣ Creating an SSE Connection</h3>
-      <p>
-        The <b>EventSource</b> object opens a persistent connection to
-        `/mock-sse`, listening for new events.
-      </p>
-      <pre><code>const eventSource = new EventSource('/mock-sse');
-
-eventSource.onmessage = function(event) {
-    document.getElementById('sse-data').innerText = event.data;
+      <h2>Client code</h2>
+      <pre><code>const source = new EventSource("/events");
+source.onmessage = (event) => {
+  console.log("SSE data:", event.data);
+};
+source.onerror = () => {
+  console.error("SSE connection error");
 };</code></pre>
 
-      <h2 class="mt-4 text-dark">🔹 Conclusion</h2>
-      <p>
-        SSE is a great way to push updates from the server to the client with
-        minimal overhead. It is <b>simpler</b> and <b>more efficient</b> than
-        WebSockets for real-time applications that only require one-way
-        communication.
-      </p>
-    </div>
-    <!-- JavaScript for SSE -->
+      <h2>Live example (service worker mock)</h2>
+      <div class="example-box">
+        <h3 class="h5">Live SSE Data</h3>
+        <div id="sse-data" class="fs-5 text-success">Waiting for events...</div>
+      </div>
+
+      <div class="alert alert-info mt-4">
+        SSE automatically reconnects in many cases, but you should still handle connection loss in your UI.
+      </div>
+    </main>
+
     <script>
-      // Register the Service Worker
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("sw.js")
-          .then(() => console.log("✅ Service Worker Registered"))
-          .catch((err) =>
-            console.error("❌ Service Worker Registration Failed", err)
-          );
+        navigator.serviceWorker.register("sw.js").catch(console.error);
       }
 
-      // Start listening to SSE mock endpoint
       const eventSource = new EventSource("/mock-sse");
-
-      eventSource.onmessage = function (event) {
-        document.getElementById("sse-data").innerText = event.data;
+      eventSource.onmessage = (event) => {
+        document.getElementById("sse-data").textContent = event.data;
       };
-
-      eventSource.onerror = function (event) {
-        console.error("SSE Error:", event);
+      eventSource.onerror = () => {
+        document.getElementById("sse-data").textContent = "Connection issue. Retrying...";
       };
     </script>
   </body>
