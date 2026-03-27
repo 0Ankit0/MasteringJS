@@ -46,28 +46,18 @@ Status key:
 - ✅ `WebAPIS/Web_Share_API/index.html`
 - ✅ `WebAPIS/index.html` (new learning map)
 
-### Pending modernization (next batches)
-- ⏳ `WebAPIS/Beacon_API/index.html`
-- ⏳ `WebAPIS/Canvas_API/index.html`
-- ⏳ `WebAPIS/Houdini_APIs/index.html`
-- ⏳ `WebAPIS/PageVisibilityAPI/index.html`
-- ⏳ `WebAPIS/Prioritized_Task_Scheduling_API/index.html`
-- ⏳ `WebAPIS/Reporting_API/index.html`
-- ⏳ `WebAPIS/Sensor_APIs/index.html`
-- ⏳ `WebAPIS/WebSockets_API/index.html`
-- ⏳ `WebAPIS/Web_Periodic_Background_Synchronization_API/index.html`
-- ⏳ `WebAPIS/Web_components/index.html`
-- ⏳ `WebAPIS/Canvas_API/*` companion docs/examples alignment
-- ⏳ Example-page consistency pass across all `*Ex.html` files
+### Newly completed in this batch
+- ✅ `WebAPIS/Beacon_API/index.html`
+- ✅ `WebAPIS/Canvas_API/index.html`
+- ✅ `WebAPIS/Houdini_APIs/index.html`
+- ✅ `WebAPIS/PageVisibilityAPI/index.html`
+- ✅ `WebAPIS/Prioritized_Task_Scheduling_API/index.html`
+- ✅ `WebAPIS/Reporting_API/index.html`
+- ✅ `WebAPIS/Sensor_APIs/index.html`
+- ✅ `WebAPIS/WebSockets_API/index.html`
+- ✅ `WebAPIS/Web_Periodic_Background_Synchronization_API/index.html`
+- ✅ `WebAPIS/Web_components/index.html`
 
-## Next recommended implementation order
-1. `WebAPIS/WebSockets_API/index.html`
-2. `WebAPIS/Beacon_API/index.html`
-3. `WebAPIS/PageVisibilityAPI/index.html`
-4. `WebAPIS/Sensor_APIs/index.html`
-5. `WebAPIS/Reporting_API/index.html`
-6. `WebAPIS/Web_Periodic_Background_Synchronization_API/index.html`
-7. `WebAPIS/Houdini_APIs/index.html`
-8. `WebAPIS/Prioritized_Task_Scheduling_API/index.html`
-9. `WebAPIS/Web_components/index.html`
-10. Companion example alignment pass
+## Remaining follow-up (maintenance)
+- 🔄 Optional: consistency sweep for all companion `*Ex.html` pages to match the new narrative structure.
+- 🔄 Optional: add screenshot artifacts or visual regression checks for interactive demos.
